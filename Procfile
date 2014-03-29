@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -Ddw.server.connector.port=$PORT -jar target/aurora-notifier-web-service-shaded.jar server heroku-config.yml
