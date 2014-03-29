@@ -37,6 +37,6 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 
 		final KpIndexFetcherHealthCheck healthCheck =
 				new KpIndexFetcherHealthCheck(fetcher);
-		environment.healthChecks().register("configuration", healthCheck);
+		environment.healthChecks().register("kp index fetcher", healthCheck);
 	}
 }
