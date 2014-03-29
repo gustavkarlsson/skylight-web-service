@@ -5,7 +5,7 @@
 	<groupId>se.gustavkarlsson</groupId>
 	<artifactId>aurora-notifier-web-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
 	<name>aurora-notifier-web-service</name>
 
