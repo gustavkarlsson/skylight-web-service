@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier_web_service.app;
+package se.gustavkarlsson.aurora_notifier_web_service.resources;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;

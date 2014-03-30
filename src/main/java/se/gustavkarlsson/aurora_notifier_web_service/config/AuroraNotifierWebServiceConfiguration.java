@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 public class AuroraNotifierWebServiceConfiguration extends Configuration {
+
 	@Min(1)
 	private long kpIndexUpdateDelayMinutes = 15;
 
