@@ -8,4 +8,4 @@
 
 # IntelliJ
 /.idea/
-/aurora-notifier-web-service.iml
+*.iml
