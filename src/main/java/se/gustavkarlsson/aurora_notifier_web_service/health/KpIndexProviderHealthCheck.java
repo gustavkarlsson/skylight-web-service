@@ -1,26 +1,27 @@
 package se.gustavkarlsson.aurora_notifier_web_service.health;
 
 import com.codahale.metrics.health.HealthCheck;
-import se.gustavkarlsson.aurora_notifier_web_service.services.fetcher.kp_index.CachingKpIndexFetcher;
+import se.gustavkarlsson.aurora_notifier_web_service.domain.KpIndexHolder;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-public class KpIndexFetcherHealthCheck extends HealthCheck {
+public class KpIndexProviderHealthCheck extends HealthCheck {
 
 	private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	private static final Validator validator = factory.getValidator();
 
-	private final CachingKpIndexFetcher fetcher;
+	private final Provider<KpIndexHolder> provider;
 
-	public KpIndexFetcherHealthCheck(CachingKpIndexFetcher fetcher) {
-		this.fetcher = fetcher;
+	public KpIndexProviderHealthCheck(Provider<KpIndexHolder> provider) {
+		this.provider = provider;
 	}
 
 	@Override
 	protected Result check() throws Exception {
-		fetcher.fetch();
+		provider.getValue();
 		return Result.healthy();
 	}
 }

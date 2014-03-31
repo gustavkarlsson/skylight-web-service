@@ -8,10 +8,12 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.joda.time.Duration;
-import se.gustavkarlsson.aurora_notifier_web_service.services.fetcher.kp_index.CachingKpIndexFetcher;
-import se.gustavkarlsson.aurora_notifier_web_service.services.fetcher.kp_index.NationalWeatherServiceKpIndexFetcher;
+import se.gustavkarlsson.aurora_notifier_web_service.domain.KpIndexHolder;
+import se.gustavkarlsson.aurora_notifier_web_service.health.KpIndexProviderHealthCheck;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.TimeCachedProvider;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index.NationalWeatherServiceKpIndexProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.config.AuroraNotifierWebServiceConfiguration;
-import se.gustavkarlsson.aurora_notifier_web_service.health.KpIndexFetcherHealthCheck;
 import se.gustavkarlsson.aurora_notifier_web_service.resources.KpIndexResource;
 
 public class AuroraNotifierWebServiceApplication extends Application<AuroraNotifierWebServiceConfiguration> {
@@ -37,13 +39,14 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 		JerseyEnvironment jersey = environment.jersey();
 		HealthCheckRegistry healthChecks = environment.healthChecks();
 
-		final CachingKpIndexFetcher fetcher = new NationalWeatherServiceKpIndexFetcher(
-				Duration.standardMinutes(configuration.getKpIndexUpdateDelayMinutes()), metrics);
+		final Provider<KpIndexHolder> kpIndexProvider = new NationalWeatherServiceKpIndexProvider(metrics);
+		final TimeCachedProvider<KpIndexHolder> cachedKpIndexProvider = new TimeCachedProvider<>(kpIndexProvider,
+				Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
 
-		final KpIndexResource kpIndexResource = new KpIndexResource(fetcher, metrics);
+		final KpIndexResource kpIndexResource = new KpIndexResource(cachedKpIndexProvider, metrics);
 		jersey.register(kpIndexResource);
 
-		final KpIndexFetcherHealthCheck healthCheck = new KpIndexFetcherHealthCheck(fetcher);
-		healthChecks.register("kpIndexFetcher", healthCheck);
+		final KpIndexProviderHealthCheck healthCheck = new KpIndexProviderHealthCheck(kpIndexProvider);
+		healthChecks.register("kpIndexProvider", healthCheck);
 	}
 }

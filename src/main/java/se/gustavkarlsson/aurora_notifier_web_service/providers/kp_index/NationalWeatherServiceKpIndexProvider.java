@@ -1,33 +1,32 @@
-package se.gustavkarlsson.aurora_notifier_web_service.services.fetcher.kp_index;
+package se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import org.joda.time.Duration;
 import se.gustavkarlsson.aurora_notifier_web_service.domain.KpIndexHolder;
-import se.gustavkarlsson.aurora_notifier_web_service.services.fetcher.FetchException;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.ProviderException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
-public class NationalWeatherServiceKpIndexFetcher extends CachingKpIndexFetcher {
+public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexHolder> {
 
 	private static final String CHARSET = "UTF-8";
 	private static final String URL = "http://www.swpc.noaa.gov/wingkp/wingkp_list.txt";
 
-	private final Timer fetchKpIndexTimer;
+	private final Timer getValueTimer;
 	private final Meter errorsMeter;
 
-	public NationalWeatherServiceKpIndexFetcher(Duration minimumDurationBetweenUpdates, MetricRegistry metrics) {
-		super(minimumDurationBetweenUpdates);
-		fetchKpIndexTimer = createFetchKpIndexTimer(metrics);
+	public NationalWeatherServiceKpIndexProvider(MetricRegistry metrics) {
+		getValueTimer = createGetValueTimer(metrics);
 		errorsMeter = createErrorsMeter(metrics);
 	}
 
-	private Timer createFetchKpIndexTimer(MetricRegistry metrics) {
-		return metrics.timer(MetricRegistry.name(getClass(), "fetchKpIndex"));
+	private Timer createGetValueTimer(MetricRegistry metrics) {
+		return metrics.timer(MetricRegistry.name(getClass(), "getValue"));
 	}
 
 	private Meter createErrorsMeter(MetricRegistry metrics) {
@@ -35,8 +34,8 @@ public class NationalWeatherServiceKpIndexFetcher extends CachingKpIndexFetcher 
 	}
 
 	@Override
-	protected KpIndexHolder fetchKpIndex() throws FetchException {
-		try (Timer.Context timerContext = fetchKpIndexTimer.time()) {
+	public KpIndexHolder getValue() throws ProviderException {
+		try (Timer.Context timerContext = getValueTimer.time()) {
 			URL url = new URL(URL);
 			String urlContent = getUrlContent(url);
 			float kpIndexValue = parseKpIndex(urlContent);
@@ -45,7 +44,7 @@ public class NationalWeatherServiceKpIndexFetcher extends CachingKpIndexFetcher 
 			return kpIndexHolder;
 		} catch (IOException e) {
 			errorsMeter.mark();
-			throw new FetchException(e);
+			throw new ProviderException(e);
 		}
 	}
 
@@ -58,7 +57,7 @@ public class NationalWeatherServiceKpIndexFetcher extends CachingKpIndexFetcher 
 		return content;
 	}
 
-	private float parseKpIndex(final String content) throws FetchException {
+	private float parseKpIndex(final String content) throws ProviderException {
 		try {
 			final String[] lines = content.split("\\n");
 			final String lastLine = lines[lines.length - 1];
@@ -67,7 +66,7 @@ public class NationalWeatherServiceKpIndexFetcher extends CachingKpIndexFetcher 
 			final float kpIndex = Float.parseFloat(kpIndexString);
 			return kpIndex;
 		} catch (RuntimeException e) {
-			throw new FetchException(e);
+			throw new ProviderException(e);
 		}
 	}
 }
