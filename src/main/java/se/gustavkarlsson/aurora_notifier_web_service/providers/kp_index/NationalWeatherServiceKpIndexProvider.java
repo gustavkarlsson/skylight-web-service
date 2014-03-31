@@ -62,7 +62,7 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexHo
 			final String[] lines = content.split("\\n");
 			final String lastLine = lines[lines.length - 1];
 			final String[] lastLineSplit = lastLine.split("\\s+");
-			final String kpIndexString = lastLineSplit[9];
+			final String kpIndexString = lastLineSplit[17];
 			final float kpIndex = Float.parseFloat(kpIndexString);
 			return kpIndex;
 		} catch (RuntimeException e) {
