@@ -52,4 +52,4 @@ shadow {
     exclude 'META-INF/*.RSA'
 }
 
-defaultTasks 'shadowJar'
+task stage(dependsOn: ["clean", "shadowJar"])
