@@ -1,7 +1,7 @@
 package se.gustavkarlsson.aurora_notifier_web_service.health;
 
 import com.codahale.metrics.health.HealthCheck;
-import se.gustavkarlsson.aurora_notifier_web_service.domain.KpIndexHolder;
+import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
 
 import javax.validation.Validation;
@@ -13,9 +13,9 @@ public class KpIndexProviderHealthCheck extends HealthCheck {
 	private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	private static final Validator validator = factory.getValidator();
 
-	private final Provider<KpIndexHolder> provider;
+	private final Provider<KpIndexReport> provider;
 
-	public KpIndexProviderHealthCheck(Provider<KpIndexHolder> provider) {
+	public KpIndexProviderHealthCheck(Provider<KpIndexReport> provider) {
 		this.provider = provider;
 	}
 

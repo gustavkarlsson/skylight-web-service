@@ -3,11 +3,15 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = '1.0'
-mainClassName = 'se.gustavkarlsson.aurora_notifier_web_service.app.AuroraNotifierWebServiceApplication'
+project.group = 'se.gustavkarlsson.aurora-notifier'
+version = '1.0-SNAPSHOT'
+mainClassName = 'se.gustavkarlsson.aurora_notifier.web_service.app.AuroraNotifierWebServiceApplication'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'repo'
+    }
 }
 
 buildscript {
@@ -26,12 +30,14 @@ dependencies {
         junitVersion = '3.8.1'
         dropwizardVersion = '0.7.0-rc2'
         jsoupVersion = '1.7.3'
+        auroraNotifierVersion = '1.0-SNAPSHOT'
     }
 
     testCompile 'junit:junit:' + junitVersion
     compile 'io.dropwizard:dropwizard-core:' + dropwizardVersion
     compile 'io.dropwizard:dropwizard-metrics:' + dropwizardVersion
     compile 'org.jsoup:jsoup:' + jsoupVersion
+    compile 'se.gustavkarlsson.aurora-notifier:aurora-notifier-common:' + auroraNotifierVersion
 }
 
 jar {
@@ -52,4 +58,6 @@ shadow {
     exclude 'META-INF/*.RSA'
 }
 
-task stage(dependsOn: ["clean", "shadowJar"])
+task stage(dependsOn: ['clean', 'shadowJar'])
+
+defaultTasks 'stage'

@@ -8,12 +8,12 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.joda.time.Duration;
-import se.gustavkarlsson.aurora_notifier_web_service.domain.KpIndexHolder;
+import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
+import se.gustavkarlsson.aurora_notifier_web_service.config.AuroraNotifierWebServiceConfiguration;
 import se.gustavkarlsson.aurora_notifier_web_service.health.KpIndexProviderHealthCheck;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.TimeCachedProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index.NationalWeatherServiceKpIndexProvider;
-import se.gustavkarlsson.aurora_notifier_web_service.config.AuroraNotifierWebServiceConfiguration;
 import se.gustavkarlsson.aurora_notifier_web_service.resources.KpIndexResource;
 
 public class AuroraNotifierWebServiceApplication extends Application<AuroraNotifierWebServiceConfiguration> {
@@ -39,8 +39,8 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 		JerseyEnvironment jersey = environment.jersey();
 		HealthCheckRegistry healthChecks = environment.healthChecks();
 
-		final Provider<KpIndexHolder> kpIndexProvider = new NationalWeatherServiceKpIndexProvider(metrics);
-		final TimeCachedProvider<KpIndexHolder> cachedKpIndexProvider = new TimeCachedProvider<>(kpIndexProvider,
+		final Provider<KpIndexReport> kpIndexProvider = new NationalWeatherServiceKpIndexProvider(metrics);
+		final TimeCachedProvider<KpIndexReport> cachedKpIndexProvider = new TimeCachedProvider<>(kpIndexProvider,
 				Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
 
 		final KpIndexResource kpIndexResource = new KpIndexResource(cachedKpIndexProvider, metrics);

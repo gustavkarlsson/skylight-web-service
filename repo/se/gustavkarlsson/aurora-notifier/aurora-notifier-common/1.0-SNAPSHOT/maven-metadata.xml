@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>se.gustavkarlsson.aurora-notifier</groupId>
+  <artifactId>aurora-notifier-common</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20140407.201025</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20140407201025</lastUpdated>
+  </versioning>
+</metadata>
