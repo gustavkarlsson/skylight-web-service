@@ -7,6 +7,7 @@ import se.gustavkarlsson.aurora_notifier_web_service.providers.CacheException;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.CachedProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.ProviderException;
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
+import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,7 +18,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/kp-index")
 @Produces(MediaType.APPLICATION_JSON)
-public class KpIndexResource {
+public class KpIndexResource implements KpIndexService {
 
 	private final CachedProvider<KpIndexReport> provider;
 	private final Meter errorsMeter;
@@ -27,6 +28,7 @@ public class KpIndexResource {
 		errorsMeter = createErrorsMeter(metrics);
 	}
 
+	@Override
 	@GET
 	@Timed
 	public KpIndexReport getKpIndex() throws WebApplicationException {
