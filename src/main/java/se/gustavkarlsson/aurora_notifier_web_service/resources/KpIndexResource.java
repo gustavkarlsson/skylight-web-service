@@ -3,11 +3,11 @@ package se.gustavkarlsson.aurora_notifier_web_service.resources;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.annotation.Timed;
+import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
+import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.CacheException;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.CachedProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.ProviderException;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
-import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,10 +20,10 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class KpIndexResource implements KpIndexService {
 
-	private final CachedProvider<KpIndexReport> provider;
+	private final CachedProvider<KpIndexWsReport> provider;
 	private final Meter errorsMeter;
 
-	public KpIndexResource(CachedProvider<KpIndexReport> provider, MetricRegistry metrics) {
+	public KpIndexResource(CachedProvider<KpIndexWsReport> provider, MetricRegistry metrics) {
 		this.provider = provider;
 		errorsMeter = createErrorsMeter(metrics);
 	}
@@ -31,8 +31,8 @@ public class KpIndexResource implements KpIndexService {
 	@Override
 	@GET
 	@Timed
-	public KpIndexReport getKpIndex() throws WebApplicationException {
-		KpIndexReport kpIndexReport;
+	public KpIndexWsReport getKpIndex() throws WebApplicationException {
+		KpIndexWsReport kpIndexReport;
 		try {
 			kpIndexReport = provider.getValue();
 		} catch (ProviderException pe) {
