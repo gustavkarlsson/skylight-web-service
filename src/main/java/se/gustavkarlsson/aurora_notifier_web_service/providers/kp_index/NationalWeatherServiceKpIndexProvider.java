@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWsReport> {
 
 	private static final String CHARSET = "UTF-8";
-	private static final String URL = "http://www.swpc.noaa.gov/wingkp/wingkp_list.txt";
+	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
 
 	private final Timer getValueTimer;
 	private final Meter errorsMeter;
