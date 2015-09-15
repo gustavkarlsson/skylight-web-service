@@ -24,6 +24,11 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 
 	private static final String APPLICATION_NAME = "Aurora Notifier Web Service";
 
+	private AuroraNotifierWebServiceConfiguration configuration;
+	private MetricRegistry metrics;
+	private JerseyEnvironment jersey;
+	private HealthCheckRegistry healthChecks;
+
 	public static void main(String[] args) throws Exception {
 		new AuroraNotifierWebServiceApplication().run(args);
 	}
@@ -39,19 +44,29 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 
 	@Override
 	public void run(AuroraNotifierWebServiceConfiguration configuration, Environment environment) {
-		MetricRegistry metrics = environment.metrics();
-		JerseyEnvironment jersey = environment.jersey();
-		HealthCheckRegistry healthChecks = environment.healthChecks();
+		this.configuration = configuration;
+		this.metrics = environment.metrics();
+		this.jersey = environment.jersey();
+		this.healthChecks = environment.healthChecks();
 
-		final Provider<KpIndexWsReport> kpIndexProvider = createKpIndexProvider(configuration, metrics);
-		final KpIndexResource kpIndexResource = new KpIndexResource(kpIndexProvider, metrics);
-		jersey.register(kpIndexResource);
-
-		final ProviderHealthCheck healthCheck = new ProviderHealthCheck(kpIndexProvider);
-		healthChecks.register("kpIndexProvider", healthCheck);
+		setupKpIndexResource();
+		setupHealthChecks();
 	}
 
-	private Provider<KpIndexWsReport> createKpIndexProvider(AuroraNotifierWebServiceConfiguration configuration, MetricRegistry metrics) {
+	private void setupHealthChecks() {
+		final ProviderHealthCheck nwsKpIndex = new ProviderHealthCheck(new NationalWeatherServiceKpIndexProvider());
+		final ProviderHealthCheck swlKpIndex = new ProviderHealthCheck(new SpaceWeatherLiveKpIndexProvider());
+		healthChecks.register("nwsKpIndex", nwsKpIndex);
+		healthChecks.register("swlKpIndex", swlKpIndex);
+	}
+
+	private void setupKpIndexResource() {
+		final Provider<KpIndexWsReport> kpIndexProvider = createKpIndexProvider();
+		final KpIndexResource kpIndexResource = new KpIndexResource(kpIndexProvider, metrics);
+		jersey.register(kpIndexResource);
+	}
+
+	private Provider<KpIndexWsReport> createKpIndexProvider() {
 		Provider<KpIndexWsReport> nws = new CachingProvider<>(new NationalWeatherServiceKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
 		Provider<KpIndexWsReport> swl = new CachingProvider<>(new SpaceWeatherLiveKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
 		return new AggregateKpIndexProvider(Arrays.asList(nws, swl));
