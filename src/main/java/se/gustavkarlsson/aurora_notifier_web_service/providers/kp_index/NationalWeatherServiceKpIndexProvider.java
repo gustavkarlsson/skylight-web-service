@@ -25,6 +25,10 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWs
 		errorsMeter = createErrorsMeter(metrics);
 	}
 
+	public NationalWeatherServiceKpIndexProvider() {
+		this(new MetricRegistry());
+	}
+
 	private Timer createGetValueTimer(MetricRegistry metrics) {
 		return metrics.timer(MetricRegistry.name(getClass(), "getValue"));
 	}
@@ -41,8 +45,9 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWs
 			float kpIndexValue = parseKpIndex(urlContent);
 			long timestampMillis = System.currentTimeMillis();
 			KpIndexWsReport kpIndexReport = new KpIndexWsReport(kpIndexValue, timestampMillis);
+			timerContext.stop();
 			return kpIndexReport;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			errorsMeter.mark();
 			throw new ProviderException(e);
 		}
