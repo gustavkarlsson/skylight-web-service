@@ -47,7 +47,7 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWs
 			KpIndexWsReport kpIndexReport = new KpIndexWsReport(kpIndexValue, timestampMillis);
 			timerContext.stop();
 			return kpIndexReport;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			errorsMeter.mark();
 			throw new ProviderException(e);
 		}

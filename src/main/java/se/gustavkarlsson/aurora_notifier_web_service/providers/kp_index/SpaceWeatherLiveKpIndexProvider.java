@@ -11,6 +11,7 @@ import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.ProviderException;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport> {
@@ -52,7 +53,7 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport
 			KpIndexWsReport kpIndexReport = new KpIndexWsReport(kpIndex, timestampMillis);
 			timerContext.stop();
 			return kpIndexReport;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			errorsMeter.mark();
 			throw new ProviderException(e);
 		}
