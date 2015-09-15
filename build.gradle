@@ -1,21 +1,8 @@
-apply plugin: "java"
-apply plugin: "application"
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-project.group = "se.gustavkarlsson.aurora-notifier"
-version = "1.0-SNAPSHOT"
-mainClassName = "se.gustavkarlsson.aurora_notifier.web_service.app.AuroraNotifierWebServiceApplication"
-
 repositories {
     mavenCentral()
     maven {
         url "repo"
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = "1.10"
 }
 
 buildscript {
@@ -27,13 +14,21 @@ buildscript {
     }
 }
 
+apply plugin: "java"
+apply plugin: "application"
 apply plugin: "shadow"
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+project.group = "se.gustavkarlsson.aurora-notifier"
+version = "1.0-SNAPSHOT"
+mainClassName = "se.gustavkarlsson.aurora_notifier.web_service.app.AuroraNotifierWebServiceApplication"
 
 dependencies {
     ext {
-        junitVersion = "3.8.1"
-        dropwizardVersion = "0.7.0-rc2"
-        jsoupVersion = "1.7.3"
+        junitVersion = "4.12"
+        dropwizardVersion = "0.8.2"
+        jsoupVersion = "1.8.3"
         auroraNotifierVersion = "1.0-SNAPSHOT"
     }
 
@@ -42,6 +37,10 @@ dependencies {
     compile "io.dropwizard:dropwizard-metrics:" + dropwizardVersion
     compile "org.jsoup:jsoup:" + jsoupVersion
     compile "se.gustavkarlsson.aurora-notifier:aurora-notifier-common:" + auroraNotifierVersion
+}
+
+wrapper() {
+    gradleVersion = "1.10"
 }
 
 jar {
@@ -54,6 +53,7 @@ jar {
                 "Main-Class": "se.gustavkarlsson.aurora_notifier_web_service.app.AuroraNotifierWebServiceApplication"
     }
 }
+
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 
 shadow {
