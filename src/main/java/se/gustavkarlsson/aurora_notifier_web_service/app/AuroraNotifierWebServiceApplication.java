@@ -11,9 +11,11 @@ import org.joda.time.Duration;
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
 import se.gustavkarlsson.aurora_notifier_web_service.config.AuroraNotifierWebServiceConfiguration;
 import se.gustavkarlsson.aurora_notifier_web_service.health.ProviderHealthCheck;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.AggregateKpIndexProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
-import se.gustavkarlsson.aurora_notifier_web_service.providers.TimeCachedProvider;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.CachingProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index.NationalWeatherServiceKpIndexProvider;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index.SpaceWeatherLiveKpIndexProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.resources.KpIndexResource;
 
 public class AuroraNotifierWebServiceApplication extends Application<AuroraNotifierWebServiceConfiguration> {
@@ -39,14 +41,17 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 		JerseyEnvironment jersey = environment.jersey();
 		HealthCheckRegistry healthChecks = environment.healthChecks();
 
-		final Provider<KpIndexWsReport> kpIndexProvider = new NationalWeatherServiceKpIndexProvider(metrics);
-		final TimeCachedProvider<KpIndexWsReport> cachedKpIndexProvider = new TimeCachedProvider<>(kpIndexProvider,
-				Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
-
-		final KpIndexResource kpIndexResource = new KpIndexResource(cachedKpIndexProvider, metrics);
+		final Provider<KpIndexWsReport> kpIndexProvider = createKpIndexProvider(configuration, metrics);
+		final KpIndexResource kpIndexResource = new KpIndexResource(kpIndexProvider, metrics);
 		jersey.register(kpIndexResource);
 
 		final ProviderHealthCheck healthCheck = new ProviderHealthCheck(kpIndexProvider);
 		healthChecks.register("kpIndexProvider", healthCheck);
+	}
+
+	private Provider<KpIndexWsReport> createKpIndexProvider(AuroraNotifierWebServiceConfiguration configuration, MetricRegistry metrics) {
+		Provider<KpIndexWsReport> nws = new CachingProvider<>(new NationalWeatherServiceKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
+		Provider<KpIndexWsReport> swl = new CachingProvider<>(new SpaceWeatherLiveKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
+		return new AggregateKpIndexProvider(nws, swl);
 	}
 }
