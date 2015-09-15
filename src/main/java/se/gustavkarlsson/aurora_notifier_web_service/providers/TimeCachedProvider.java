@@ -36,8 +36,7 @@ public class TimeCachedProvider<T> implements CachedProvider<T> {
 		if (!hasBeenUpdated()) {
 			return true;
 		}
-		boolean isInvalid = isInvalid();
-		return isInvalid;
+		return isInvalid();
 	}
 
 	private boolean isInvalid() {
