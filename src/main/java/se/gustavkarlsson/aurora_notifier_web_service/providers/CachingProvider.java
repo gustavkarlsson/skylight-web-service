@@ -3,6 +3,7 @@ package se.gustavkarlsson.aurora_notifier_web_service.providers;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
+// TODO Implement using Guava Cache
 public class CachingProvider<T> implements Provider<T> {
 
 	private final Provider<T> provider;
@@ -22,7 +23,7 @@ public class CachingProvider<T> implements Provider<T> {
 			try {
 				update();
 			} catch (ProviderException e) {
-				// TODO log that we're falling back on cached value
+				// TODO log that we're falling back to cached value
 			}
 		}
 		return cached;
