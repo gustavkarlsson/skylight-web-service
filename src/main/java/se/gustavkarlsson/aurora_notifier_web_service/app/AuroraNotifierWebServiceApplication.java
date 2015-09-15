@@ -10,7 +10,7 @@ import io.dropwizard.setup.Environment;
 import org.joda.time.Duration;
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
 import se.gustavkarlsson.aurora_notifier_web_service.config.AuroraNotifierWebServiceConfiguration;
-import se.gustavkarlsson.aurora_notifier_web_service.health.KpIndexProviderHealthCheck;
+import se.gustavkarlsson.aurora_notifier_web_service.health.ProviderHealthCheck;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.TimeCachedProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index.NationalWeatherServiceKpIndexProvider;
@@ -46,7 +46,7 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 		final KpIndexResource kpIndexResource = new KpIndexResource(cachedKpIndexProvider, metrics);
 		jersey.register(kpIndexResource);
 
-		final KpIndexProviderHealthCheck healthCheck = new KpIndexProviderHealthCheck(kpIndexProvider);
+		final ProviderHealthCheck healthCheck = new ProviderHealthCheck(kpIndexProvider);
 		healthChecks.register("kpIndexProvider", healthCheck);
 	}
 }
