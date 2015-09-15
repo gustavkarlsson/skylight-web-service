@@ -12,11 +12,13 @@ import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
 import se.gustavkarlsson.aurora_notifier_web_service.config.AuroraNotifierWebServiceConfiguration;
 import se.gustavkarlsson.aurora_notifier_web_service.health.ProviderHealthCheck;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.AggregateKpIndexProvider;
-import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.CachingProvider;
+import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index.NationalWeatherServiceKpIndexProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index.SpaceWeatherLiveKpIndexProvider;
 import se.gustavkarlsson.aurora_notifier_web_service.resources.KpIndexResource;
+
+import java.util.Arrays;
 
 public class AuroraNotifierWebServiceApplication extends Application<AuroraNotifierWebServiceConfiguration> {
 
@@ -52,6 +54,6 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 	private Provider<KpIndexWsReport> createKpIndexProvider(AuroraNotifierWebServiceConfiguration configuration, MetricRegistry metrics) {
 		Provider<KpIndexWsReport> nws = new CachingProvider<>(new NationalWeatherServiceKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
 		Provider<KpIndexWsReport> swl = new CachingProvider<>(new SpaceWeatherLiveKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
-		return new AggregateKpIndexProvider(nws, swl);
+		return new AggregateKpIndexProvider(Arrays.asList(nws, swl));
 	}
 }

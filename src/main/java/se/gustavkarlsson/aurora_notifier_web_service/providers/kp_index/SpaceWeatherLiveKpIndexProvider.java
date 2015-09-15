@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport> {
 
-	private static final String CHARSET = "UTF-8";
 	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity/kp";
 	private static final String CSS_PATH = "div.panel-heading > h5.center > span:eq(0)";
 
@@ -73,7 +72,6 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport
 		} else {
 			extra = 0;
 		}
-		float kpIndex = whole + extra;
-		return kpIndex;
+		return whole + extra;
 	}
 }

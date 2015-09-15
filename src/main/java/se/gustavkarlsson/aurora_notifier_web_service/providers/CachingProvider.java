@@ -29,10 +29,7 @@ public class CachingProvider<T> implements Provider<T> {
 	}
 
 	private boolean needsUpdate() {
-		if (!cachedExists()) {
-			return true;
-		}
-		return !isValid();
+		return !cachedExists() || !isValid();
 	}
 
 	private boolean isValid() {

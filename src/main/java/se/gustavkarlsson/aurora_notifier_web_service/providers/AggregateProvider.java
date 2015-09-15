@@ -8,12 +8,6 @@ public abstract class AggregateProvider<T> implements Provider<T> {
 
 	private final List<Provider<T>> providers = new ArrayList<>();
 
-	public AggregateProvider(Provider<T>... providers) {
-		for (Provider<T> provider : providers) {
-			this.providers.add(provider);
-		}
-	}
-
 	public AggregateProvider(Collection<Provider<T>> providers) {
 		this.providers.addAll(providers);
 	}
