@@ -12,15 +12,17 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWsReport> {
 
-	private static final String CHARSET = "UTF-8";
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
 
 	private final Timer getValueTimer;
 	private final Meter errorsMeter;
 
 	public NationalWeatherServiceKpIndexProvider(MetricRegistry metrics) {
+		checkNotNull(metrics);
 		getValueTimer = createGetValueTimer(metrics);
 		errorsMeter = createErrorsMeter(metrics);
 	}
@@ -55,7 +57,7 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWs
 
 	private String getUrlContent(URL url) throws IOException {
 		InputStream stream = url.openStream();
-		Scanner scanner = new Scanner(stream, CHARSET);
+		Scanner scanner = new Scanner(stream, "UTF-8");
 		scanner.useDelimiter("\\A");
 		String content = scanner.hasNext() ? scanner.next() : "";
 		scanner.close();

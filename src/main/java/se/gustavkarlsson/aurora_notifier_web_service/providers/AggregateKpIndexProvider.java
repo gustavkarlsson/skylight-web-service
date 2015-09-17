@@ -5,10 +5,12 @@ import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
 import java.util.Collection;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.*;
+
 public class AggregateKpIndexProvider extends AggregateProvider<KpIndexWsReport> {
 
 	public AggregateKpIndexProvider(Collection<Provider<KpIndexWsReport>> providers) {
-		super(providers);
+		super(checkNotNull(providers));
 	}
 
 	public AggregateKpIndexProvider() {
@@ -25,7 +27,6 @@ public class AggregateKpIndexProvider extends AggregateProvider<KpIndexWsReport>
 		long latestTimestamp = 0;
 		float kpIndexSum = 0;
 		for (KpIndexWsReport report : values) {
-			// TODO NPE can occur
 			latestTimestamp = Math.max(latestTimestamp, report.getTimestamp());
 			kpIndexSum += report.getKpIndex();
 		}

@@ -14,6 +14,8 @@ import se.gustavkarlsson.aurora_notifier_web_service.providers.ProviderException
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport> {
 
 	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity/kp";
@@ -25,6 +27,7 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport
 	private final Meter errorsMeter;
 
 	public SpaceWeatherLiveKpIndexProvider(MetricRegistry metrics) {
+		checkNotNull(metrics);
 		getValueTimer = createGetValueTimer(metrics);
 		errorsMeter = createErrorsMeter(metrics);
 	}

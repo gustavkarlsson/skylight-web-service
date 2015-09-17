@@ -8,15 +8,10 @@ import javax.validation.constraints.Min;
 public class AuroraNotifierWebServiceConfiguration extends Configuration {
 
 	@Min(1)
+	@JsonProperty
 	private int kpIndexCacheInvalidationMinutes = 15;
 
-	@JsonProperty
 	public int getKpIndexCacheInvalidationMinutes() {
 		return kpIndexCacheInvalidationMinutes;
-	}
-
-	@JsonProperty
-	public void setKpIndexCacheInvalidationMinutes(int kpIndexCacheInvalidationMinutes) {
-		this.kpIndexCacheInvalidationMinutes = kpIndexCacheInvalidationMinutes;
 	}
 }
