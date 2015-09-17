@@ -25,6 +25,7 @@ public class AggregateKpIndexProvider extends AggregateProvider<KpIndexWsReport>
 		long latestTimestamp = 0;
 		float kpIndexSum = 0;
 		for (KpIndexWsReport report : values) {
+			// TODO NPE can occur
 			latestTimestamp = Math.max(latestTimestamp, report.getTimestamp());
 			kpIndexSum += report.getKpIndex();
 		}
