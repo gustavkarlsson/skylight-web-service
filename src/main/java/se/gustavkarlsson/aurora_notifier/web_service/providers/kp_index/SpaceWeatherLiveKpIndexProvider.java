@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier_web_service.providers.kp_index;
+package se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
@@ -8,8 +8,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
-import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
-import se.gustavkarlsson.aurora_notifier_web_service.providers.ProviderException;
+import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
+import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
 
 import java.io.IOException;
 import java.util.regex.Pattern;

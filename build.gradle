@@ -49,7 +49,7 @@ jar {
                 "Built-By": System.getProperty("user.name"),
                 "Built-Date": new Date(),
                 "Built-JDK": System.getProperty("java.version"),
-                "Main-Class": "se.gustavkarlsson.aurora_notifier_web_service.app.AuroraNotifierWebServiceApplication"
+                "Main-Class": mainClassName
     }
 }
 

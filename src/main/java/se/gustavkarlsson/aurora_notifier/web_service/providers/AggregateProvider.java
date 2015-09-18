@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier_web_service.providers;
+package se.gustavkarlsson.aurora_notifier.web_service.providers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

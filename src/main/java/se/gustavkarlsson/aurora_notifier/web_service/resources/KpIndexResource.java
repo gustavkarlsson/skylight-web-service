@@ -1,15 +1,14 @@
-package se.gustavkarlsson.aurora_notifier_web_service.resources;
+package se.gustavkarlsson.aurora_notifier.web_service.resources;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
 import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
-import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
-import se.gustavkarlsson.aurora_notifier_web_service.providers.ProviderException;
+import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
+import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

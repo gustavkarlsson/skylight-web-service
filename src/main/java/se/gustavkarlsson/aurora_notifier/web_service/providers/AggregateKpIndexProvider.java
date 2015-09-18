@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier_web_service.providers;
+package se.gustavkarlsson.aurora_notifier.web_service.providers;
 
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
 

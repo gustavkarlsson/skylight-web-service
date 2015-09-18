@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier_web_service.config;
+package se.gustavkarlsson.aurora_notifier.web_service.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;

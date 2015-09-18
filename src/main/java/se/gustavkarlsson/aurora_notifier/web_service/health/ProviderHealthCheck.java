@@ -1,8 +1,8 @@
-package se.gustavkarlsson.aurora_notifier_web_service.health;
+package se.gustavkarlsson.aurora_notifier.web_service.health;
 
 import com.codahale.metrics.health.HealthCheck;
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
-import se.gustavkarlsson.aurora_notifier_web_service.providers.Provider;
+import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 
 public class ProviderHealthCheck extends HealthCheck {
 

@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier_web_service.providers;
+package se.gustavkarlsson.aurora_notifier.web_service.providers;
 
 public interface Provider<T> {
 
