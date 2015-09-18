@@ -1,17 +1,10 @@
-repositories {
-    mavenCentral()
-    maven {
-        url "repo"
-    }
-}
-
 buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:0.8"
-    }
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath "com.github.jengelman.gradle.plugins:shadow:0.8"
+	}
 }
 
 apply plugin: "java"
@@ -24,7 +17,14 @@ version = "1.0-SNAPSHOT"
 mainClassName = "se.gustavkarlsson.aurora_notifier.web_service.app.AuroraNotifierWebServiceApplication"
 
 wrapper() {
-    gradleVersion = "1.10"
+	gradleVersion = "1.10"
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		url "repo"
+	}
 }
 
 dependencies {
@@ -43,23 +43,23 @@ dependencies {
 }
 
 jar {
-    manifest {
-        attributes "Implementation-Title": name,
-                "Implementation-Version": version,
-                "Built-By": System.getProperty("user.name"),
-                "Built-Date": new Date(),
-                "Built-JDK": System.getProperty("java.version"),
-                "Main-Class": mainClassName
-    }
+	manifest {
+		attributes "Implementation-Title": name,
+				"Implementation-Version": version,
+				"Built-By": System.getProperty("user.name"),
+				"Built-Date": new Date(),
+				"Built-JDK": System.getProperty("java.version"),
+				"Main-Class": mainClassName
+	}
 }
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 
 shadow {
-    transformer(ServiceFileTransformer)
-    exclude "META-INF/*.SF"
-    exclude "META-INF/*.DSA"
-    exclude "META-INF/*.RSA"
+	transformer(ServiceFileTransformer)
+	exclude "META-INF/*.SF"
+	exclude "META-INF/*.DSA"
+	exclude "META-INF/*.RSA"
 }
 
 task stage(dependsOn: ["clean", "shadowJar"])
