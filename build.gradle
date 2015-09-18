@@ -19,33 +19,32 @@ apply plugin: "application"
 apply plugin: "shadow"
 
 sourceCompatibility = 1.7
-targetCompatibility = 1.7
-project.group = "se.gustavkarlsson.aurora-notifier"
+group = "se.gustavkarlsson.aurora-notifier"
 version = "1.0-SNAPSHOT"
 mainClassName = "se.gustavkarlsson.aurora_notifier.web_service.app.AuroraNotifierWebServiceApplication"
-
-dependencies {
-    ext {
-        junitVersion = "4.12"
-        dropwizardVersion = "0.8.2"
-        jsoupVersion = "1.8.3"
-        auroraNotifierVersion = "1.0-SNAPSHOT"
-    }
-
-    testCompile "junit:junit:" + junitVersion
-    compile "io.dropwizard:dropwizard-core:" + dropwizardVersion
-    compile "io.dropwizard:dropwizard-metrics:" + dropwizardVersion
-    compile "org.jsoup:jsoup:" + jsoupVersion
-    compile "se.gustavkarlsson.aurora-notifier:aurora-notifier-common:" + auroraNotifierVersion
-}
 
 wrapper() {
     gradleVersion = "1.10"
 }
 
+dependencies {
+	ext {
+		junitVersion = "4.12"
+		dropwizardVersion = "0.8.2"
+		jsoupVersion = "1.8.3"
+		auroraNotifierVersion = "1.0-SNAPSHOT"
+	}
+
+	testCompile "junit:junit:" + junitVersion
+	compile "io.dropwizard:dropwizard-core:" + dropwizardVersion
+	compile "io.dropwizard:dropwizard-metrics:" + dropwizardVersion
+	compile "org.jsoup:jsoup:" + jsoupVersion
+	compile "se.gustavkarlsson.aurora-notifier:aurora-notifier-common:" + auroraNotifierVersion
+}
+
 jar {
     manifest {
-        attributes "Implementation-Title": project.name,
+        attributes "Implementation-Title": name,
                 "Implementation-Version": version,
                 "Built-By": System.getProperty("user.name"),
                 "Built-Date": new Date(),
