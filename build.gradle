@@ -15,9 +15,7 @@ wrapper() {
 
 repositories {
 	mavenCentral()
-	maven {
-		url "repo"
-	}
+	mavenLocal()
 }
 
 dependencies {
@@ -25,14 +23,14 @@ dependencies {
 		junitVersion = "4.12"
 		dropwizardVersion = "0.8.2"
 		jsoupVersion = "1.8.3"
-		auroraNotifierVersion = "1.0-SNAPSHOT"
+		commonVersion = "1.0-SNAPSHOT"
 	}
 
 	testCompile "junit:junit:" + junitVersion
 	compile "io.dropwizard:dropwizard-core:" + dropwizardVersion
 	compile "io.dropwizard:dropwizard-metrics:" + dropwizardVersion
 	compile "org.jsoup:jsoup:" + jsoupVersion
-	compile "se.gustavkarlsson.aurora-notifier:aurora-notifier-common:" + auroraNotifierVersion
+	compile "se.gustavkarlsson.aurora-notifier:common:" + commonVersion
 }
 
 jar {

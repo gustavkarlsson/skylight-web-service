@@ -8,15 +8,15 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.joda.time.Duration;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
+import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
 import se.gustavkarlsson.aurora_notifier.web_service.config.AuroraNotifierWebServiceConfiguration;
 import se.gustavkarlsson.aurora_notifier.web_service.health.ProviderHealthCheck;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
-import se.gustavkarlsson.aurora_notifier.web_service.resources.KpIndexResource;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.AggregateKpIndexProvider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.CachingProvider;
+import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index.NationalWeatherServiceKpIndexProvider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index.SpaceWeatherLiveKpIndexProvider;
+import se.gustavkarlsson.aurora_notifier.web_service.resources.KpIndexResource;
 
 import java.util.Arrays;
 
@@ -61,14 +61,14 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 	}
 
 	private void setupKpIndexResource() {
-		final Provider<KpIndexWsReport> kpIndexProvider = createKpIndexProvider();
+		final Provider<KpIndexReport> kpIndexProvider = createKpIndexProvider();
 		final KpIndexResource kpIndexResource = new KpIndexResource(kpIndexProvider, metrics);
 		jersey.register(kpIndexResource);
 	}
 
-	private Provider<KpIndexWsReport> createKpIndexProvider() {
-		Provider<KpIndexWsReport> nws = new CachingProvider<>(new NationalWeatherServiceKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
-		Provider<KpIndexWsReport> swl = new CachingProvider<>(new SpaceWeatherLiveKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
+	private Provider<KpIndexReport> createKpIndexProvider() {
+		Provider<KpIndexReport> nws = new CachingProvider<>(new NationalWeatherServiceKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
+		Provider<KpIndexReport> swl = new CachingProvider<>(new SpaceWeatherLiveKpIndexProvider(metrics), Duration.standardMinutes(configuration.getKpIndexCacheInvalidationMinutes()));
 		return new AggregateKpIndexProvider(Arrays.asList(nws, swl));
 	}
 }

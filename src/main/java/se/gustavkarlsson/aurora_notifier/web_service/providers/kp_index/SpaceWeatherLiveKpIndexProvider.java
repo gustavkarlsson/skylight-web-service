@@ -7,7 +7,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
+import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
 
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport> {
+public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexReport> {
 
 	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity/kp";
 	private static final String CSS_PATH = "div.panel-heading > h5.center > span:eq(0)";
@@ -45,7 +45,7 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport
 	}
 
 	@Override
-	public KpIndexWsReport getValue() throws ProviderException {
+	public KpIndexReport getValue() throws ProviderException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
 			Connection connection = Jsoup.connect(URL);
 			Document document = connection.get();
@@ -53,7 +53,7 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexWsReport
 			String text = elements.text();
 			float kpIndex = parseKpIndex(text);
 			long timestampMillis = System.currentTimeMillis();
-			KpIndexWsReport kpIndexReport = new KpIndexWsReport(kpIndex, timestampMillis);
+			KpIndexReport kpIndexReport = new KpIndexReport(kpIndex, timestampMillis);
 			timerContext.stop();
 			return kpIndexReport;
 		} catch (IOException e) {

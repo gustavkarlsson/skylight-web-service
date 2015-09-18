@@ -3,7 +3,7 @@ package se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexWsReport;
+import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
 
@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWsReport> {
+public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexReport> {
 
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
 
@@ -40,13 +40,13 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexWs
 	}
 
 	@Override
-	public KpIndexWsReport getValue() throws ProviderException {
+	public KpIndexReport getValue() throws ProviderException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
 			URL url = new URL(URL);
 			String urlContent = getUrlContent(url);
 			float kpIndexValue = parseKpIndex(urlContent);
 			long timestampMillis = System.currentTimeMillis();
-			KpIndexWsReport kpIndexReport = new KpIndexWsReport(kpIndexValue, timestampMillis);
+			KpIndexReport kpIndexReport = new KpIndexReport(kpIndexValue, timestampMillis);
 			timerContext.stop();
 			return kpIndexReport;
 		} catch (IOException e) {
