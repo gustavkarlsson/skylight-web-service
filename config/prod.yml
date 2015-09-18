@@ -1,0 +1,10 @@
+logging:
+  level: INFO
+  appenders:
+
+    - type: file
+      currentLogFilename: ./logs/server.log
+      archivedLogFilenamePattern: ./logs/server-%d.log.gz
+      archivedFileCount: 50
+
+    - type: console
