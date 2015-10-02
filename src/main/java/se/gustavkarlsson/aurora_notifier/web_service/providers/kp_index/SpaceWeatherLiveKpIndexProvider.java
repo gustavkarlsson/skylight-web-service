@@ -18,8 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexReport> {
 
-	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity/kp";
-	private static final String CSS_PATH = "div.panel-heading > h5.center > span:eq(0)";
+	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity";
+	private static final String CSS_PATH = "body > div.body > div > div:nth-child(1) > div.col-sx-12.col-sm-8 > div:nth-child(6) > div:nth-child(1) > div > h5 > a:nth-child(4)";
 
 	public static final Pattern pkIndexPattern = Pattern.compile("(0\\+?|[1-8](-|\\+)?|9-?)");
 
