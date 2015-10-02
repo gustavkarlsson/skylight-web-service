@@ -1,10 +1,14 @@
 logging:
   level: INFO
   appenders:
-
     - type: file
       currentLogFilename: ./logs/server.log
-      archivedLogFilenamePattern: ./logs/server-%d.log.gz
+      archivedLogFilenamePattern: ./logs/server-%d.log
       archivedFileCount: 50
-
-    - type: console
+server:
+  requestLog:
+    appenders:
+      - type: file
+        currentLogFilename: ./logs/access.log
+        archivedLogFilenamePattern: ./logs/access-%d.log
+        archivedFileCount: 50
