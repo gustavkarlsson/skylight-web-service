@@ -1,1 +1,0 @@
-web: bash -c 'java $JAVA_OPTS -Ddw.server.connector.port=$PORT -jar build/distributions/build_*-shadow.jar server config/heroku.yml'
