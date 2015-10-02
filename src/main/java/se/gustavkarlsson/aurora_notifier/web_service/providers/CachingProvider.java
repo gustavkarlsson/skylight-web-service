@@ -42,6 +42,9 @@ public class CachingProvider<T> implements Provider<T> {
 	}
 
 	private boolean isValid() {
+		if (!cachedExists()) {
+			return false;
+		}
 		DateTime updateNeededTime = lastUpdateTime.plus(invalidateDuration);
 		return DateTime.now().isBefore(updateNeededTime);
 	}
