@@ -9,7 +9,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.joda.time.Duration;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
-import se.gustavkarlsson.aurora_notifier.web_service.config.AuroraNotifierWebServiceConfiguration;
+import se.gustavkarlsson.aurora_notifier.web_service.config.AuroraConfiguration;
 import se.gustavkarlsson.aurora_notifier.web_service.health.ProviderHealthCheck;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.CachingProvider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
@@ -20,17 +20,17 @@ import se.gustavkarlsson.aurora_notifier.web_service.resources.KpIndexResource;
 
 import java.util.Arrays;
 
-public class AuroraNotifierWebServiceApplication extends Application<AuroraNotifierWebServiceConfiguration> {
+public class AuroraApplication extends Application<AuroraConfiguration> {
 
 	private static final String APPLICATION_NAME = "Aurora Notifier Web Service";
 
-	private AuroraNotifierWebServiceConfiguration configuration;
+	private AuroraConfiguration configuration;
 	private MetricRegistry metrics;
 	private JerseyEnvironment jersey;
 	private HealthCheckRegistry healthChecks;
 
 	public static void main(String[] args) throws Exception {
-		new AuroraNotifierWebServiceApplication().run(args);
+		new AuroraApplication().run(args);
 	}
 
 	@Override
@@ -39,11 +39,11 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 	}
 
 	@Override
-	public void initialize(Bootstrap<AuroraNotifierWebServiceConfiguration> bootstrap) {
+	public void initialize(Bootstrap<AuroraConfiguration> bootstrap) {
 	}
 
 	@Override
-	public void run(AuroraNotifierWebServiceConfiguration configuration, Environment environment) {
+	public void run(AuroraConfiguration configuration, Environment environment) {
 		this.configuration = configuration;
 		this.metrics = environment.metrics();
 		this.jersey = environment.jersey();

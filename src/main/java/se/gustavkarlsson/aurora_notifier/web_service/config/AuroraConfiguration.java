@@ -5,7 +5,7 @@ import io.dropwizard.Configuration;
 
 import javax.validation.constraints.Min;
 
-public class AuroraNotifierWebServiceConfiguration extends Configuration {
+public class AuroraConfiguration extends Configuration {
 
 	@Min(1)
 	@JsonProperty
