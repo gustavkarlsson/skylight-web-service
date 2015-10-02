@@ -17,22 +17,19 @@ public abstract class AggregateProvider<T> implements Provider<T> {
 
 	public AggregateProvider(Collection<Provider<T>> providers) {
 		checkNotNull(providers);
+		checkArgument(!providers.isEmpty(), "No providers");
 		checkArgument(!providers.contains(null), "One provider is null");
 		this.providers.addAll(providers);
 	}
 
-	protected List<T> getValues() throws ProviderException {
-		checkState(!providers.isEmpty(), "No providers to get value from");
+	protected List<T> getValues() {
 		List<T> values = new ArrayList<>();
 		for (Provider<T> provider : providers) {
 			try {
 				values.add(provider.getValue());
 			} catch (ProviderException e) {
-				logger.warn("Provider failed. Continuing...", e);
+				logger.warn("A provider failed. Continuing...", e);
 			}
-		}
-		if (values.isEmpty()) {
-			throw new ProviderException("No provider successfully returned a value");
 		}
 		return values;
 	}

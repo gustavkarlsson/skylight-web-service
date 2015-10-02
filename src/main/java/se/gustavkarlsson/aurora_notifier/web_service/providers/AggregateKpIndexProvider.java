@@ -17,7 +17,7 @@ public class AggregateKpIndexProvider extends AggregateProvider<KpIndexReport> {
 	public KpIndexReport getValue() throws ProviderException {
 		List<KpIndexReport> values = getValues();
 		if (values.isEmpty()) {
-			throw new ProviderException("No values to provide aggregate result");
+			throw new ProviderException("No values to provide result");
 		}
 
 		long latestTimestamp = 0;

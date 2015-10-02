@@ -49,7 +49,7 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexRe
 			KpIndexReport kpIndexReport = new KpIndexReport(kpIndexValue, timestampMillis);
 			timerContext.stop();
 			return kpIndexReport;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			errorsMeter.mark();
 			throw new ProviderException(e);
 		}
@@ -64,15 +64,11 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexRe
 		return content;
 	}
 
-	private float parseKpIndex(final String content) throws ProviderException {
-		try {
-			final String[] lines = content.split("\\n");
-			final String lastLine = lines[lines.length - 1];
-			final String[] lastLineSplit = lastLine.split("\\s+");
-			final String kpIndexString = lastLineSplit[17];
-			return Float.parseFloat(kpIndexString);
-		} catch (RuntimeException e) {
-			throw new ProviderException(e);
-		}
+	private float parseKpIndex(final String content) {
+		final String[] lines = content.split("\\n");
+		final String lastLine = lines[lines.length - 1];
+		final String[] lastLineSplit = lastLine.split("\\s+");
+		final String kpIndexString = lastLineSplit[17];
+		return Float.parseFloat(kpIndexString);
 	}
 }

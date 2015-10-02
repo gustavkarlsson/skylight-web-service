@@ -62,7 +62,7 @@ public class AuroraNotifierWebServiceApplication extends Application<AuroraNotif
 
 	private void setupKpIndexResource() {
 		final Provider<KpIndexReport> kpIndexProvider = createKpIndexProvider();
-		final KpIndexResource kpIndexResource = new KpIndexResource(kpIndexProvider, metrics);
+		final KpIndexResource kpIndexResource = new KpIndexResource(kpIndexProvider);
 		jersey.register(kpIndexResource);
 	}
 

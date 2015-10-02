@@ -11,7 +11,6 @@ import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
 
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -56,15 +55,15 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexReport> 
 			KpIndexReport kpIndexReport = new KpIndexReport(kpIndex, timestampMillis);
 			timerContext.stop();
 			return kpIndexReport;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			errorsMeter.mark();
 			throw new ProviderException(e);
 		}
 	}
 
-	private float parseKpIndex(final String text) throws ProviderException {
+	private float parseKpIndex(final String text) {
 		if (!pkIndexPattern.matcher(text).matches()) {
-			throw new ProviderException("Invalid Kp index: '" + text + "'");
+			throw new IllegalArgumentException("Invalid Kp index: '" + text + "'");
 		}
 		float whole = Float.valueOf(String.valueOf(text.charAt(0)));
 		String suffix = text.substring(1);

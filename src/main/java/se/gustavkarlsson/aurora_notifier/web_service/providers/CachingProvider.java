@@ -28,7 +28,7 @@ public class CachingProvider<T> implements Provider<T> {
 			try {
 				update();
 			} catch (ProviderException e) {
-				logger.warn("Failed to update value. Falling back to cached");
+				logger.warn("Failed to update value. Falling back to cached value", e);
 			}
 		}
 		if (!cachedExists()) {
