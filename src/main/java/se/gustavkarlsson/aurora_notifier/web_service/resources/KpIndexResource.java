@@ -28,6 +28,8 @@ public class KpIndexResource implements KpIndexService {
 	@Timed
 	@ExceptionMetered
 	public Timestamped<Float> get() {
-		return provider.getValue();
+		synchronized (this) {
+			return provider.getValue();
+		}
 	}
 }
