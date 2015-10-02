@@ -3,8 +3,6 @@ package se.gustavkarlsson.aurora_notifier.web_service.resources;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.annotation.Timed;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
 import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
@@ -21,8 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Path("/kp-index")
 @Produces(MediaType.APPLICATION_JSON)
 public class KpIndexResource implements KpIndexService {
-
-	private static final Logger logger = LoggerFactory.getLogger(KpIndexResource.class);
 
 	private final Provider<KpIndexReport> provider;
 	private final Meter errorsMeter;

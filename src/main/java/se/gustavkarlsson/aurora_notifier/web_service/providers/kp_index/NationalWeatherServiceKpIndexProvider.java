@@ -47,6 +47,7 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexRe
 			float kpIndexValue = parseKpIndex(urlContent);
 			long timestampMillis = System.currentTimeMillis();
 			KpIndexReport kpIndexReport = new KpIndexReport(kpIndexValue, timestampMillis);
+			timerContext.stop();
 			return kpIndexReport;
 		} catch (IOException e) {
 			errorsMeter.mark();

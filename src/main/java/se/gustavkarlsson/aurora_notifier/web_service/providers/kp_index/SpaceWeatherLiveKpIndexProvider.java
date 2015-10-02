@@ -54,6 +54,7 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexReport> 
 			float kpIndex = parseKpIndex(text);
 			long timestampMillis = System.currentTimeMillis();
 			KpIndexReport kpIndexReport = new KpIndexReport(kpIndex, timestampMillis);
+			timerContext.stop();
 			return kpIndexReport;
 		} catch (IOException e) {
 			errorsMeter.mark();

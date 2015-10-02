@@ -13,10 +13,6 @@ public class AggregateKpIndexProvider extends AggregateProvider<KpIndexReport> {
 		super(checkNotNull(providers));
 	}
 
-	public AggregateKpIndexProvider() {
-		super();
-	}
-
 	@Override
 	public KpIndexReport getValue() throws ProviderException {
 		List<KpIndexReport> values = getValues();

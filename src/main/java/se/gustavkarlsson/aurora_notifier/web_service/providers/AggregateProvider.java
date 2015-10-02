@@ -21,13 +21,6 @@ public abstract class AggregateProvider<T> implements Provider<T> {
 		this.providers.addAll(providers);
 	}
 
-	public AggregateProvider() {
-	}
-
-	public void addProvider(Provider<T> provider) {
-		providers.add(checkNotNull(provider));
-	}
-
 	protected List<T> getValues() throws ProviderException {
 		checkState(!providers.isEmpty(), "No providers to get value from");
 		List<T> values = new ArrayList<>();

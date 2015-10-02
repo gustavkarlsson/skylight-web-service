@@ -9,8 +9,4 @@ public class ProviderException extends Exception {
 	public ProviderException(Throwable cause) {
 		super(cause);
 	}
-
-	public ProviderException(String message, Throwable cause) {
-		super(message, cause);
-	}
 }
