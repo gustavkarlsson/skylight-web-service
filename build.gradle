@@ -24,6 +24,7 @@ dependencies {
 		dropwizardVersion = "0.8.2"
 		jsoupVersion = "1.8.3"
 		commonVersion = "0ba1846b93"
+		dropwizardGuiceVersion = "0.8.3.0"
 	}
 
 	testCompile "junit:junit:" + junitVersion
@@ -31,6 +32,7 @@ dependencies {
 	compile "io.dropwizard:dropwizard-metrics:" + dropwizardVersion
 	compile "org.jsoup:jsoup:" + jsoupVersion
 	compile "com.github.gustavkarlsson:aurora-notifier-common:" + commonVersion
+	compile "com.hubspot.dropwizard:dropwizard-guice:" + dropwizardGuiceVersion
 }
 
 jar {
