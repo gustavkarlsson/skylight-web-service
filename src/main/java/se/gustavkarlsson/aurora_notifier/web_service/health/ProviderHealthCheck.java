@@ -1,14 +1,13 @@
 package se.gustavkarlsson.aurora_notifier.web_service.health;
 
 import com.codahale.metrics.health.HealthCheck;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 
 public class ProviderHealthCheck extends HealthCheck {
 
-	private final Provider<KpIndexReport> provider;
+	private final Provider<?> provider;
 
-	public ProviderHealthCheck(Provider<KpIndexReport> provider) {
+	public ProviderHealthCheck(Provider<?> provider) {
 		this.provider = provider;
 	}
 

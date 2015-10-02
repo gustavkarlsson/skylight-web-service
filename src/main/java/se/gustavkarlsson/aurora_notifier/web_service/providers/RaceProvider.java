@@ -21,10 +21,23 @@ public class RaceProvider<T> implements Provider<T> {
 
 	@Override
 	public T getValue() throws ProviderException {
-		Optional<T> winnerValue = providers.parallelStream().map(Provider::getValue).findAny();
+		Optional<T> winnerValue = providers
+				.parallelStream()
+				.map(this::tryGetValue)
+				.filter(v -> v != null)
+				.findAny();
 		if (!winnerValue.isPresent()) {
 			throw new ProviderException("No provider produced a value");
 		}
 		return winnerValue.get();
+	}
+
+	private T tryGetValue(Provider<T> provider) {
+		try {
+			return provider.getValue();
+		} catch (ProviderException e) {
+			// Exceptions should be logged in provider
+			return null;
+		}
 	}
 }

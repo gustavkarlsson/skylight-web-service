@@ -3,7 +3,8 @@ package se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
 
@@ -14,7 +15,9 @@ import java.util.Scanner;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexReport> {
+public class NationalWeatherServiceKpIndexProvider implements Provider<Float> {
+
+	private static final Logger logger = LoggerFactory.getLogger(NationalWeatherServiceKpIndexProvider.class);
 
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
 
@@ -40,17 +43,16 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<KpIndexRe
 	}
 
 	@Override
-	public KpIndexReport getValue() throws ProviderException {
+	public Float getValue() throws ProviderException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
 			URL url = new URL(URL);
 			String urlContent = getUrlContent(url);
-			float kpIndexValue = parseKpIndex(urlContent);
-			long timestampMillis = System.currentTimeMillis();
-			KpIndexReport kpIndexReport = new KpIndexReport(kpIndexValue, timestampMillis);
+			float kpIndex = parseKpIndex(urlContent);
 			timerContext.stop();
-			return kpIndexReport;
+			return kpIndex;
 		} catch (Exception e) {
 			errorsMeter.mark();
+			logger.warn("Failed to get value", e);
 			throw new ProviderException(e);
 		}
 	}
