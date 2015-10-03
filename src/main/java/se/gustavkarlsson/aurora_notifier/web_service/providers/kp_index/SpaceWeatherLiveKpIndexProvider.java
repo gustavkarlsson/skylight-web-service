@@ -7,7 +7,8 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
 
@@ -15,7 +16,9 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexReport> {
+public class SpaceWeatherLiveKpIndexProvider implements Provider<Float> {
+
+	private static final Logger logger = LoggerFactory.getLogger(SpaceWeatherLiveKpIndexProvider.class);
 
 	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity";
 	private static final String CSS_PATH = "body > div.body > div > div:nth-child(1) > div.col-sx-12.col-sm-8 > div:nth-child(6) > div:nth-child(1) > div > h5 > a:nth-child(4)";
@@ -44,19 +47,18 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<KpIndexReport> 
 	}
 
 	@Override
-	public KpIndexReport getValue() throws ProviderException {
+	public Float getValue() throws ProviderException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
 			Connection connection = Jsoup.connect(URL);
 			Document document = connection.get();
 			Elements elements = document.select(CSS_PATH);
 			String text = elements.text();
 			float kpIndex = parseKpIndex(text);
-			long timestampMillis = System.currentTimeMillis();
-			KpIndexReport kpIndexReport = new KpIndexReport(kpIndex, timestampMillis);
 			timerContext.stop();
-			return kpIndexReport;
+			return kpIndex;
 		} catch (Exception e) {
 			errorsMeter.mark();
+			logger.warn("Failed to get value", e);
 			throw new ProviderException(e);
 		}
 	}

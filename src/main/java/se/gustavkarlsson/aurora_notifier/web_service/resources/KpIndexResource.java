@@ -2,7 +2,7 @@ package se.gustavkarlsson.aurora_notifier.web_service.resources;
 
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
-import se.gustavkarlsson.aurora_notifier.common.domain.KpIndexReport;
+import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 
@@ -17,9 +17,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Produces(MediaType.APPLICATION_JSON)
 public class KpIndexResource implements KpIndexService {
 
-	private final Provider<KpIndexReport> provider;
+	private final Provider<Timestamped<Float>> provider;
 
-	public KpIndexResource(Provider<KpIndexReport> provider) {
+	public KpIndexResource(Provider<Timestamped<Float>> provider) {
 		this.provider = checkNotNull(provider);
 	}
 
@@ -27,7 +27,9 @@ public class KpIndexResource implements KpIndexService {
 	@GET
 	@Timed
 	@ExceptionMetered
-	public KpIndexReport getKpIndex() {
-		return provider.getValue();
+	public Timestamped<Float> get() {
+		synchronized (this) {
+			return provider.getValue();
+		}
 	}
 }

@@ -4,18 +4,18 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CachingProvider<T> implements Provider<T> {
+public class CachingProvider<T> implements Provider<Timestamped<T>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(CachingProvider.class);
 
 	private final Provider<T> provider;
 	private final Duration invalidateDuration;
 
-	private DateTime lastUpdateTime = null;
-	private T cached = null;
+	private Timestamped<T> cached = null;
 
 	public CachingProvider(Provider<T> provider, Duration invalidateDuration) {
 		this.provider = checkNotNull(provider);
@@ -23,8 +23,8 @@ public class CachingProvider<T> implements Provider<T> {
 	}
 
 	@Override
-	public T getValue() throws ProviderException {
-		if (needsUpdate()) {
+	public Timestamped<T> getValue() throws ProviderException {
+		if (!isValid()) {
 			try {
 				update();
 			} catch (ProviderException e) {
@@ -37,24 +37,15 @@ public class CachingProvider<T> implements Provider<T> {
 		return cached;
 	}
 
-	private boolean needsUpdate() {
-		return !cachedExists() || !isValid();
-	}
-
 	private boolean isValid() {
-		if (!cachedExists()) {
-			return false;
-		}
-		DateTime updateNeededTime = lastUpdateTime.plus(invalidateDuration);
-		return DateTime.now().isBefore(updateNeededTime);
+		return cachedExists() && DateTime.now().minus(invalidateDuration).isBefore(cached.getTimestamp());
 	}
 
 	private boolean cachedExists() {
-		return lastUpdateTime != null;
+		return cached != null;
 	}
 
 	private void update() throws ProviderException {
-		cached = provider.getValue();
-		lastUpdateTime = new DateTime(DateTime.now());
+		cached = new Timestamped<>(provider.getValue());
 	}
 }

@@ -7,7 +7,7 @@ plugins {
 sourceCompatibility = 1.8
 group = "se.gustavkarlsson.aurora-notifier"
 version = "1.0-SNAPSHOT"
-mainClassName = "se.gustavkarlsson.aurora_notifier.web_service.app.AuroraNotifierWebServiceApplication"
+mainClassName = "se.gustavkarlsson.aurora_notifier.web_service.app.AuroraApplication"
 
 wrapper() {
 	gradleVersion = "2.7"
@@ -23,7 +23,7 @@ dependencies {
 		junitVersion = "4.12"
 		dropwizardVersion = "0.8.2"
 		jsoupVersion = "1.8.3"
-		commonVersion = "0ba1846b93"
+		commonVersion = "release-1.1.0"
 		dropwizardGuiceVersion = "0.8.3.0"
 	}
 
