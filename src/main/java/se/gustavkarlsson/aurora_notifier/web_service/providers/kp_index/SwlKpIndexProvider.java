@@ -3,6 +3,7 @@ package se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.inject.Inject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,9 +17,9 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class SpaceWeatherLiveKpIndexProvider implements Provider<Float> {
+public class SwlKpIndexProvider implements Provider<Float> {
 
-	private static final Logger logger = LoggerFactory.getLogger(SpaceWeatherLiveKpIndexProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(SwlKpIndexProvider.class);
 
 	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity";
 	private static final String CSS_PATH = "body > div.body > div > div:nth-child(1) > div.col-sx-12.col-sm-8 > div:nth-child(6) > div:nth-child(1) > div > h5 > a:nth-child(4)";
@@ -26,15 +27,16 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<Float> {
 	public static final Pattern pkIndexPattern = Pattern.compile("(0\\+?|[1-8](-|\\+)?|9-?)");
 
 	private final Timer getValueTimer;
-	private final Meter errorsMeter;
+	private final Meter exceptionsMeter;
 
-	public SpaceWeatherLiveKpIndexProvider(MetricRegistry metrics) {
+	@Inject
+	public SwlKpIndexProvider(MetricRegistry metrics) {
 		checkNotNull(metrics);
 		getValueTimer = createGetValueTimer(metrics);
-		errorsMeter = createErrorsMeter(metrics);
+		exceptionsMeter = createExceptionsMeter(metrics);
 	}
 
-	public SpaceWeatherLiveKpIndexProvider() {
+	public SwlKpIndexProvider() {
 		this(new MetricRegistry());
 	}
 
@@ -42,8 +44,8 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<Float> {
 		return metrics.timer(MetricRegistry.name(getClass(), "getValue"));
 	}
 
-	private Meter createErrorsMeter(MetricRegistry metrics) {
-		return metrics.meter(MetricRegistry.name(getClass(), "errors"));
+	private Meter createExceptionsMeter(MetricRegistry metrics) {
+		return metrics.meter(MetricRegistry.name(getClass(), "exceptions"));
 	}
 
 	@Override
@@ -57,7 +59,7 @@ public class SpaceWeatherLiveKpIndexProvider implements Provider<Float> {
 			timerContext.stop();
 			return kpIndex;
 		} catch (Exception e) {
-			errorsMeter.mark();
+			exceptionsMeter.mark();
 			logger.warn("Failed to get value", e);
 			throw new ProviderException(e);
 		}

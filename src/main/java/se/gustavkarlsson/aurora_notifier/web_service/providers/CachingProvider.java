@@ -1,12 +1,19 @@
 package se.gustavkarlsson.aurora_notifier.web_service.providers;
 
+import com.google.inject.BindingAnnotation;
+import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class CachingProvider<T> implements Provider<Timestamped<T>> {
 
@@ -17,9 +24,10 @@ public class CachingProvider<T> implements Provider<Timestamped<T>> {
 
 	private Timestamped<T> cached = null;
 
-	public CachingProvider(Provider<T> provider, Duration invalidateDuration) {
+	@Inject
+	public CachingProvider(Provider<T> provider, @CacheDuration Duration cacheDuration) {
 		this.provider = checkNotNull(provider);
-		this.invalidateDuration = checkNotNull(invalidateDuration);
+		this.invalidateDuration = checkNotNull(cacheDuration);
 	}
 
 	@Override
@@ -48,4 +56,8 @@ public class CachingProvider<T> implements Provider<Timestamped<T>> {
 	private void update() throws ProviderException {
 		cached = new Timestamped<>(provider.getValue());
 	}
+
+	@BindingAnnotation
+	@Target({ FIELD, PARAMETER, METHOD }) @Retention(RUNTIME)
+	public static @interface CacheDuration {}
 }

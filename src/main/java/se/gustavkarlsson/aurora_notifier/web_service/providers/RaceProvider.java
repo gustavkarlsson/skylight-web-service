@@ -1,9 +1,11 @@
 package se.gustavkarlsson.aurora_notifier.web_service.providers;
 
+import com.google.inject.Inject;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,7 +14,8 @@ public class RaceProvider<T> implements Provider<T> {
 
 	private final List<Provider<T>> providers = new ArrayList<>();
 
-	public RaceProvider(Collection<Provider<T>> providers) {
+	@Inject
+	public RaceProvider(Set<Provider<T>> providers) {
 		checkNotNull(providers);
 		checkArgument(!providers.isEmpty(), "No providers");
 		checkArgument(!providers.contains(null), "One provider is null");

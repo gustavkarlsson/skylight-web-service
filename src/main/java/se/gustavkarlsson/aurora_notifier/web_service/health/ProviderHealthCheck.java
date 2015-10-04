@@ -1,11 +1,11 @@
 package se.gustavkarlsson.aurora_notifier.web_service.health;
 
-import com.codahale.metrics.health.HealthCheck;
+import com.hubspot.dropwizard.guice.InjectableHealthCheck;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
 
-public class ProviderHealthCheck extends HealthCheck {
+public abstract class ProviderHealthCheck extends InjectableHealthCheck {
 
-	private final Provider<?> provider;
+	protected final Provider<?> provider;
 
 	public ProviderHealthCheck(Provider<?> provider) {
 		this.provider = provider;

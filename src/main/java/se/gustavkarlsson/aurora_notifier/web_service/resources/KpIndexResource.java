@@ -2,6 +2,7 @@ package se.gustavkarlsson.aurora_notifier.web_service.resources;
 
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
+import com.google.inject.Inject;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
@@ -19,6 +20,7 @@ public class KpIndexResource implements KpIndexService {
 
 	private final Provider<Timestamped<Float>> provider;
 
+	@Inject
 	public KpIndexResource(Provider<Timestamped<Float>> provider) {
 		this.provider = checkNotNull(provider);
 	}

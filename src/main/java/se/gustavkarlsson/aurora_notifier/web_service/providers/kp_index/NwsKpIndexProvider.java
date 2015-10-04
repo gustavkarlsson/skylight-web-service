@@ -3,6 +3,7 @@ package se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
@@ -15,22 +16,23 @@ import java.util.Scanner;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class NationalWeatherServiceKpIndexProvider implements Provider<Float> {
+public class NwsKpIndexProvider implements Provider<Float> {
 
-	private static final Logger logger = LoggerFactory.getLogger(NationalWeatherServiceKpIndexProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(NwsKpIndexProvider.class);
 
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
 
 	private final Timer getValueTimer;
-	private final Meter errorsMeter;
+	private final Meter exceptionsMeter;
 
-	public NationalWeatherServiceKpIndexProvider(MetricRegistry metrics) {
+	@Inject
+	public NwsKpIndexProvider(MetricRegistry metrics) {
 		checkNotNull(metrics);
 		getValueTimer = createGetValueTimer(metrics);
-		errorsMeter = createErrorsMeter(metrics);
+		exceptionsMeter = createExceptionsMeter(metrics);
 	}
 
-	public NationalWeatherServiceKpIndexProvider() {
+	public NwsKpIndexProvider() {
 		this(new MetricRegistry());
 	}
 
@@ -38,8 +40,8 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<Float> {
 		return metrics.timer(MetricRegistry.name(getClass(), "getValue"));
 	}
 
-	private Meter createErrorsMeter(MetricRegistry metrics) {
-		return metrics.meter(MetricRegistry.name(getClass(), "errors"));
+	private Meter createExceptionsMeter(MetricRegistry metrics) {
+		return metrics.meter(MetricRegistry.name(getClass(), "exceptions"));
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class NationalWeatherServiceKpIndexProvider implements Provider<Float> {
 			timerContext.stop();
 			return kpIndex;
 		} catch (Exception e) {
-			errorsMeter.mark();
+			exceptionsMeter.mark();
 			logger.warn("Failed to get value", e);
 			throw new ProviderException(e);
 		}
