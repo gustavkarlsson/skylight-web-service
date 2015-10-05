@@ -32,10 +32,6 @@ public class NwsKpIndexProvider implements Provider<Float> {
 		exceptionsMeter = createExceptionsMeter(metrics);
 	}
 
-	public NwsKpIndexProvider() {
-		this(new MetricRegistry());
-	}
-
 	private Timer createGetValueTimer(MetricRegistry metrics) {
 		return metrics.timer(MetricRegistry.name(getClass(), "getValue"));
 	}

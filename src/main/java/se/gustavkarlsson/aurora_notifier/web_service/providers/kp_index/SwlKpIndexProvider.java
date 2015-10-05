@@ -36,10 +36,6 @@ public class SwlKpIndexProvider implements Provider<Float> {
 		exceptionsMeter = createExceptionsMeter(metrics);
 	}
 
-	public SwlKpIndexProvider() {
-		this(new MetricRegistry());
-	}
-
 	private Timer createGetValueTimer(MetricRegistry metrics) {
 		return metrics.timer(MetricRegistry.name(getClass(), "getValue"));
 	}
