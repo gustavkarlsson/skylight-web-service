@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Path("/kp-index")
+@Path("")
 @Produces(MediaType.APPLICATION_JSON)
 public class KpIndexResource implements KpIndexService {
 
@@ -27,6 +27,7 @@ public class KpIndexResource implements KpIndexService {
 
 	@Override
 	@GET
+	@Path("/kp-index")
 	@Timed
 	@ExceptionMetered
 	public Timestamped<Float> get() {
