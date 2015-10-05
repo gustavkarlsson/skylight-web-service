@@ -23,7 +23,7 @@ dependencies {
 		junitVersion = "4.12"
 		dropwizardVersion = "0.8.2"
 		jsoupVersion = "1.8.3"
-		commonVersion = "release-1.1.0"
+		commonVersion = "aurora-notifier-common-1.2.0"
 		dropwizardGuiceVersion = "0.8.3.0"
 	}
 
