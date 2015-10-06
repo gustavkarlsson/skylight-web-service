@@ -1,8 +1,12 @@
 package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import org.joda.time.Duration;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Supplier;
 
@@ -12,6 +16,11 @@ import static org.mockito.Mockito.*;
 public class CachingSupplierTest {
 
 	private Supplier<Object> mocked;
+
+	@BeforeClass
+	public static void setupClass() {
+		((Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(Level.OFF);
+	}
 
 	@Before
 	public void setup() {
