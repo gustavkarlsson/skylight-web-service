@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index;
+package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
@@ -10,16 +10,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
+import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SupplierException;
 
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class SwlKpIndexProvider implements Provider<Float> {
+public class SwlKpIndexSupplier implements Supplier<Float> {
 
-	private static final Logger logger = LoggerFactory.getLogger(SwlKpIndexProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(SwlKpIndexSupplier.class);
 
 	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity";
 	private static final String CSS_PATH = "body > div.body > div > div:nth-child(1) > div.col-sx-12.col-sm-8 > div:nth-child(6) > div:nth-child(1) > div > h5 > a:nth-child(4)";
@@ -30,7 +30,7 @@ public class SwlKpIndexProvider implements Provider<Float> {
 	private final Meter exceptionsMeter;
 
 	@Inject
-	public SwlKpIndexProvider(MetricRegistry metrics) {
+	public SwlKpIndexSupplier(MetricRegistry metrics) {
 		checkNotNull(metrics);
 		getValueTimer = createGetValueTimer(metrics);
 		exceptionsMeter = createExceptionsMeter(metrics);
@@ -45,7 +45,7 @@ public class SwlKpIndexProvider implements Provider<Float> {
 	}
 
 	@Override
-	public Float getValue() throws ProviderException {
+	public Float get() throws SupplierException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
 			Connection connection = Jsoup.connect(URL);
 			Document document = connection.get();
@@ -57,7 +57,7 @@ public class SwlKpIndexProvider implements Provider<Float> {
 		} catch (Exception e) {
 			exceptionsMeter.mark();
 			logger.warn("Failed to get value", e);
-			throw new ProviderException(e);
+			throw new SupplierException(e);
 		}
 	}
 

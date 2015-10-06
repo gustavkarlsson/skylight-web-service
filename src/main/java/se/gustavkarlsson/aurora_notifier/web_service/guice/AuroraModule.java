@@ -9,26 +9,27 @@ import io.dropwizard.setup.Environment;
 import org.joda.time.Duration;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.web_service.config.AuroraConfiguration;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.CachingProvider;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.RaceProvider;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index.NwsKpIndexProvider;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index.SwlKpIndexProvider;
+import se.gustavkarlsson.aurora_notifier.web_service.suppliers.CachingSupplier;
+import se.gustavkarlsson.aurora_notifier.web_service.suppliers.RaceSupplier;
+import se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index.NwsKpIndexSupplier;
+import se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index.SwlKpIndexSupplier;
+
+import java.util.function.Supplier;
 
 public class AuroraModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(new TypeLiteral<Provider<Timestamped<Float>>>() {}).to(new TypeLiteral<CachingProvider<Float>>() {});
-		bind(new TypeLiteral<Provider<Float>>() {}).to(new TypeLiteral<RaceProvider<Float>>() {});
+		bind(new TypeLiteral<Supplier<Timestamped<Float>>>() {}).to(new TypeLiteral<CachingSupplier<Float>>() {});
+		bind(new TypeLiteral<Supplier<Float>>() {}).to(new TypeLiteral<RaceSupplier<Float>>() {});
 
-		Multibinder<Provider<Float>> actionBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<Provider<Float>>() {});
-		actionBinder.addBinding().to(NwsKpIndexProvider.class);
-		actionBinder.addBinding().to(SwlKpIndexProvider.class);
+		Multibinder<Supplier<Float>> actionBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<Supplier<Float>>() {});
+		actionBinder.addBinding().to(NwsKpIndexSupplier.class);
+		actionBinder.addBinding().to(SwlKpIndexSupplier.class);
 	}
 
 	@Provides
-	@CachingProvider.CacheDuration
+	@CachingSupplier.CacheDuration
 	public Duration provideKpIndexCacheDuration(AuroraConfiguration config) {
 		return config.getKpIndexCacheDuration();
 	}

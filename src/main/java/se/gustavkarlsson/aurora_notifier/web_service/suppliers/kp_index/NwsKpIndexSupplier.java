@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.providers.kp_index;
+package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
@@ -6,19 +6,19 @@ import com.codahale.metrics.Timer;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.Provider;
-import se.gustavkarlsson.aurora_notifier.web_service.providers.ProviderException;
+import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SupplierException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class NwsKpIndexProvider implements Provider<Float> {
+public class NwsKpIndexSupplier implements Supplier<Float> {
 
-	private static final Logger logger = LoggerFactory.getLogger(NwsKpIndexProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(NwsKpIndexSupplier.class);
 
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
 
@@ -26,7 +26,7 @@ public class NwsKpIndexProvider implements Provider<Float> {
 	private final Meter exceptionsMeter;
 
 	@Inject
-	public NwsKpIndexProvider(MetricRegistry metrics) {
+	public NwsKpIndexSupplier(MetricRegistry metrics) {
 		checkNotNull(metrics);
 		getValueTimer = createGetValueTimer(metrics);
 		exceptionsMeter = createExceptionsMeter(metrics);
@@ -41,7 +41,7 @@ public class NwsKpIndexProvider implements Provider<Float> {
 	}
 
 	@Override
-	public Float getValue() throws ProviderException {
+	public Float get() throws SupplierException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
 			URL url = new URL(URL);
 			String urlContent = getUrlContent(url);
@@ -51,7 +51,7 @@ public class NwsKpIndexProvider implements Provider<Float> {
 		} catch (Exception e) {
 			exceptionsMeter.mark();
 			logger.warn("Failed to get value", e);
-			throw new ProviderException(e);
+			throw new SupplierException(e);
 		}
 	}
 
