@@ -2,17 +2,17 @@ package se.gustavkarlsson.aurora_notifier.web_service.providers;
 
 import com.google.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RaceProvider<T> implements Provider<T> {
 
-	private final List<Provider<T>> providers = new ArrayList<>();
+	private final Set<Provider<T>> providers = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
 	@Inject
 	public RaceProvider(Set<Provider<T>> providers) {
@@ -26,7 +26,7 @@ public class RaceProvider<T> implements Provider<T> {
 	public T getValue() throws ProviderException {
 		Optional<T> winnerValue = providers
 				.parallelStream()
-				.map(this::tryGetValue)
+				.map(RaceProvider::tryGetValue)
 				.filter(v -> v != null)
 				.findAny();
 		if (!winnerValue.isPresent()) {
@@ -35,7 +35,7 @@ public class RaceProvider<T> implements Provider<T> {
 		return winnerValue.get();
 	}
 
-	private T tryGetValue(Provider<T> provider) {
+	private static <T> T tryGetValue(Provider<T> provider) {
 		try {
 			return provider.getValue();
 		} catch (ProviderException e) {

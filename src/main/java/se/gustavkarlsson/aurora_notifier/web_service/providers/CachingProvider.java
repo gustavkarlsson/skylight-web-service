@@ -11,6 +11,7 @@ import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -28,6 +29,7 @@ public class CachingProvider<T> implements Provider<Timestamped<T>> {
 	public CachingProvider(Provider<T> provider, @CacheDuration Duration cacheDuration) {
 		this.provider = checkNotNull(provider);
 		this.invalidateDuration = checkNotNull(cacheDuration);
+		checkArgument(cacheDuration.getMillis() >= 0, "Duration is negative: " + cacheDuration);
 	}
 
 	@Override
