@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.app;
+package se.gustavkarlsson.aurora_notifier.web_service;
 
 
 import com.google.inject.Module;
@@ -6,8 +6,6 @@ import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import se.gustavkarlsson.aurora_notifier.web_service.config.AuroraConfiguration;
-import se.gustavkarlsson.aurora_notifier.web_service.guice.AuroraModule;
 
 public class AuroraApplication extends Application<AuroraConfiguration> {
 

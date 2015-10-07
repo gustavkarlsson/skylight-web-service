@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.app;
+package se.gustavkarlsson.aurora_notifier.web_service;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
@@ -15,7 +15,6 @@ import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
-import se.gustavkarlsson.aurora_notifier.web_service.config.AuroraConfiguration;
 
 import java.util.function.Supplier;
 

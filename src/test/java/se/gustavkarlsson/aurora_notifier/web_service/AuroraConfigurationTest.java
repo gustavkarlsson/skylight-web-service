@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.config;
+package se.gustavkarlsson.aurora_notifier.web_service;
 
 
 import ch.qos.logback.classic.Level;

@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.guice;
+package se.gustavkarlsson.aurora_notifier.web_service;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.inject.AbstractModule;
@@ -8,7 +8,6 @@ import com.google.inject.multibindings.Multibinder;
 import io.dropwizard.setup.Environment;
 import org.joda.time.Duration;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
-import se.gustavkarlsson.aurora_notifier.web_service.config.AuroraConfiguration;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.CachingSupplier;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.RaceSupplier;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index.NwsKpIndexSupplier;

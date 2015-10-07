@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.config;
+package se.gustavkarlsson.aurora_notifier.web_service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
