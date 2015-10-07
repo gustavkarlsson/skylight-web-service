@@ -32,6 +32,7 @@ dependencies {
 	testCompile "junit:junit:4.12"
 	testCompile "nl.jqno.equalsverifier:equalsverifier:1.7.5"
 	testCompile "io.dropwizard:dropwizard-testing:" + dropwizardVersion
+	testCompile "io.dropwizard:dropwizard-client:" + dropwizardVersion
 }
 
 jar {
