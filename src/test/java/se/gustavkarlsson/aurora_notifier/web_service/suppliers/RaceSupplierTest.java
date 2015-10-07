@@ -1,8 +1,8 @@
 package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import org.junit.Test;
+import org.mockito.internal.util.collections.Sets;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,7 +41,7 @@ public class RaceSupplierTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void nullSupplierThrowsIae() {
-		new RaceSupplier<>(new HashSet<>(Arrays.asList(mockFastSupplier(), null)));
+		new RaceSupplier<>(Sets.newSet(mockFastSupplier(), null));
 	}
 
 	@Test
@@ -54,6 +54,16 @@ public class RaceSupplierTest {
 		RaceSupplier<String> raceSupplier = new RaceSupplier<>(suppliers);
 		Object winner = raceSupplier.get();
 		assertThat(winner).isEqualTo("fast");
+	}
+
+	@Test(expected = SupplierException.class)
+	public void throwsExceptionIfNoSupplierIsSuccessful() {
+		Supplier supplier = mock(Supplier.class);
+		when(supplier.get()).thenThrow(SupplierException.class);
+
+		Set<Supplier<String>> suppliers = Sets.newSet(supplier);
+		RaceSupplier<String> raceSupplier = new RaceSupplier<>(suppliers);
+		raceSupplier.get();
 	}
 
 }
