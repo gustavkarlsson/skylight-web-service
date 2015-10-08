@@ -1,10 +1,10 @@
 package se.gustavkarlsson.aurora_notifier.web_service.health;
 
-import com.hubspot.dropwizard.guice.InjectableHealthCheck;
+import ru.vyarus.dropwizard.guice.module.installer.feature.health.NamedHealthCheck;
 
 import java.util.function.Supplier;
 
-public abstract class SupplierHealthCheck extends InjectableHealthCheck {
+public abstract class SupplierHealthCheck extends NamedHealthCheck {
 
 	protected final Supplier<?> supplier;
 

@@ -1,11 +1,10 @@
 package se.gustavkarlsson.aurora_notifier.web_service;
 
 
-import com.google.inject.Module;
-import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import ru.vyarus.dropwizard.guice.GuiceBundle;
 
 public class AuroraApplication extends Application<AuroraConfiguration> {
 
@@ -22,19 +21,14 @@ public class AuroraApplication extends Application<AuroraConfiguration> {
 
 	@Override
 	public void initialize(Bootstrap<AuroraConfiguration> bootstrap) {
-		GuiceBundle<AuroraConfiguration> guiceBundle = GuiceBundle.<AuroraConfiguration>newBuilder()
-				.addModule(getModule())
+		GuiceBundle<AuroraConfiguration> guiceBundle = GuiceBundle.<AuroraConfiguration>builder()
 				.enableAutoConfig("se.gustavkarlsson.aurora_notifier.web_service")
-				.setConfigClass(AuroraConfiguration.class)
+				.modules(new AuroraModule())
 				.build();
 		bootstrap.addBundle(guiceBundle);
 	}
 
 	@Override
 	public void run(AuroraConfiguration configuration, Environment environment) {
-	}
-
-	protected Module getModule() {
-		return new AuroraModule();
 	}
 }

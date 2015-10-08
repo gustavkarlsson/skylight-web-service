@@ -1,9 +1,8 @@
 package se.gustavkarlsson.aurora_notifier.web_service;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
-import com.squarespace.jersey2.guice.BootstrapUtils;
+import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -11,9 +10,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import ru.vyarus.dropwizard.guice.GuiceBundle;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 
 import java.util.function.Supplier;
@@ -25,11 +24,6 @@ public class AuroraApplicationIntegrationTest {
 	@ClassRule
 	public static final DropwizardAppRule<AuroraConfiguration> RULE =
 			new DropwizardAppRule<>(AuroraTestApplication.class, null);
-
-	@AfterClass
-	public static void tearDown() {
-		BootstrapUtils.reset();
-	}
 
 	@Test
 	public void getKpIndexSucceeds() throws Exception {
@@ -46,8 +40,12 @@ public class AuroraApplicationIntegrationTest {
 
 	public static class AuroraTestApplication extends AuroraApplication {
 		@Override
-		protected Module getModule() {
-			return new AuroraTestModule();
+		public void initialize(Bootstrap<AuroraConfiguration> bootstrap) {
+			GuiceBundle<AuroraConfiguration> guiceBundle = GuiceBundle.<AuroraConfiguration>builder()
+					.enableAutoConfig("se.gustavkarlsson.aurora_notifier.web_service")
+					.modules(new AuroraTestModule())
+					.build();
+			bootstrap.addBundle(guiceBundle);
 		}
 
 		private static class AuroraTestModule extends AbstractModule {
