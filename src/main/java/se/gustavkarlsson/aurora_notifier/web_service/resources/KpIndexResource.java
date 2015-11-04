@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
-import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,9 +13,9 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Path("")
+@Path("/kp-index")
 @Produces(MediaType.APPLICATION_JSON)
-public class KpIndexResource implements KpIndexService {
+public class KpIndexResource {
 
 	private final Supplier<Timestamped<Float>> supplier;
 
@@ -25,9 +24,7 @@ public class KpIndexResource implements KpIndexService {
 		this.supplier = checkNotNull(supplier);
 	}
 
-	@Override
 	@GET
-	@Path("/kp-index")
 	@Timed
 	@ExceptionMetered
 	public Timestamped<Float> get() {

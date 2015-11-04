@@ -26,13 +26,14 @@ dependencies {
 	compile "io.dropwizard:dropwizard-core:" + dropwizardVersion
 	compile "io.dropwizard:dropwizard-metrics:" + dropwizardVersion
 	compile "org.jsoup:jsoup:1.8.3"
-	compile "com.github.gustavkarlsson:aurora-notifier-common:aurora-notifier-common-1.2.0"
 	compile "ru.vyarus:dropwizard-guicey:3.1.0"
+	compile "com.github.gustavkarlsson:aurora-notifier-common:aurora-notifier-common-1.3.0"
 
 	testCompile "junit:junit:4.12"
 	testCompile "nl.jqno.equalsverifier:equalsverifier:1.7.5"
 	testCompile "io.dropwizard:dropwizard-testing:" + dropwizardVersion
 	testCompile "io.dropwizard:dropwizard-client:" + dropwizardVersion
+	testCompile "com.squareup.retrofit:converter-jackson:2.0.0-beta2"
 }
 
 jar {
