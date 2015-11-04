@@ -57,7 +57,7 @@ public class AuroraApplicationIntegrationTest {
 	}
 
 	private static String createBaseUri() {
-		return "http://localhost:" + RULE.getLocalPort();
+		return "http://localhost:" + RULE.getLocalPort() + "/";
 	}
 
 	public static class AuroraTestApplication extends AuroraApplication {
