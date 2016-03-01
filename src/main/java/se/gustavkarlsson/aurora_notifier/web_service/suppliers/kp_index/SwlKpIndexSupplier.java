@@ -21,10 +21,9 @@ public class SwlKpIndexSupplier implements Supplier<Float> {
 
 	private static final Logger logger = LoggerFactory.getLogger(SwlKpIndexSupplier.class);
 
-	private static final String URL = "http://www.spaceweatherlive.com/en/auroral-activity";
-	private static final String CSS_PATH = "body > div.body > div > div:nth-child(1) > div.col-sx-12.col-sm-8 > div:nth-child(6) > div:nth-child(1) > div > h5 > a:nth-child(4)";
-
-	public static final Pattern pkIndexPattern = Pattern.compile("(0\\+?|[1-8](-|\\+)?|9-?)");
+	private static final String URL = "https://www.spaceweatherlive.com/en/auroral-activity/the-kp-index";
+	private static final String CSS_PATH = "body > div.body > div > div > div.col-sx-12.col-sm-8 > h5 > a:nth-child(1)";
+	private static final Pattern pkIndexPattern = Pattern.compile("(0\\+?|[1-8](-|\\+)?|9-?)");
 
 	private final Timer getValueTimer;
 	private final Meter exceptionsMeter;
@@ -47,7 +46,7 @@ public class SwlKpIndexSupplier implements Supplier<Float> {
 	@Override
 	public Float get() throws SupplierException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
-			Connection connection = Jsoup.connect(URL);
+			Connection connection = Jsoup.connect(URL).validateTLSCertificates(false);
 			Document document = connection.get();
 			Elements elements = document.select(CSS_PATH);
 			String text = elements.text();

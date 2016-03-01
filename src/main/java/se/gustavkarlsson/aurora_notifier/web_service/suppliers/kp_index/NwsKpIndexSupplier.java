@@ -68,7 +68,7 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 		final String[] lines = content.split("\\n");
 		final String lastLine = lines[lines.length - 1];
 		final String[] lastLineSplit = lastLine.split("\\s+");
-		final String kpIndexString = lastLineSplit[17];
+		final String kpIndexString = lastLineSplit[14];
 		return Float.parseFloat(kpIndexString);
 	}
 }
