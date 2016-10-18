@@ -12,22 +12,23 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.ClassRule;
 import org.junit.Test;
-import retrofit.JacksonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 
 import java.util.function.Supplier;
 
+import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuroraApplicationIntegrationTest {
 
 	@ClassRule
 	public static final DropwizardAppRule<AuroraConfiguration> RULE =
-			new DropwizardAppRule<>(AuroraTestApplication.class, null);
+			new DropwizardAppRule<>(AuroraTestApplication.class, resourceFilePath("test.yml"));
 
 	private static final Timestamped<Float> KP_INDEX = new Timestamped<>(2.0f, 1000);
 
@@ -52,7 +53,7 @@ public class AuroraApplicationIntegrationTest {
 				.build();
 		KpIndexService service = retrofit.create(KpIndexService.class);
 		Response<Timestamped<Float>> response = service.get().execute();
-		assertThat(response.isSuccess()).isTrue();
+		assertThat(response.isSuccessful()).isTrue();
 		assertThat(response.body()).isEqualTo(KP_INDEX);
 	}
 
