@@ -1,0 +1,674 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<title>The Kp-index | SpaceWeatherLive.com</title>
+	<meta charset="UTF-8" />
+	<meta name="robots" content="index, follow" />
+	<meta name="description" content="The Kp-index is a global auroral activity indicator on a scale from 0 to 9. You can use it as a guide to estimate how active the aurora is and at w..." />
+	<meta name="keywords" content="SpaceWeatherLive, Real-time, aurora community, solar wind, Kp index, kiruna, EPAM, DSCVR, aurora borealis, aurora, aurora australis, northern lights, data plots, proton flux monitor, solar activity, solar flares, sunspots, aurora alert, warnings, Sun, Space Weather, SDO, Stereo, SpaceWeatherUpdates, SpaceWeatherUpdate, Space Weather update" />
+	<!-- Facebook meta -->
+	<meta property="og:url" content="https://www.spaceweatherlive.com/en/auroral-activity/the-kp-index" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="The Kp-index" />
+	<meta property="og:description" content="The Kp-index is a global auroral activity indicator on a scale from 0 to 9. You can use it as a guide to estimate how active the aurora is and at what latitude aurora might be visible. This graph is based on the USAF Wing Kp-index. The latest observed Kp-value comes from the most recently availab..." />
+	<meta property="og:image" content="https://www.spaceweatherlive.com/images/share_headers/default.jpg" />
+	<meta property="og:site_name" content="SpaceWeatherLive.com" />
+	<meta property="fb:app_id" content="344241918924880" />
+	<meta property="fb:admins" content="615289796" />
+	<meta property="fb:admins" content="100002307882367" />
+	<!-- Twitter Card meta -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@_SpaceWeather_" />
+	<meta name="twitter:creator" content="@_SpaceWeather_">
+	<meta name="twitter:url" content="https://www.spaceweatherlive.com/en/auroral-activity/the-kp-index" />
+	<meta name="twitter:title" content="The Kp-index" />
+	<meta name="twitter:description" content="The Kp-index is a global auroral activity indicator on a scale from 0 to 9. You can use it as a guide to estimate how active the aurora is and at what latitude aurora might be visible. This graph i...">
+	<meta name="twitter:image:src" content="https://www.spaceweatherlive.com/images/share_headers/default.jpg" />
+	<meta http-equiv="refresh" content="300; URL=https://www.spaceweatherlive.com/en/auroral-activity/the-kp-index" />    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="apple-touch-icon" href="/templates/SWL10/images/SWL/apple-touch-icon.png"/>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link href="/templates/SWL10/css/template.min.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script>
+            $(function () {
+                Highcharts.setOptions({
+                    lang: {
+                        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+                    }
+                });
+            });
+        </script>
+	<script src="/templates/SWL10/html5lightbox/html5lightbox.js"></script>
+	<script src="https://use.fontawesome.com/c7c66e943e.js"></script>
+	<link rel="alternate" href="/rss_news.xml" title="RSS news" type="application/rss+xml" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<!-- Notifications -->
+	<link rel="manifest" href="/manifest.json">
+	<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+	<script>
+      var OneSignal = OneSignal || [];
+      OneSignal.push(["init", {
+        appId: "f7e23cab-977f-419b-ab27-268baafb97c2",
+        safari_web_id: 'web.onesignal.auto.548f76b5-1495-4e31-bc8e-b1b76d8ec8fd',
+        autoRegister: false,
+        notifyButton: {
+          enable: true, // Set to false to hide
+          showCredit: false,
+          prenotify: true,
+          text: {
+              'dialog.main.title': 'Manage Space Weather Notifications',
+              'tip.state.unsubscribed': 'Subscribe to SpaceWeatherLive notifications',
+              'tip.state.subscribed': "You're subscribed to SpaceWeatherLive notifications"
+          }
+        },
+        welcomeNotification: {
+          "title": "SpaceWeatherLive alerts",
+          "message": "Thanks for subscribing to our service!"
+          // "url": ""
+        },
+        promptOptions: {
+            showCredit: false
+        }
+      }]);
+    </script>
+	<script>
+        /* Analytics */
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-975826-4', 'auto', {'allowLinker': true});
+        ga('require', 'linker');// Load the plugin.
+        ga('linker:autoLink', ['poollicht.be', 'spaceweatherlive.com', 'spaceweather.live'], true);// Define which domains to autoLink.
+        ga('send', 'pageview');
+        /* UTC Time */
+        function startTime() {
+            var today = new Date();
+            var h = today.getUTCHours();
+            var m = today.getUTCMinutes();
+            var s = today.getUTCSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('UTCtime').innerHTML =
+            h + ":" + m + ":" + s + " UTC";
+            var t = setTimeout(startTime, 500);
+        }
+        function checkTime(i) {
+            if (i < 10) {i = "0" + i;};  // add zero in front of numbers < 10
+            return i;
+        }
+        /* Cookie Consent */
+        window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":null,"theme":"dark-bottom"};
+    </script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.10/cookieconsent.min.js"></script>
+</head>
+<body onload="startTime();">
+<div id="fb-root"></div>
+<script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '344241918924880',
+            xfbml      : true,
+            version    : 'v2.8'
+          });
+        };
+        (function(d, s, id){
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement(s); js.id = id;
+           js.src = "//connect.facebook.net/en_US/sdk.js";
+           fjs.parentNode.insertBefore(js, fjs);
+         }(document, 'script', 'facebook-jssdk'));
+    </script>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="navbar-header">
+		<div class="logomobile visible-xs">
+			<a href="/en" class="brand">
+				<img src="/templates/SWL10/images/SWL/logo.png" alt=""/>
+			</a>
+		</div>
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+	</div>
+	<div class="collapse navbar-collapse navbar-responsive-collapse">
+		<ul class="nav navbar-nav">
+			<li><a href="/en/news">News</a></li>
+			<li class="dropdown"><a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown">Solar activity <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/en/solar-activity">Real-time Solar activity</a></li>
+					<li><a href="/en/solar-activity/solar-flares">Solar flares</a></li>
+					<li><a href="/en/solar-activity/sunspot-regions">Sunspot regions</a></li>
+					<li><a href="/en/solar-activity/solar-cycle-progression">Solar Cycle progression</a></li>
+					<li><a href="/en/solar-activity/wsa-enlil">WSA-Enlil</a></li>
+					<li class="divider"></li>
+					<li class="dropdown-header">Solar images</li>
+					<li><a href="/en/solar-activity/solar-images/sdo">SDO</a></li>
+					<li><a href="/en/solar-activity/solar-images/stereo">STEREO</a></li>
+					<li><a href="/en/solar-activity/solar-images/proba">PROBA-2</a></li>
+					<li><a href="/en/solar-activity/solar-images/soho">SOHO</a></li>
+					<li><a href="/en/solar-activity/solar-images/mlso">Mauna Loa Solar Observatory</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown">Auroral activity <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/en/auroral-activity">Auroral activity</a></li>
+					<li><a href="/en/auroral-activity/real-time-auroral-activity">Real-time auroral activity</a></li>
+					<li><a href="/en/auroral-activity/the-kp-index">The Kp-index</a></li>
+					<li><a href="/en/auroral-activity/auroral-oval">Auroral oval</a></li>
+					<li><a href="/en/auroral-activity/magnetometers">Magnetometers</a></li>
+					<li><a href="/en/auroral-activity/webcams">Webcams</a></li>
+					<li><a href="/en/auroral-activity/aurora-forecast">Aurora forecast</a></li>
+					<li><a href="/en/moon-phases-calendar">Moon Phases Calendar</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/en/reports/solar-activity-report">Solar activity report</a></li>
+					<li><a href="/en/reports/sunspotreport">Sunspotreport</a></li>
+					<li><a href="/en/reports/geophysical-report">Geophysical report</a></li>
+					<li><a href="/en/reports/noaa-swpc-alerts-watches-and-warnings">NOAA SWPC Alerts, Watches and Warnings</a></li>
+					<li class="divider"></li>
+					<li class="dropdown-header">Forecast</li>
+					<li><a href="/en/reports/forecast-discussion">Forecast discussion</a></li>
+					<li><a href="/en/reports/3-day-forecast">3-Day Forecast</a></li>
+					<li class="divider"></li>
+					<li class="dropdown-header">SpaceWeatherLive Reports</li>
+					<li><a href="/en/news">News</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown">Archive <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/en/archive">The aurora and solar activity archive</a></li>
+					<li class="divider"></li>
+					<li><a href="/en/solar-activity/top-50-solar-flares">Top 50 solar flares</a></li>
+					<li><a href="/en/solar-activity/top-25-sunspot-regions">Top 25 sunspot regions</a></li>
+					<li><a href="/en/auroral-activity/top-50-geomagnetic-storms">Top 50 geomagnetic storms</a></li>
+					<li class="divider"></li>
+					<li><a href="/en/solar-activity/solar-cycle-progression">Solar Cycle progression</a></li>
+				</ul>
+			</li>
+			<li><a href="http://www.spaceweatherlive.com/community">Community</a></li>
+			<li><a href="http://www.spaceweatherlive.com/community/gallery/">Gallery</a></li>
+			<li class="dropdown"><a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown">Help <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/en/help">Help</a></li>
+					<li><a href="/en/faq">FAQ</a></li>
+				</ul>
+			</li>
+			<li><a href="/en/links">Links</a></li>
+			<li class="dropdown"><a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/en/about">More about SpaceWeatherLive</a></li>
+					<li><a href="/en/contact-us">Contact us</a></li>
+					<li><a href="/en/disclaimer">Disclaimer</a></li>
+				</ul>
+			</li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right hidden-xs hidden-sm hidden-md">
+			<li class="dropdown">
+				<a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe" aria-hidden="true"></i> Languages<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li class="lang"><a href="http://www.poollicht.be/nl">Nederlands</a></li>
+					<li class="lang"><a href="https://www.spaceweatherlive.com/fr">Français</a></li>
+					<li class="lang"><a href="https://www.spaceweatherlive.com/en">English</a></li>
+					<li class="lang"><a href="https://www.spaceweatherlive.com/de">Deutsch</a></li>
+					<li class="lang"><a href="https://www.spaceweatherlive.com/es">Español</a></li>
+					<li class="lang"><a href="https://www.spaceweatherlive.com/sv">Svenska</a></li>
+				</ul>
+		</ul>
+	</div>
+</nav>
+<div class="hoofding SWL hidden-xs">
+	<div class="container">
+		<div class="row">
+			<div class="col-sx-12 col-sm-6 col-lg-6">
+				<div class="logofull">
+					<a href="/en"><img src="/templates/SWL10/images/SWL/logo.png" alt="" /></a>
+				</div>
+			</div>
+			<div class="col-sx-12 col-sm-6 col-lg-6">
+				<div class="module">
+					<div class="social">
+						<span><a href="https://www.twitter.com/_SpaceWeather_" title="SpaceWeatherLive on Twitter"><i class="fa fa-twitter fa-3x"></i></a></span>
+						<span><a href="https://www.facebook.com/SpaceWeatherLive" title="SpaceWeatherLive on Facebook"><i class="fa fa-facebook-official fa-3x"></i></a></span>
+						<span><a href="https://google.com/+Spaceweatherlive" title="SpaceWeatherLive op Google+"><i class="fa fa-google-plus fa-3x"></i></a></span>
+						<span><a href="https://www.youtube.com/user/spaceweatherlive" title="SpaceWeatherLive op YouTube"><i class="fa fa-youtube fa-3x"></i></a></span>
+						<span><a href="https://www.spaceweatherlive.com/rss_news.xml" title="SpaceWeatherLive RSS feed"><i class="fa fa-rss fa-3x"></i></a></span>
+					</div>
+					<div style="color:white;font-weight:bold;" id="UTCtime"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Body -->
+<div class="body">
+	<div class="container">
+		<!-- Main content -->
+		<div class="row">
+			<div class="col-sx-12 col-sm-7">
+				<div class="banner">
+					<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+					<!-- SpaceWeatherLive - Responsive ad -->
+					<ins class="adsbygoogle"
+						 style="display:block"
+						 data-ad-client="ca-pub-5115842573839487"
+						 data-ad-slot="6680376636"
+						 data-ad-format="auto"></ins>
+					<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+				</div>
+				<h3>The Kp-index</h3>
+				<a href="/en/help/the-kp-index" class="btn btn-sm btn-default"><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a>
+
+				<h4>USAF Wing Kp-index</h4>
+				<p>This is the Wing-Kp index from the U.S. Air Force Weather Agency. The Wing Kp model uses solar wind data to produce a 1-hour advance prediction of the level of geomagnetic activity, as represented by the planetary K-index, every 15 minutes. It is expressed in a scale of thirds and has 28 values. The Wing Kp model also provides an observed Kp-value from a magnetometer network of the USAF but this is not a real-time measurement.</p>
+				<div id="Kp" style="height:300px;"></div>
+				<h5 class="PLwaarden center">
+					Observed Kp: <a href="#" data-toggle="tooltip" data-html="true" title="
+    0 -&gt; 3 = Quiet<br />    4 = Active<br />    5 = Minor storm (G1)<br />    6 = Moderate storm (G2)<br />    7 = Strong storm (G3)<br />    8 = Severe storm (G4)<br />    9 = Extreme storm (G5)<br />    Orange line = Predicted Kp">4+</a><br />
+					Predicted Kp: <a href="#" data-toggle="tooltip" data-html="true" title="
+    0 -&gt; 3 = Quiet<br />    4 = Active<br />    5 = Minor storm (G1)<br />    6 = Moderate storm (G2)<br />    7 = Strong storm (G3)<br />    8 = Severe storm (G4)<br />    9 = Extreme storm (G5)<br />    Orange line = Predicted Kp">0+</a>
+					(+63m Kp: <a href="#" data-toggle="tooltip" data-html="true" title="
+    0 -&gt; 3 = Quiet<br />    4 = Active<br />    5 = Minor storm (G1)<br />    6 = Moderate storm (G2)<br />    7 = Strong storm (G3)<br />    8 = Severe storm (G4)<br />    9 = Extreme storm (G5)<br />    Orange line = Predicted Kp">1-</a>)
+				</h5>
+
+				<h4>GFZ Potsdam Quicklook Kp-index</h4>
+				<p>This is the Quicklook Kp-index from the GFZ German Research Centre for Geosciences. This is a preliminary Kp-index which estimates the Kp-index in 3-hour periods. It is expressed in a scale of thirds and has 28 values.</p>
+				<div id="Kp_Potsdam" style="height:350px;"></div>
+
+				<h4>NOAA SWPC Planetary K-index</h4>
+				<p>This is the planetary K-index from the NOAA SWPC. This is a preliminary Kp-index that is updated every minute by the NOAA SWPC with an estimate of the measured Kp of the past 3 hours based on eight ground-based magnetometers around the world. This estimated 3-hour planetary Kp-index consists of 10 values and ranges from 0 to 9. It is important to understand that this Kp-index isn't a forecast or an indicator of the current conditions, it always shows the Kp-value that was observed during a certain period.</p>
+				<p class="center"><img src="http://services.swpc.noaa.gov/images/planetary-k-index.gif" alt="NOAA Kp"/></p>
+
+				<script>
+    $(function () {
+        $('#Kp').highcharts({
+    chart:{},
+    title:{text:'Wing Kp-index',style:{fontSize:'16px'}},
+    subtitle: {
+        text: 'data of the past day'
+    },
+     xAxis: {
+        type:'datetime',
+        plotLines: [{
+            color: 'gray',
+            value: 1476986102000,
+            width: 2,
+            label: {
+                text: 'Now',
+                style: {
+                    color: 'gray',
+                    fontWeight: 'bold'
+                }
+            },
+            zIndex:7
+        }]
+     },
+     yAxis: {
+        max: 9,
+        min: 0,
+        endOnTick: false,
+        tickInterval:1,
+        labels:{
+        },
+        title: {
+            text: 'Kp'
+        }
+     },
+     series: [{
+            name: 'Predicted Kp',
+            data: [[1476899100000,1],[1476900000000,1],[1476900900000,1],[1476901800000,1],[1476902700000,0.67],[1476903600000,0.67],[1476904500000,1],[1476905400000,1],[1476906300000,2],[1476907200000,1.67],[1476908100000,1.67],[1476909000000,1.33],[1476909900000,1],[1476910800000,1],[1476911700000,1],[1476912600000,1],[1476913500000,1.33],[1476914400000,1.33],[1476915300000,1.33],[1476916200000,1.33],[1476917100000,0.67],[1476918000000,0.67],[1476918900000,1],[1476919800000,1],[1476920700000,1.33],[1476921600000,1.33],[1476922500000,1.33],[1476923400000,1.33],[1476924300000,0.67],[1476925200000,1],[1476926100000,1],[1476927000000,1],[1476927900000,1.67],[1476928800000,1.67],[1476929700000,1.67],[1476930600000,1.33],[1476931500000,1.33],[1476932400000,1.33],[1476933300000,1.33],[1476934200000,1.33],[1476935100000,1.67],[1476936000000,1.67],[1476936900000,1.67],[1476937800000,1.33],[1476938700000,1],[1476939600000,1],[1476940500000,1],[1476941400000,1],[1476942300000,0.67],[1476943200000,0.67],[1476944100000,0.67],[1476945000000,0.67],[1476945900000,1],[1476946800000,1],[1476947700000,0.33],[1476948600000,0.33],[1476949500000,1],[1476950400000,1],[1476951300000,0.67],[1476952200000,0.67],[1476953100000,0.33],[1476954000000,0.33],[1476954900000,0.33],[1476955800000,0.67],[1476956700000,0.67],[1476957600000,0.67],[1476958500000,0.33],[1476959400000,0.33],[1476960300000,0.33],[1476961200000,0.33],[1476962100000,0.33],[1476963000000,0.33],[1476963900000,0.33],[1476964800000,0.33],[1476965700000,0.33],[1476966600000,0.33],[1476967500000,0.33],[1476968400000,0.33],[1476969300000,0.33],[1476970200000,0.33],[1476971100000,0.33],[1476972000000,0.33],[1476972900000,0.67],[1476973800000,0.67],[1476974700000,0.67],[1476975600000,0.67],[1476976500000,0.67],[1476977400000,0.67],[1476978300000,0.67],[1476979200000,0.33],[1476980100000,0.33],[1476981000000,0.33],[1476981900000,0.33],[1476982800000,0.33],[1476983700000,0.33],[1476984600000,0.33],[1476985500000,1],[1476986400000,1],[1476987300000,0.67],[1476988200000,0.67],[1476989100000,0.33]],
+            type: 'line',
+            zIndex: 10,
+            connectNulls: true,
+            color: 'orange',
+            zones: [{
+                value: 3.67,
+                color: 'green',
+                fillColor : 'green'
+                }, {
+                value: 4.67,
+                color: 'orange',
+                fillColor : '#FFEE00'
+                },{
+                color: 'red',
+                fillColor : 'red'
+            }],
+            marker: {
+                enabled: false
+            },
+            step:true
+        },{
+            name: 'Observed Kp',
+            data: [[1476900000000,1],[1476903600000,1],[1476907200000,1],[1476910800000,1],[1476914400000,1],[1476918000000,1],[1476921600000,0.67],[1476925200000,0.67],[1476928800000,0.67],[1476932400000,0],[1476936000000,0],[1476939600000,0],[1476943200000,0],[1476946800000,0],[1476950400000,0],[1476954000000,0],[1476957600000,0],[1476961200000,0],[1476964800000,0.33],[1476968400000,0.33],[1476972000000,0.33],[1476975600000,0.33],[1476979200000,0.33],[1476982800000,0.33]],
+            type: 'column',
+            color:'green',
+            zones: [{
+                value: 3.67,
+                color: 'LightGreen',
+                fillColor : 'LightGreen'
+                }, {
+                value: 4.67,
+                color: '#FFEE00',
+                fillColor : '#FFEE00'
+                },{
+                color: 'FireBrick',
+                fillColor : 'FireBrick'
+            }]
+        }
+     ],
+     tooltip: {
+        formatter: function(){
+            var Kpraw = this.y.toString();
+            var Kpvalue = Math.round(this.y, 2);
+            var extension = Kpraw.substr(2,2);
+            var date = new Date(this.x);
+            if(date.getUTCHours() < 10){    var graph_hours = '0'   + date.getUTCHours();}     else{var graph_hours    = date.getUTCHours();}
+            if(date.getUTCMinutes() < 10){  var graph_minutes = '0' + date.getUTCMinutes();}   else{var graph_minutes  = date.getUTCMinutes();}
+            if(extension === "33"){
+                return graph_hours+':'+graph_minutes + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"+</b>";
+            }else if(extension === "67"){
+                return graph_hours+':'+graph_minutes + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"-</b>";
+            }else if(extension === "00"){
+                return graph_hours+':'+graph_minutes + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"</b>";
+            }else{return graph_hours+':'+graph_minutes + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"</b>";}
+        }
+     },
+     legend: {
+        enabled: false
+     },
+     credits :{
+         href:"http://www.spaceweatherlive.com",
+         text:"SpaceWeatherLive.com"
+     }
+ });        $('#Kp_Potsdam').highcharts({
+    chart:{type:'column'},
+    title:{text:'Potsdam Kp-index',style:{fontSize:'16px'}},
+    xAxis:{
+        categories: ["18 Oct 0h-3h","18 Oct 3h-6h","18 Oct 6h-9h","18 Oct 9h-12h","18 Oct 12h-15h","18 Oct 15h-18h","18 Oct 18h-21h","18 Oct 21h-0h","19 Oct 0h-3h","19 Oct 3h-6h","19 Oct 6h-9h","19 Oct 9h-12h","19 Oct 12h-15h","19 Oct 15h-18h","19 Oct 18h-21h","19 Oct 21h-0h","20 Oct 0h-3h","20 Oct 3h-6h","20 Oct 6h-9h","20 Oct 9h-12h","20 Oct 12h-15h","20 Oct 15h-18h","20 Oct 18h-21h","20 Oct 21h-0h"]    },
+    yAxis:{
+        max: 9,
+        min: 0,
+        endOnTick: false,
+        tickInterval:1,
+        labels:{
+        },
+        title: {
+            text: 'Kp'
+        }
+    },
+    series:[{
+            name: 'Observed Kp',
+            data: [3,3,3,2,1.33,1,1,2.33,2.67,2,1,1.33,0.67,1.33,1,0.67,1.33,null,0.33,null,0.33,null,null,null],
+            type: 'column',
+            color:'green',
+            zones: [{
+                value: 3.67,
+                color: 'green',
+                fillColor : 'green'
+                }, {
+                value: 4.67,
+                color: '#FFEE00',
+                fillColor : '#FFEE00'
+                },{
+                color: 'red',
+                fillColor : 'red'
+            }],
+            states: {
+                hover: {
+                    enabled: false
+                }
+            }
+        }
+    ],
+    tooltip: {
+        formatter: function(){
+            var Kpraw = this.y.toString();
+            var Kpvalue = Math.round(this.y, 2);
+            var extension = Kpraw.substr(2,2);
+            if(extension === "33"){
+                return this.x + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"+</b>";
+            }else if(extension === "67"){
+                return this.x + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"-</b>";
+            }else if(extension === "00"){
+                return this.x + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"</b>";
+            }else{return this.x + '<br/>' + this.series.name + ': <b>' + Math.round(Kpvalue)+"</b>";}
+        }
+     },
+     legend: {
+        enabled: false
+     },
+     credits :{
+         href:"http://www.gfz-potsdam.de",
+         text:"GFZ Potsdam"
+     }
+ });    });
+</script><!-- From SWL cache generated 17:55-->                    <!-- End Content -->
+				<div class="banner" style="margin-top:5px;">
+					<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+					<!-- SpaceWeatherLive - Responsive ad - bottom -->
+					<ins class="adsbygoogle"
+						 style="display:block"
+						 data-ad-client="ca-pub-5115842573839487"
+						 data-ad-slot="2109661834"
+						 data-ad-format="auto"></ins>
+					<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+					<div class="pull-right"><a href="#top" id="back-top">Back to top <i class="fa fa-chevron-up" aria-hidden="true"></i></a></div>
+				</div>
+			</div>
+			<div class="col-sx-12 col-sm-4">
+				<div class="alertbalk waarschuwing">Current data suggest that it is not possible to see aurora now at middle latitudes</div>                    <div class="moduletable"><h3>Latest news</h3>
+				<div id="carousel-news" class="carousel slide" data-ride="carousel">
+					<!-- Indicators -->
+					<ol class="carousel-indicators">
+						<li data-target="#carousel-news" data-slide-to="0"  class="active"></li><li data-target="#carousel-news" data-slide-to="1" ></li><li data-target="#carousel-news" data-slide-to="2" ></li>  </ol>
+					<!-- Wrapper for slides -->
+					<div class="carousel-inner">
+						<div class="item active">
+							<a href="/en/news/view/241/20161012-cme-tomorrow-coronal-hole-faces-earth"><img src="/images/news/241-thumb.jpg" alt="" style="max-width:100%;"></a>
+							<div class="carousel-caption" style="text-shadow: 0 3px 5px rgba(0,0,0,.6);">
+								<div>Wednesday, 12 October 2016 - 18:35 UTC</div><h4><a href="/en/news/view/241/20161012-cme-tomorrow-coronal-hole-faces-earth">CME tomorrow, coronal hole faces Earth</a></h4>      </div>
+						</div>
+						<div class="item ">
+							<a href="/en/news/view/240/20161010-incoming-cme-dst-index"><img src="/images/news/240-thumb.jpg" alt="" style="max-width:100%;"></a>
+							<div class="carousel-caption" style="text-shadow: 0 3px 5px rgba(0,0,0,.6);">
+								<div>Monday, 10 October 2016 - 19:27 UTC</div><h4><a href="/en/news/view/240/20161010-incoming-cme-dst-index">Incoming CME? Dst-index</a></h4>      </div>
+						</div>
+						<div class="item ">
+							<a href="/en/news/view/239/20160926-massive-coronal-hole-faces-earth"><img src="/images/news/239-thumb.jpg" alt="" style="max-width:100%;"></a>
+							<div class="carousel-caption" style="text-shadow: 0 3px 5px rgba(0,0,0,.6);">
+								<div>Monday, 26 September 2016 - 10:14 UTC</div><h4><a href="/en/news/view/239/20160926-massive-coronal-hole-faces-earth">Massive coronal hole faces Earth</a></h4>      </div>
+						</div>
+					</div>
+					<!-- Controls -->
+					<a class="left carousel-control" href="#carousel-news" data-slide="prev">
+						<i class="fa fa-chevron-left" aria-hidden="true"></i>
+					</a>
+					<a class="right carousel-control" href="#carousel-news" data-slide="next">
+						<i class="fa fa-chevron-right" aria-hidden="true"></i>
+					</a>
+				</div>
+				<div style="margin-top:5px;"><a href="/en/news" class="btn btn-sm btn-default">More news</a></div>
+			</div>
+				<div class="moduletable">
+					<h3>Today's space weather</h3>
+					<table class="table table-condensed">
+						<thead>
+						<tr>
+							<th><h5 style="margin:0;">Auroral activity</h5></th>
+							<th style="text-align:center;">Minor</th>
+							<th style="text-align:center;">Severe</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>High latitude</td>
+							<td style="text-align:center;"><span class="badge badge-success">15%</span></td>
+							<td style="text-align:center;"><span class="badge badge-success">10%</span></td>
+						</tr>
+						<tr>
+							<td>Middle latitude</td>
+							<td style="text-align:center;"><span class="badge badge-success">1%</span></td>
+							<td style="text-align:center;"><span class="badge badge-success">1%</span></td>
+						</tr>
+						<tr>
+							<td>Predicted Kp max</td>
+							<td class="success" style="text-align:center;"><span class="Kp quiet">2</span></td>      <td></td>
+						</tr>
+						</tbody>
+					</table>
+					<div class="btn-group">
+						<a href="/en/auroral-activity/aurora-forecast" class="btn btn-sm btn-default">Aurora forecast</a>
+						<a href="/en/help/the-low-middle-and-high-latitude" class="btn btn-sm btn-default"><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a>
+						<a href="/en/auroral-activity" class="btn btn-sm btn-default">More data</a>
+					</div>
+
+
+					<table class="table table-condensed" style="margin-top:5px;">
+						<thead>
+						<tr>
+							<th><h5 style="margin:0;">Solar activity</h5></th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><b>M-class</b> solar flare</td>
+							<td style="text-align:center;"><span class="badge badge-success">1%</span></td>
+						</tr>
+						<tr>
+							<td><b>X-class</b> solar flare</td>
+							<td style="text-align:center;"><span class="badge badge-success">1%</span></td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+						</tr>
+						</tbody>
+					</table>
+					<div class="btn-group">
+						<a href="/en/solar-activity/sunspot-regions" class="btn btn-sm btn-default">Sunspot regions</a>
+						<a href="/en/solar-activity" class="btn btn-sm btn-default">More data</a>
+					</div>                    </div>
+				<div class="moduletable">
+					<h3>Latest forum messages</h3>
+					<div>
+						<div class="list-group" style="background:none;">
+							<a class="list-group-item" style="border:none;" href="http://www.spaceweatherlive.com/community/topic/1095-swpc-1-minute-kp-index/&amp;do=getNewComment">SWPC 1-minute Kp-Index<span class="badge hidden-xs hidden-sm hidden-md"><i class="fa fa-comments-o" aria-hidden="true"></i> 8</span></a><a class="list-group-item" style="border:none;" href="http://www.spaceweatherlive.com/community/topic/1093-how-to-read-the-auroral-oval/&amp;do=getNewComment">how to read the auroral oval<span class="badge hidden-xs hidden-sm hidden-md"><i class="fa fa-comments-o" aria-hidden="true"></i> 8</span></a><a class="list-group-item" style="border:none;" href="http://www.spaceweatherlive.com/community/topic/1091-sgi-expected/&amp;do=getNewComment">SGI expected<span class="badge hidden-xs hidden-sm hidden-md"><i class="fa fa-comments-o" aria-hidden="true"></i> 3</span></a><a class="list-group-item" style="border:none;" href="http://www.spaceweatherlive.com/community/topic/1088-magnetic-reconnections-and-plasma-outflows-from-magnetosphere/&amp;do=getNewComment">Magnetic reconnections and plasma outflows from magnetosphere<span class="badge hidden-xs hidden-sm hidden-md"><i class="fa fa-comments-o" aria-hidden="true"></i> 1</span></a><a class="list-group-item" style="border:none;" href="http://www.spaceweatherlive.com/community/topic/1063-where-to-find-historical-data-24-hour-or-longer-in-text-for-phi/&amp;do=getNewComment">Where to find historical data (24 hour or longer) in text for Phi?<span class="badge hidden-xs hidden-sm hidden-md"><i class="fa fa-comments-o" aria-hidden="true"></i> 18</span></a>      </div>
+					</div>
+					<div><a href="/community" class="btn btn-sm btn-default">More topics</a></div>
+				</div>
+				<div class="moduletable">
+					<h3>Support SpaceWeatherLive.com!</h3>
+					<p style="text-align:justify;">A lot of people come to SpaceWeatherLive to follow the Sun's activity or if there is aurora to be seen, but with more traffic comes higher server costs. Consider a donation if you enjoy SpaceWeatherLive so we can keep the website online!</p>
+					<div class="progress">
+						<div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">
+							<span>75%</span>
+						</div>
+					</div>
+					<div class="center">
+						<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+							<input type="hidden" name="cmd" value="_s-xclick">
+							<input type="hidden" name="hosted_button_id" value="XVFBBXTRMJZF4">
+							<input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif" name="submit" alt="PayPal — The safer, easier way to pay online.">
+							<img alt="" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif"/>
+						</form>
+					</div>
+				</div>
+				<div class="moduletable center">
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+					<div class="hidden-xs center">
+						<h3>Latest alerts</h3>
+						<a class="twitter-timeline" href="https://twitter.com/_SpaceWeather_" data-widget-id="350967895427256322">Tweets by @_SpaceWeather_</a>
+					</div>
+					<a href="https://twitter.com/_SpaceWeather_" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @_SpaceWeather_</a>
+					<br/><a href="/en/aurora-alerts" class="btn btn-xl btn-primary"><i class="fa fa-bell" aria-hidden="true"></i> <b>Get instant alerts!</b></a>
+				</div>
+				<div class="moduletable">
+					<h3>Space weather facts</h3><table class="table table-condensed"><tbody><tr><td>Last X-flare:</td><td><a href="/en/archive/2015/05/05/xray">2015/05/05</a></td><td><span class="flare_small Xclass">X2.7</span></td></tr><tr><td>Last M-flare:</td><td><a href="/en/archive/2016/08/07/xray">2016/08/07</a></td><td><span class="flare_small Mclass">M1.3</span></td></tr><tr><td>Last geomagnetic storm:</td><td><a href="/en/archive/2016/10/16">2016/10/16</a></td><td><span class="Kp G1">Kp5</span> (G1)</td></tr><tr><td colspan="2">Number of spotless days in 2016:</td><td>22</td></tr><tr><td colspan="2">Last spotless day:</td><td>2016/10/01</td></tr></tbody></table><h4>This day in history*</h4><div class="row"><div class="col-md-6"><table class="table table-condensed table-striped"><thead><tr><th colspan="3">Solar flares</th></tr></thead><tbody><tr><td>1</td><td><a href="/en/archive/2012/10/20/xray">2012</a></td><td><span class="flare_small Mclass">M9.0</span></td></tr><tr><td>2</td><td><a href="/en/archive/2014/10/20/xray">2014</a></td><td><span class="flare_small Mclass">M4.5</span></td></tr><tr><td>3</td><td><a href="/en/archive/2014/10/20/xray">2014</a></td><td><span class="flare_small Mclass">M3.9</span></td></tr><tr><td>4</td><td><a href="/en/archive/2004/10/20/xray">2004</a></td><td><span class="flare_small Mclass">M2.6</span></td></tr><tr><td>5</td><td><a href="/en/archive/2003/10/20/xray">2003</a></td><td><span class="flare_small Mclass">M1.9</span></td></tr></tbody></table></div><div class="col-md-6"><table class="table table-condensed table-striped"><thead><tr><th></th><th></th><th>Ap</th><th>G</th></tr></thead><tbody><tr><td>1</td><td><a href="/en/archive/2003/10/20">2003</a></td><td>36</td><td><span class="Kp G2">G2</span></td></tr><tr><td>2</td><td>1995</td><td>34</td><td><span class="Kp G2">G2</span></td></tr><tr><td>3</td><td><a href="/en/archive/2014/10/20">2014</a></td><td>24</td><td><span class="Kp G1">G1</span></td></tr><tr><td>4</td><td><a href="/en/archive/1998/10/20">1998</a></td><td>22</td><td><span class="Kp G1">G1</span></td></tr><tr><td>5</td><td><a href="/en/archive/1996/10/20">1996</a></td><td>16</td><td></td></tr></tbody></table></div></div><div class="text-muted" style="text-align:right;">*since 1994</div>                    </div>
+				<div class="moduletable hidden-xs hidden-sm">
+					<h3>Social networks</h3>
+					<div class="fb-page" data-href="https://www.facebook.com/SpaceWeatherLive" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false" data-show-posts="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/SpaceWeatherLive"><a href="https://www.facebook.com/SpaceWeatherLive">SpaceWeatherLive</a></blockquote></div></div>
+					<div class="g-page" data-width="273" data-href="//plus.google.com/116649069953399236796" data-layout="landscape" data-rel="publisher"></div>
+				</div>
+				<div class="moduletable">
+					<h3>Available languages</h3>
+					<ul><li><a href="https://www.poollicht.be/nl" lang="nl">Nederlands</a></li><li><a href="https://www.spaceweatherlive.com/en" lang="en">English</a></li><li><a href="https://www.spaceweatherlive.com/fr" lang="fr">Français</a></li><li><a href="https://www.spaceweatherlive.com/de" lang="de">Deutsch</a></li><li><a href="https://www.spaceweatherlive.com/es" lang="es">Español</a></li><li><a href="https://www.spaceweatherlive.com/sv" lang="sv">Svenska</a></li><li><a href="https://www.spaceweatherlive.com/pl" lang="pl">Polski (Beta)</a></li></ul>                      <div class="alert alert-info">
+					<a href="http://www.spaceweatherlive.com/community/topic/217-help-us-translate-this-website-into-your-language/">Not your language? Help us translate!</a>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Footer -->
+<footer class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-12 col-lg-12">
+				<div class="row hidden-xs">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<h3>About Astro Event Group vzw</h3>
+						<p>The Astro Event Group vzw (AEG) is a non-profit organization from Belgium which is active in astronomy and space. Donations are welcome to support our projects.</p>
+						<p><a href="http://www.aegvzw.be" class="btn btn-sm btn-default">More info...</a></p>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<h3>Websites/Projects</h3>
+						<ul>
+							<li><a href="https://www.spacepage.be">Spacepage</a></li>
+							<li><a href="http://www.spaceweatherlive.com">SpaceWeatherLive</a></li>
+							<li><a href="https://www.belgiuminspace.be">Belgium in Space</a></li>
+							<li><a href="http://www.starnights.be">Starnights</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<h3>About</h3>
+						<p>SpaceWeatherLive.com is a near live website where you can follow space weather from the Sun to Earth and know exactly when you can see aurora.</p>
+						<p><a href="/en/about" class="btn btn-default btn-sm">More info...</a></p>
+					</div>
+				</div>
+				<div class="center">
+					Copyright &copy; 2003-2016 SpaceWeatherLive &copy; All rights reserved -
+					Part of the Astro Event Group vzw -
+					<a href="/en/disclaimer">
+						Disclaimer</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+        /* Google Plus*/
+        (function() {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = 'https://apis.google.com/js/plusone.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        })();
+        /* Tooltips */
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</body>
+</html>

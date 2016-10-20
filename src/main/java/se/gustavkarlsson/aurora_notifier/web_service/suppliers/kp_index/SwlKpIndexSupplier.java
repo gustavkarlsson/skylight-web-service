@@ -4,7 +4,6 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.inject.Inject;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -12,6 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SupplierException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -23,16 +28,31 @@ public class SwlKpIndexSupplier implements Supplier<Float> {
 
 	private static final String URL = "https://www.spaceweatherlive.com/en/auroral-activity/the-kp-index";
 	private static final String CSS_PATH = "body > div.body > div > div > div.col-sx-12.col-sm-8 > h5 > a:nth-child(1)";
-	private static final Pattern pkIndexPattern = Pattern.compile("(0\\+?|[1-8](-|\\+)?|9-?)");
+	private static final Pattern PK_INDEX_PATTERN = Pattern.compile("(0\\+?|[1-8](-|\\+)?|9-?)");
 
 	private final Timer getValueTimer;
 	private final Meter exceptionsMeter;
+	private final URL url;
 
 	@Inject
-	public SwlKpIndexSupplier(MetricRegistry metrics) {
+	SwlKpIndexSupplier(MetricRegistry metrics) {
+		this(metrics, getUrl());
+	}
+
+	SwlKpIndexSupplier(MetricRegistry metrics, URL url) {
 		checkNotNull(metrics);
+		checkNotNull(url);
 		getValueTimer = createGetValueTimer(metrics);
 		exceptionsMeter = createExceptionsMeter(metrics);
+		this.url = url;
+	}
+
+	private static URL getUrl() {
+		try {
+			return new URL(URL);
+		} catch (MalformedURLException e) {
+			throw new IllegalStateException("URL constant not valid", e);
+		}
 	}
 
 	private Timer createGetValueTimer(MetricRegistry metrics) {
@@ -45,23 +65,30 @@ public class SwlKpIndexSupplier implements Supplier<Float> {
 
 	@Override
 	public Float get() throws SupplierException {
-		try (Timer.Context timerContext = getValueTimer.time()) {
-			Connection connection = Jsoup.connect(URL).validateTLSCertificates(false);
-			Document document = connection.get();
-			Elements elements = document.select(CSS_PATH);
-			String text = elements.text();
-			float kpIndex = parseKpIndex(text);
-			timerContext.stop();
-			return kpIndex;
+		try (Timer.Context ignored = getValueTimer.time()) {
+			String urlContent = getUrlContent(url);
+			return parseKpIndex(urlContent);
 		} catch (Exception e) {
 			exceptionsMeter.mark();
-			logger.warn("Failed to get value", e);
+			logger.warn("Failed to get KP index", e);
 			throw new SupplierException(e);
 		}
 	}
 
-	private float parseKpIndex(final String text) {
-		if (!pkIndexPattern.matcher(text).matches()) {
+	private static String getUrlContent(URL url) throws IOException {
+		logger.debug("Getting content from {}", url);
+		try (InputStream stream = url.openStream()) {
+			Scanner scanner = new Scanner(stream, StandardCharsets.UTF_8.name());
+			scanner.useDelimiter( "\\A");
+			return scanner.hasNext() ? scanner.next() : "";
+		}
+	}
+
+	private static float parseKpIndex(final String urlContent) {
+		Document document = Jsoup.parse(urlContent);
+		Elements elements = document.select(CSS_PATH);
+		String text = elements.text();
+		if (!PK_INDEX_PATTERN.matcher(text).matches()) {
 			throw new IllegalArgumentException("Invalid Kp index: '" + text + "'");
 		}
 		float whole = Float.valueOf(String.valueOf(text.charAt(0)));
