@@ -7,14 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import se.gustavkarlsson.aurora_notifier.web_service.security.SslSecurityOverrider;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.regex.Pattern;
 
 public class SwlKpIndexSupplier extends WebBasedKpIndexSupplier {
