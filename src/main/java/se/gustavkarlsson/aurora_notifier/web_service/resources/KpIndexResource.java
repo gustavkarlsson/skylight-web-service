@@ -20,7 +20,7 @@ public class KpIndexResource {
 	private final Supplier<Timestamped<Float>> supplier;
 
 	@Inject
-	public KpIndexResource(Supplier<Timestamped<Float>> supplier) {
+	KpIndexResource(Supplier<Timestamped<Float>> supplier) {
 		this.supplier = checkNotNull(supplier);
 	}
 

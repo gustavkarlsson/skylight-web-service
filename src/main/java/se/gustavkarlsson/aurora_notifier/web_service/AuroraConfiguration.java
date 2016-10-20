@@ -7,7 +7,6 @@ import io.dropwizard.validation.ValidationMethod;
 import java.time.Duration;
 
 class AuroraConfiguration extends Configuration {
-
 	static final String AT_LEAST_ONE_MINUTE = "must be at least 60000 (1 minute)";
 
 	// Parsed as milliseconds or according to ISO-8601

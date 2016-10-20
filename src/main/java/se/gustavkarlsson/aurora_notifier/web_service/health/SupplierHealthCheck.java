@@ -4,11 +4,11 @@ import ru.vyarus.dropwizard.guice.module.installer.feature.health.NamedHealthChe
 
 import java.util.function.Supplier;
 
-public abstract class SupplierHealthCheck extends NamedHealthCheck {
+abstract class SupplierHealthCheck extends NamedHealthCheck {
 
 	protected final Supplier<?> supplier;
 
-	public SupplierHealthCheck(Supplier<?> supplier) {
+	SupplierHealthCheck(Supplier<?> supplier) {
 		this.supplier = supplier;
 	}
 

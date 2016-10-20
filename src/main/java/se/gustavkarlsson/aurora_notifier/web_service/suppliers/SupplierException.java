@@ -2,7 +2,7 @@ package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 public class SupplierException extends RuntimeException {
 
-	public SupplierException(String message) {
+	SupplierException(String message) {
 		super(message);
 	}
 
@@ -10,7 +10,7 @@ public class SupplierException extends RuntimeException {
 		super(cause);
 	}
 
-	public SupplierException(String message, Throwable cause) {
+	SupplierException(String message, Throwable cause) {
 		super(message, cause);
 	}
 }

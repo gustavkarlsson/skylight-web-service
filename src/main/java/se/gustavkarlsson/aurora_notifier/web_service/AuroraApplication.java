@@ -7,7 +7,6 @@ import io.dropwizard.setup.Environment;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
 
 public class AuroraApplication extends Application<AuroraConfiguration> {
-
 	private static final String APPLICATION_NAME = "Aurora Notifier Web Service";
 
 	public static void main(String[] args) throws Exception {

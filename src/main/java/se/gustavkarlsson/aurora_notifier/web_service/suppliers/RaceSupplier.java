@@ -31,8 +31,8 @@ public class RaceSupplier<T> implements Supplier<T> {
 				tasks.add(supplier::get);
 			}
 			return executor.invokeAny(tasks);
-		} catch (ExecutionException ex) {
-			throw new SupplierException("No supplier successfully produced a result", ex);
+		} catch (ExecutionException e) {
+			throw new SupplierException("No supplier successfully produced a result", e);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}

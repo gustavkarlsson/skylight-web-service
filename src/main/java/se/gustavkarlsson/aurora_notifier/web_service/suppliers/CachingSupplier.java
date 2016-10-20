@@ -52,8 +52,10 @@ public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
 	}
 
 	private boolean hasExpired() {
-		Instant expiryTime = Instant.ofEpochMilli(cached.getTimestamp()).plus(invalidateDuration);
-		return !expiryTime.isAfter(Instant.now());
+		Instant cachedTimestamp = Instant.ofEpochMilli(cached.getTimestamp());
+		Instant expiryTime = cachedTimestamp.plus(invalidateDuration);
+		Instant now = Instant.now();
+		return !expiryTime.isAfter(now);
 	}
 
 	private boolean cachedExists() {
