@@ -1,69 +1,75 @@
 package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import org.junit.Test;
-import org.mockito.internal.util.collections.Sets;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class RaceSupplierTest {
 
-	private Supplier<String> mockSlowSupplier() {
-		Supplier<String> supplier = mock(Supplier.class);
-		when(supplier.get()).then(i -> {
-			Thread.sleep(5_000);
-			return "slow";
-		});
-		return supplier;
-	}
-
-	private Supplier<String> mockFastSupplier() {
-		Supplier<String> supplier = mock(Supplier.class);
-		when(supplier.get()).thenReturn("fast");
-		return supplier;
-	}
-
 	@Test(expected = IllegalArgumentException.class)
-	public void emptySuppliersThrowsIae() {
-		new RaceSupplier<Void>(Collections.emptySet());
+	public void emptySuppliers_constructor_throwsIae() {
+		new RaceSupplier<Void>(emptySet());
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void nullSuppliersThrowsNpe() {
+	public void nullSuppliers_constructor_throwsNpe() {
 		new RaceSupplier<Void>(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void nullSupplierThrowsIae() {
-		new RaceSupplier<>(Sets.newSet(mockFastSupplier(), null));
+	public void oneNullSupplier_constructor_throwsIae() {
+		new RaceSupplier<>(asList(fastSupplier(), null));
 	}
 
 	@Test
-	public void picksFastestImplementation() {
+	public void manySlowSuppliersAndOneFast_get_fastestSupplierIsPicked() {
 		Set<Supplier<String>> suppliers = new HashSet<>();
-		suppliers.add(mockFastSupplier());
-		for (int i = 0; i < 100; i++) {
-			suppliers.add(mockSlowSupplier());
+		for (int i = 0; i < 50; i++) {
+			suppliers.add(slowSupplier());
+		}
+		suppliers.add(fastSupplier());
+		for (int i = 0; i < 50; i++) {
+			suppliers.add(slowSupplier());
 		}
 		RaceSupplier<String> raceSupplier = new RaceSupplier<>(suppliers);
+
 		Object winner = raceSupplier.get();
+
 		assertThat(winner).isEqualTo("fast");
 	}
 
 	@Test(expected = SupplierException.class)
-	public void throwsExceptionIfNoSupplierIsSuccessful() {
-		Supplier supplier = mock(Supplier.class);
-		when(supplier.get()).thenThrow(SupplierException.class);
+	public void onlyOneSupplierThatThrowsException_get_throwsSupplierException() {
+		RaceSupplier<String> raceSupplier = new RaceSupplier<>(singletonList(exceptionThrowingSupplier()));
 
-		Set<Supplier<String>> suppliers = Sets.newSet(supplier);
-		RaceSupplier<String> raceSupplier = new RaceSupplier<>(suppliers);
 		raceSupplier.get();
+	}
+
+	private static Supplier<String> slowSupplier() {
+		return () -> {
+			try {
+				Thread.sleep(5_000);
+			} catch (InterruptedException ignored) {
+			}
+			return "slow";
+		};
+	}
+
+	private static Supplier<String> fastSupplier() {
+		return () -> "fast";
+	}
+
+	private static Supplier<String> exceptionThrowingSupplier() {
+		return () -> {
+			throw new RuntimeException("Error!");
+		};
 	}
 
 }

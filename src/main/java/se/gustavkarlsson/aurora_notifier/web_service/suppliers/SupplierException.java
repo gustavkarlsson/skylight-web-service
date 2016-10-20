@@ -9,4 +9,8 @@ public class SupplierException extends RuntimeException {
 	public SupplierException(Throwable cause) {
 		super(cause);
 	}
+
+	public SupplierException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }
