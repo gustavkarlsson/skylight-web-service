@@ -6,9 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import static java.util.Arrays.asList;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.emptySet;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RaceSupplierTest {
@@ -25,7 +24,7 @@ public class RaceSupplierTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void oneNullSupplier_constructor_throwsIae() {
-		new RaceSupplier<>(asList(fastSupplier(), null));
+		new RaceSupplier<>(newHashSet(fastSupplier(), null));
 	}
 
 	@Test
@@ -47,7 +46,7 @@ public class RaceSupplierTest {
 
 	@Test(expected = SupplierException.class)
 	public void onlyOneSupplierThatThrowsException_get_throwsSupplierException() {
-		RaceSupplier<String> raceSupplier = new RaceSupplier<>(singletonList(exceptionThrowingSupplier()));
+		RaceSupplier<String> raceSupplier = new RaceSupplier<>(newHashSet(exceptionThrowingSupplier()));
 
 		raceSupplier.get();
 	}

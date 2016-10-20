@@ -15,7 +15,7 @@ public class RaceSupplier<T> implements Supplier<T> {
 	private final ExecutorService executor;
 
 	@Inject
-	RaceSupplier(Collection<Supplier<T>> suppliers) {
+	RaceSupplier(Set<Supplier<T>> suppliers) {
 		checkNotNull(suppliers);
 		checkArgument(!suppliers.isEmpty(), "No suppliers");
 		checkArgument(!suppliers.contains(null), "One supplier is null");
