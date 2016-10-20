@@ -2,14 +2,14 @@ package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -18,7 +18,6 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
-
 	private static final Logger logger = LoggerFactory.getLogger(CachingSupplier.class);
 
 	private final Supplier<T> supplier;
@@ -27,10 +26,10 @@ public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
 	private Timestamped<T> cached = null;
 
 	@Inject
-	public CachingSupplier(Supplier<T> supplier, @CacheDuration Duration cacheDuration) {
+	CachingSupplier(Supplier<T> supplier, @CacheDuration Duration cacheDuration) {
 		this.supplier = checkNotNull(supplier);
 		this.invalidateDuration = checkNotNull(cacheDuration);
-		checkArgument(cacheDuration.getMillis() >= 0, "Duration is negative: " + cacheDuration);
+		checkArgument(!cacheDuration.isNegative(), "Duration is negative: " + cacheDuration);
 	}
 
 	@Override
@@ -49,7 +48,12 @@ public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
 	}
 
 	private boolean isValid() {
-		return cachedExists() && DateTime.now().minus(invalidateDuration).isBefore(cached.getTimestamp());
+		return cachedExists() && !hasExpired();
+	}
+
+	private boolean hasExpired() {
+		Instant expiryTime = Instant.ofEpochMilli(cached.getTimestamp()).plus(invalidateDuration);
+		return !expiryTime.isAfter(Instant.now());
 	}
 
 	private boolean cachedExists() {
@@ -62,5 +66,5 @@ public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
 
 	@BindingAnnotation
 	@Target({ FIELD, PARAMETER, METHOD }) @Retention(RUNTIME)
-	public static @interface CacheDuration {}
+	public @interface CacheDuration {}
 }

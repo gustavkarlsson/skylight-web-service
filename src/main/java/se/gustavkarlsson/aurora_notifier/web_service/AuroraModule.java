@@ -6,7 +6,7 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import io.dropwizard.setup.Environment;
-import org.joda.time.Duration;
+import java.time.Duration;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.CachingSupplier;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.RaceSupplier;
@@ -15,7 +15,7 @@ import se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index.SwlKpInd
 
 import java.util.function.Supplier;
 
-public class AuroraModule extends AbstractModule {
+class AuroraModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

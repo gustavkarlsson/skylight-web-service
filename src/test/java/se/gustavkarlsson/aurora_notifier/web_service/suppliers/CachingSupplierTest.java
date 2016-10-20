@@ -1,78 +1,83 @@
 package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import org.joda.time.Duration;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.Duration;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CachingSupplierTest {
 
-	private Supplier<Object> mocked;
+	@Mock
+	private Supplier<String> mocked;
 
-	@BeforeClass
-	public static void setupClass() {
-		((Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(Level.OFF);
-	}
-
-	@Before
-	public void setup() {
-		mocked = mock(Supplier.class);
+	@Test(expected = NullPointerException.class)
+	public void nullSupplier_constructor_throwsNpe() {
+		new CachingSupplier<Void>(null, Duration.ofMinutes(30));
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void nullSupplierThrowsNpe() {
-		new CachingSupplier<Void>(null, Duration.standardMinutes(30));
-	}
-
-	@Test(expected = NullPointerException.class)
-	public void nullDurationThrowsNpe() {
+	public void nullDuration_constructor_throwsNpe() {
 		new CachingSupplier<>(mocked, null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void negativeDurationThrowsIae() {
-		new CachingSupplier<>(mocked, Duration.millis(-1));
+	public void negativeDuration_constructor_throwsIae() {
+		new CachingSupplier<>(mocked, Duration.ofMillis(-1));
 	}
 
 	@Test
-	public void cachedValueIsUsed() {
-		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.standardDays(1));
+	public void firstUse_get_cachedValueIsUsed() {
+		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.ofDays(1));
+
 		supplier.get();
-		verify(mocked, times(1)).get();
-		supplier.get();
+
 		verify(mocked, times(1)).get();
 	}
 
 	@Test
-	public void cachedValueIsNotUsedIfExpired() {
-		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.millis(0));
+	public void usedOnceBeforeAndNotExpired_get_cachedValueIsUsed() {
+		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.ofDays(1));
 		supplier.get();
+
+		supplier.get();
+
 		verify(mocked, times(1)).get();
+	}
+
+	@Test
+	public void usedBeforeButExpired_get_cachedValueIsNotUsed() {
+		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.ofMillis(0));
 		supplier.get();
+
+		supplier.get();
+
 		verify(mocked, times(2)).get();
 	}
 
 	@Test
-	public void fallsBackOnCachedValueIfSupplierException() {
-		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.millis(0));
+	public void innerSupplierUsedOnceAndThenThrowsException_get_returnsLastReturnedValue() {
+		CachingSupplier<String> supplier = new CachingSupplier<>(mocked, Duration.ofMillis(0));
 		when(mocked.get()).thenReturn("a");
 		supplier.get();
 		when(mocked.get()).thenThrow(new SupplierException("I'm not a!"));
-		assertThat(supplier.get().getValue()).isEqualTo("a");
+
+		String value = supplier.get().getValue();
+
+		assertThat(value).isEqualTo("a");
 	}
 
 	@Test(expected = SupplierException.class)
-	public void exceptionAndNoFallbackThrowsSupplierException() {
-		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.millis(0));
+	public void innerSupplierThrowsException_get_throwsSupplierException() {
+		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.ofMillis(0));
 		when(mocked.get()).thenThrow(new SupplierException("Boo!"));
+
 		supplier.get();
 	}
 }

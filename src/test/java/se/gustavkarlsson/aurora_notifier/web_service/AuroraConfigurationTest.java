@@ -3,7 +3,7 @@ package se.gustavkarlsson.aurora_notifier.web_service;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import org.joda.time.Duration;
+import java.time.Duration;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,7 +24,6 @@ public class AuroraConfigurationTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		((Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(Level.OFF);
 		validator = Validation.buildDefaultValidatorFactory().getValidator();
 	}
 
@@ -40,25 +39,25 @@ public class AuroraConfigurationTest {
 
 	@Test
 	public void negativeCacheDurationIsInvalid() {
-		config.setKpIndexCacheDuration(Duration.millis(-1));
+		config.setKpIndexCacheDuration(Duration.ofMillis(-1));
 		validateCacheDurationToShort();
 	}
 
 	@Test
 	public void shortCacheDurationIsInvalid() {
-		config.setKpIndexCacheDuration(Duration.millis(1));
+		config.setKpIndexCacheDuration(Duration.ofMillis(1));
 		validateCacheDurationToShort();
 	}
 
 	@Test
 	public void oneMinuteCacheDurationIsValid() {
-		config.setKpIndexCacheDuration(Duration.standardMinutes(1));
+		config.setKpIndexCacheDuration(Duration.ofMinutes(1));
 		assertThat(validator.validate(config)).isEmpty();
 	}
 
 	@Test
 	public void zeroCacheDurationIsInvalid() {
-		config.setKpIndexCacheDuration(Duration.millis(0));
+		config.setKpIndexCacheDuration(Duration.ofMillis(0));
 		validateCacheDurationToShort();
 	}
 
