@@ -69,12 +69,13 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 			return parseKpIndex(urlContent);
 		} catch (Exception e) {
 			exceptionsMeter.mark();
-			logger.warn("Failed to get value", e);
+			logger.warn("Failed to get KP index", e);
 			throw new SupplierException(e);
 		}
 	}
 
 	private static String getUrlContent(URL url) throws IOException {
+		logger.debug("Getting content from {}", url);
 		try (InputStream stream = url.openStream()) {
 			Scanner scanner = new Scanner(stream, StandardCharsets.UTF_8.name());
 			scanner.useDelimiter(BEGINNING_OF_STRING_TOKEN);
@@ -82,11 +83,14 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 		}
 	}
 
-	private float parseKpIndex(final String content) {
+	private static float parseKpIndex(final String content) {
+		logger.debug("Parsing KP index from content");
 		final String[] lines = content.split(NEW_LINE_PATTERN);
 		final String lastLine = lines[lines.length - 1];
 		final String[] lastLineSplit = lastLine.split(WHITESPACES_PATTERN);
 		final String kpIndexString = lastLineSplit[VALUE_COLUMN_INDEX];
-		return parseFloat(kpIndexString);
+		float kpIndex = parseFloat(kpIndexString);
+		logger.debug("Parsed KP index: {}", kpIndex);
+		return kpIndex;
 	}
 }
