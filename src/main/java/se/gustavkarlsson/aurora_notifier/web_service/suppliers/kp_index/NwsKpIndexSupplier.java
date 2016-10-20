@@ -1,96 +1,33 @@
 package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
 
-import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer;
 import com.google.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SupplierException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-import java.util.function.Supplier;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.lang.Float.*;
+import static java.lang.Float.parseFloat;
 
-public class NwsKpIndexSupplier implements Supplier<Float> {
-
-	private static final Logger logger = LoggerFactory.getLogger(NwsKpIndexSupplier.class);
-
+public class NwsKpIndexSupplier extends WebBasedKpIndexSupplier {
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
-	private static final String BEGINNING_OF_STRING_TOKEN = "\\A";
 	private static final String NEW_LINE_PATTERN = "\\n";
 	private static final String WHITESPACES_PATTERN = "\\s+";
 	private static final int VALUE_COLUMN_INDEX = 14;
 
-	private final Timer getValueTimer;
-	private final Meter exceptionsMeter;
-	private final URL url;
-
 	@Inject
 	NwsKpIndexSupplier(MetricRegistry metrics) {
-		this(metrics, getUrl());
+		this(metrics, parseUrl(URL));
 	}
 
 	NwsKpIndexSupplier(MetricRegistry metrics, URL url) {
-		checkNotNull(metrics);
-		checkNotNull(url);
-		getValueTimer = createGetValueTimer(metrics);
-		exceptionsMeter = createExceptionsMeter(metrics);
-		this.url = url;
-	}
-
-	private static URL getUrl() {
-		try {
-			return new URL(URL);
-		} catch (MalformedURLException e) {
-			throw new IllegalStateException("URL constant not valid", e);
-		}
-	}
-
-	private Timer createGetValueTimer(MetricRegistry metrics) {
-		return metrics.timer(MetricRegistry.name(getClass(), "getValue"));
-	}
-
-	private Meter createExceptionsMeter(MetricRegistry metrics) {
-		return metrics.meter(MetricRegistry.name(getClass(), "exceptions"));
+		super(metrics, url);
 	}
 
 	@Override
-	public Float get() throws SupplierException {
-		try (Timer.Context ignored = getValueTimer.time()) {
-			String urlContent = getUrlContent(url);
-			return parseKpIndex(urlContent);
-		} catch (Exception e) {
-			exceptionsMeter.mark();
-			logger.warn("Failed to get KP index", e);
-			throw new SupplierException(e);
-		}
-	}
-
-	private static String getUrlContent(URL url) throws IOException {
-		logger.debug("Getting content from {}", url);
-		try (InputStream stream = url.openStream()) {
-			Scanner scanner = new Scanner(stream, StandardCharsets.UTF_8.name());
-			scanner.useDelimiter(BEGINNING_OF_STRING_TOKEN);
-			return scanner.hasNext() ? scanner.next() : "";
-		}
-	}
-
-	private static float parseKpIndex(final String content) {
-		logger.debug("Parsing KP index from content");
-		final String[] lines = content.split(NEW_LINE_PATTERN);
+	protected float parseKpIndex(final String urlContent) {
+		final String[] lines = urlContent.split(NEW_LINE_PATTERN);
 		final String lastLine = lines[lines.length - 1];
 		final String[] lastLineSplit = lastLine.split(WHITESPACES_PATTERN);
 		final String kpIndexString = lastLineSplit[VALUE_COLUMN_INDEX];
-		float kpIndex = parseFloat(kpIndexString);
-		logger.debug("Parsed KP index: {}", kpIndex);
-		return kpIndex;
+		return parseFloat(kpIndexString);
 	}
 }
