@@ -12,16 +12,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.Float.*;
 
 public class NwsKpIndexSupplier implements Supplier<Float> {
 
 	private static final Logger logger = LoggerFactory.getLogger(NwsKpIndexSupplier.class);
 
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
+	private static final String BEGINNING_OF_STRING_TOKEN = "\\A";
+	private static final String NEW_LINE_PATTERN = "\\n";
+	private static final String WHITESPACES_PATTERN = "\\s+";
+	private static final int VALUE_COLUMN_INDEX = 14;
 
 	private final Timer getValueTimer;
 	private final Meter exceptionsMeter;
@@ -58,11 +64,9 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 
 	@Override
 	public Float get() throws SupplierException {
-		try (Timer.Context timerContext = getValueTimer.time()) {
+		try (Timer.Context ignored = getValueTimer.time()) {
 			String urlContent = getUrlContent(url);
-			float kpIndex = parseKpIndex(urlContent);
-			timerContext.stop();
-			return kpIndex;
+			return parseKpIndex(urlContent);
 		} catch (Exception e) {
 			exceptionsMeter.mark();
 			logger.warn("Failed to get value", e);
@@ -71,19 +75,18 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 	}
 
 	private static String getUrlContent(URL url) throws IOException {
-		InputStream stream = url.openStream();
-		Scanner scanner = new Scanner(stream, "UTF-8");
-		scanner.useDelimiter("\\A");
-		String content = scanner.hasNext() ? scanner.next() : "";
-		scanner.close();
-		return content;
+		try (InputStream stream = url.openStream()) {
+			Scanner scanner = new Scanner(stream, StandardCharsets.UTF_8.name());
+			scanner.useDelimiter(BEGINNING_OF_STRING_TOKEN);
+			return scanner.hasNext() ? scanner.next() : "";
+		}
 	}
 
 	private float parseKpIndex(final String content) {
-		final String[] lines = content.split("\\n");
+		final String[] lines = content.split(NEW_LINE_PATTERN);
 		final String lastLine = lines[lines.length - 1];
-		final String[] lastLineSplit = lastLine.split("\\s+");
-		final String kpIndexString = lastLineSplit[14];
-		return Float.parseFloat(kpIndexString);
+		final String[] lastLineSplit = lastLine.split(WHITESPACES_PATTERN);
+		final String kpIndexString = lastLineSplit[VALUE_COLUMN_INDEX];
+		return parseFloat(kpIndexString);
 	}
 }
