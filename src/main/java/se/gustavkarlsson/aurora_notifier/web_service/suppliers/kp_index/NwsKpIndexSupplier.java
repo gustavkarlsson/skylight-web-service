@@ -10,6 +10,7 @@ import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SupplierException
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Supplier;
@@ -24,12 +25,27 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 
 	private final Timer getValueTimer;
 	private final Meter exceptionsMeter;
+	private final URL url;
 
 	@Inject
-	public NwsKpIndexSupplier(MetricRegistry metrics) {
+	NwsKpIndexSupplier(MetricRegistry metrics) {
+		this(metrics, getUrl());
+	}
+
+	NwsKpIndexSupplier(MetricRegistry metrics, URL url) {
 		checkNotNull(metrics);
+		checkNotNull(url);
 		getValueTimer = createGetValueTimer(metrics);
 		exceptionsMeter = createExceptionsMeter(metrics);
+		this.url = url;
+	}
+
+	private static URL getUrl() {
+		try {
+			return new URL(URL);
+		} catch (MalformedURLException e) {
+			throw new IllegalStateException("URL constant not valid", e);
+		}
 	}
 
 	private Timer createGetValueTimer(MetricRegistry metrics) {
@@ -43,7 +59,6 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 	@Override
 	public Float get() throws SupplierException {
 		try (Timer.Context timerContext = getValueTimer.time()) {
-			URL url = new URL(URL);
 			String urlContent = getUrlContent(url);
 			float kpIndex = parseKpIndex(urlContent);
 			timerContext.stop();
@@ -55,7 +70,7 @@ public class NwsKpIndexSupplier implements Supplier<Float> {
 		}
 	}
 
-	private String getUrlContent(URL url) throws IOException {
+	private static String getUrlContent(URL url) throws IOException {
 		InputStream stream = url.openStream();
 		Scanner scanner = new Scanner(stream, "UTF-8");
 		scanner.useDelimiter("\\A");
