@@ -4,12 +4,14 @@ import ru.vyarus.dropwizard.guice.module.installer.feature.health.NamedHealthChe
 
 import java.util.function.Supplier;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 abstract class SupplierHealthCheck extends NamedHealthCheck {
 
-	protected final Supplier<?> supplier;
+	private final Supplier<?> supplier;
 
 	SupplierHealthCheck(Supplier<?> supplier) {
-		this.supplier = supplier;
+		this.supplier = checkNotNull(supplier);
 	}
 
 	@Override

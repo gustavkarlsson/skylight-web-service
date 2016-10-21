@@ -35,7 +35,7 @@ public class SwlKpIndexSupplierTest {
 	}
 
 	@Test
-	public void correctlyFormattedPage_get_returnsLastValue() throws Exception {
+	public void correctlyFormattedPage_get_returnsValue() throws Exception {
 		SwlKpIndexSupplier supplier = new SwlKpIndexSupplier(new MetricRegistry(), getResource("swl_report.html"));
 
 		Float value = supplier.get();

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class SwlKpIndexSupplier extends WebBasedKpIndexSupplier {
 	private static final String URL = "https://www.spaceweatherlive.com/en/auroral-activity/the-kp-index";
 	private static final String CSS_PATH = "body > div.body > div > div > div.col-sx-12.col-sm-8 > h5 > a:nth-child(1)";
-	private static final Pattern PK_INDEX_PATTERN = Pattern.compile("(0\\+?|[1-8](-|\\+)?|9-?)");
+	private static final Pattern PK_INDEX_PATTERN = Pattern.compile("(-|0\\+?|[1-8](-|\\+)?|9-?)");
 
 	static {
 		SslSecurityOverrider.override();
@@ -36,16 +36,28 @@ public class SwlKpIndexSupplier extends WebBasedKpIndexSupplier {
 		if (!PK_INDEX_PATTERN.matcher(text).matches()) {
 			throw new IllegalArgumentException("Invalid Kp index: '" + text + "'");
 		}
-		float whole = Float.valueOf(String.valueOf(text.charAt(0)));
-		String suffix = text.substring(1);
-		float extra;
-		if ("-".equals(suffix)) {
-			extra = -0.33f;
-		} else if ("+".equals(suffix)) {
-			extra = 0.33f;
-		} else {
-			extra = 0;
-		}
+		float whole = parseWhole(text);
+		float extra = parseExtra(text);
 		return whole + extra;
+	}
+
+	private float parseWhole(String text) {
+		if (text.equals("-")) {
+			return 0;
+		}
+		String firstChar = text.substring(0, 1);
+		return Float.valueOf(firstChar);
+	}
+
+	private static float parseExtra(String text) {
+		String ending = text.substring(1);
+		switch (ending) {
+			case "-":
+				return -0.33f;
+			case "+":
+				return 0.33f;
+			default:
+				return 0;
+		}
 	}
 }
