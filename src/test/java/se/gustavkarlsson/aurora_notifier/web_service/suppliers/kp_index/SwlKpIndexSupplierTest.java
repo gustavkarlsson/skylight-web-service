@@ -3,7 +3,6 @@ package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
 import com.codahale.metrics.MetricRegistry;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SupplierException;
 
 import java.net.URL;
 
@@ -43,15 +42,15 @@ public class SwlKpIndexSupplierTest {
 		assertThat(value).isCloseTo(4.33f, within(0.005f));
 	}
 
-	@Test(expected = SupplierException.class)
-	public void corruptPage_get_throwsSupplierException() throws Exception {
+	@Test(expected = RuntimeException.class)
+	public void corruptPage_get_throwsRuntimeException() throws Exception {
 		SwlKpIndexSupplier supplier = new SwlKpIndexSupplier(new MetricRegistry(), getResource("corrupt_swl_report.html"));
 
 		supplier.get();
 	}
 
-	@Test(expected = SupplierException.class)
-	public void missingPage_get_throwsSupplierException() throws Exception {
+	@Test(expected = RuntimeException.class)
+	public void missingPage_get_throwsRuntimeException() throws Exception {
 		SwlKpIndexSupplier supplier = new SwlKpIndexSupplier(new MetricRegistry(), DUMMY_URL);
 
 		supplier.get();

@@ -2,8 +2,6 @@ package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 
 import java.lang.annotation.Retention;
@@ -18,7 +16,6 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
-	private static final Logger logger = LoggerFactory.getLogger(CachingSupplier.class);
 
 	private final Supplier<T> supplier;
 	private final Duration invalidateDuration;
@@ -33,16 +30,9 @@ public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
 	}
 
 	@Override
-	public Timestamped<T> get() throws SupplierException {
+	public Timestamped<T> get() {
 		if (!isValid()) {
-			try {
-				update();
-			} catch (SupplierException e) {
-				logger.warn("Failed to update value. Falling back to cached value", e);
-			}
-		}
-		if (!cachedExists()) {
-			throw new SupplierException("No cached value exists");
+			update();
 		}
 		return cached;
 	}
@@ -62,8 +52,9 @@ public class CachingSupplier<T> implements Supplier<Timestamped<T>> {
 		return cached != null;
 	}
 
-	private void update() throws SupplierException {
-		cached = new Timestamped<>(supplier.get());
+	private void update() {
+		T value = supplier.get();
+		cached = new Timestamped<>(value);
 	}
 
 	@BindingAnnotation

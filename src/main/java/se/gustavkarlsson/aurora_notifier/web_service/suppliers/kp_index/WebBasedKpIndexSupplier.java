@@ -4,7 +4,6 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import org.slf4j.Logger;
-import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SupplierException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +42,7 @@ abstract class WebBasedKpIndexSupplier implements Supplier<Float> {
 	}
 
 	@Override
-	public Float get() throws SupplierException {
+	public Float get() {
 		try (Timer.Context ignored = getTimer.time()) {
 			logger.debug("Getting content from {}", url);
 			String urlContent = getUrlContent(url);
@@ -54,7 +53,7 @@ abstract class WebBasedKpIndexSupplier implements Supplier<Float> {
 		} catch (Exception e) {
 			exceptionsMeter.mark();
 			logger.warn("Failed to get KP index", e);
-			throw new SupplierException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

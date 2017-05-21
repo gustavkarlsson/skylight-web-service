@@ -24,7 +24,7 @@ public class RaceSupplier<T> implements Supplier<T> {
 	}
 
 	@Override
-	public T get() throws SupplierException {
+	public T get() {
 		try {
 			List<Callable<T>> tasks = new ArrayList<>();
 			for (Supplier<T> supplier : suppliers) {
@@ -32,7 +32,7 @@ public class RaceSupplier<T> implements Supplier<T> {
 			}
 			return executor.invokeAny(tasks);
 		} catch (ExecutionException e) {
-			throw new SupplierException("No supplier successfully produced a result", e);
+			throw new RuntimeException("No supplier successfully produced a result", e);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}

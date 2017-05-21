@@ -41,7 +41,7 @@ public class SwlKpIndexSupplier extends WebBasedKpIndexSupplier {
 		return whole + extra;
 	}
 
-	private float parseWhole(String text) {
+	private static float parseWhole(String text) {
 		if (text.equals("-")) {
 			return 0;
 		}

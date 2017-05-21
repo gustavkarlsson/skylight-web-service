@@ -44,8 +44,8 @@ public class RaceSupplierTest {
 		assertThat(winner).isEqualTo("fast");
 	}
 
-	@Test(expected = SupplierException.class)
-	public void onlyOneSupplierThatThrowsException_get_throwsSupplierException() {
+	@Test(expected = RuntimeException.class)
+	public void onlyOneSupplierThatThrowsException_get_throwsRuntimeException() {
 		RaceSupplier<String> raceSupplier = new RaceSupplier<>(newHashSet(exceptionThrowingSupplier()));
 
 		raceSupplier.get();

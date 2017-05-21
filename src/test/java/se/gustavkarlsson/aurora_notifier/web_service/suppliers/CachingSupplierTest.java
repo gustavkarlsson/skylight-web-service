@@ -8,7 +8,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.time.Duration;
 import java.util.function.Supplier;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -61,22 +60,10 @@ public class CachingSupplierTest {
 		verify(mocked, times(2)).get();
 	}
 
-	@Test
-	public void innerSupplierUsedOnceAndThenThrowsException_get_returnsLastReturnedValue() {
-		CachingSupplier<String> supplier = new CachingSupplier<>(mocked, Duration.ofMillis(0));
-		when(mocked.get()).thenReturn("a");
-		supplier.get();
-		when(mocked.get()).thenThrow(new SupplierException("I'm not a!"));
-
-		String value = supplier.get().getValue();
-
-		assertThat(value).isEqualTo("a");
-	}
-
-	@Test(expected = SupplierException.class)
-	public void innerSupplierThrowsException_get_throwsSupplierException() {
+	@Test(expected = RuntimeException.class)
+	public void innerSupplierThrowsException_get_throwsRuntimeException() {
 		CachingSupplier<?> supplier = new CachingSupplier<>(mocked, Duration.ofMillis(0));
-		when(mocked.get()).thenThrow(new SupplierException("Boo!"));
+		when(mocked.get()).thenThrow(new RuntimeException("Boo!"));
 
 		supplier.get();
 	}
