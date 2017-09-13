@@ -79,7 +79,7 @@ public class KpIndexUpdater implements Managed {
 				.mapToDouble(Float::doubleValue)
 				.average()
 				.orElse(Double.NaN);
-		if (value == Double.NaN) {
+		if (value.isNaN()) {
 			return null;
 		}
 		return value;
