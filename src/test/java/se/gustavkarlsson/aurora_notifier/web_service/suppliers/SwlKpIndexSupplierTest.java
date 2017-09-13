@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
+package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import com.codahale.metrics.MetricRegistry;
 import org.junit.BeforeClass;
@@ -42,17 +42,21 @@ public class SwlKpIndexSupplierTest {
 		assertThat(value).isCloseTo(4.33f, within(0.005f));
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void corruptPage_get_throwsRuntimeException() throws Exception {
+	@Test
+	public void corruptPage_get_returnsNull() throws Exception {
 		SwlKpIndexSupplier supplier = new SwlKpIndexSupplier(new MetricRegistry(), getResource("corrupt_swl_report.html"));
 
-		supplier.get();
+		Float value = supplier.get();
+
+		assertThat(value).isNull();
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void missingPage_get_throwsRuntimeException() throws Exception {
+	@Test
+	public void missingPage_get_returnsNull() throws Exception {
 		SwlKpIndexSupplier supplier = new SwlKpIndexSupplier(new MetricRegistry(), DUMMY_URL);
 
-		supplier.get();
+		Float value = supplier.get();
+
+		assertThat(value).isNull();
 	}
 }

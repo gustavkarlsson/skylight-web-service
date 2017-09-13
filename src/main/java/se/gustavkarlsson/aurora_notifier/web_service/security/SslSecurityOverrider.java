@@ -42,7 +42,7 @@ public class SslSecurityOverrider {
 			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, trustAllCertificates, new SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-			logger.warn("SSL certificate checks have been disabled");
+			logger.warn("SSL certificate checks have been disabled for HTTP clients");
 		} catch (GeneralSecurityException e) {
 			throw new ExceptionInInitializerError(e);
 		}

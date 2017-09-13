@@ -11,19 +11,19 @@ class AuroraConfiguration extends Configuration {
 
 	// Parsed as milliseconds or according to ISO-8601
 	@JsonProperty
-	private Duration kpIndexCacheDuration = Duration.ofMinutes(15);
+	private Duration updateDelay = Duration.ofMinutes(15);
 
-	Duration getKpIndexCacheDuration() {
-		return kpIndexCacheDuration;
+	Duration getUpdateDelay() {
+		return updateDelay;
 	}
 
-	void setKpIndexCacheDuration(Duration kpIndexCacheDuration) {
-		this.kpIndexCacheDuration = kpIndexCacheDuration;
+	void setUpdateDelay(Duration updateDelay) {
+		this.updateDelay = updateDelay;
 	}
 
 	@ValidationMethod(message= AT_LEAST_ONE_MINUTE)
 	@JsonIgnore
-	public boolean isKpIndexCacheDurationValid() {
-		return kpIndexCacheDuration.toMillis() >= Duration.ofMinutes(1).toMillis();
+	public boolean isUpdateDelayValid() {
+		return updateDelay.toMillis() >= Duration.ofMinutes(1).toMillis();
 	}
 }

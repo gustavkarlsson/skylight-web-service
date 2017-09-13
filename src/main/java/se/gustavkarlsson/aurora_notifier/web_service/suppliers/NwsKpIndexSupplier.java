@@ -1,13 +1,15 @@
-package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
+package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import com.codahale.metrics.MetricRegistry;
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.net.URL;
 
 import static java.lang.Float.parseFloat;
 
-public class NwsKpIndexSupplier extends WebBasedKpIndexSupplier {
+@Singleton
+public class NwsKpIndexSupplier extends WebScrapingKpIndexSupplier {
 	private static final String URL = "http://services.swpc.noaa.gov/text/wing-kp.txt";
 	private static final String NEW_LINE_PATTERN = "\\n";
 	private static final String WHITESPACES_PATTERN = "\\s+";

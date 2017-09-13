@@ -1,8 +1,11 @@
 package se.gustavkarlsson.aurora_notifier.web_service.health;
 
-import com.google.inject.Inject;
-import se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index.SwlKpIndexSupplier;
+import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SwlKpIndexSupplier;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 class SwlKpIndexSupplierHealthCheck extends SupplierHealthCheck {
 
 	@Inject

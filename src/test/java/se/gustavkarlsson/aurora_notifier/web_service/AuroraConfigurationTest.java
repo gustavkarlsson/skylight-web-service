@@ -1,17 +1,14 @@
 package se.gustavkarlsson.aurora_notifier.web_service;
 
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import java.time.Duration;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.time.Duration;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,34 +35,34 @@ public class AuroraConfigurationTest {
 	}
 
 	@Test
-	public void negativeCacheDurationIsInvalid() {
-		config.setKpIndexCacheDuration(Duration.ofMillis(-1));
-		validateCacheDurationToShort();
+	public void negativeUpdateDelayIsInvalid() {
+		config.setUpdateDelay(Duration.ofMillis(-1));
+		validateUpdateDelayToShort();
 	}
 
 	@Test
-	public void shortCacheDurationIsInvalid() {
-		config.setKpIndexCacheDuration(Duration.ofMillis(1));
-		validateCacheDurationToShort();
+	public void shortUpdateDelayIsInvalid() {
+		config.setUpdateDelay(Duration.ofMillis(1));
+		validateUpdateDelayToShort();
 	}
 
 	@Test
-	public void oneMinuteCacheDurationIsValid() {
-		config.setKpIndexCacheDuration(Duration.ofMinutes(1));
+	public void oneMinuteUpdateDelayIsValid() {
+		config.setUpdateDelay(Duration.ofMinutes(1));
 		assertThat(validator.validate(config)).isEmpty();
 	}
 
 	@Test
-	public void zeroCacheDurationIsInvalid() {
-		config.setKpIndexCacheDuration(Duration.ofMillis(0));
-		validateCacheDurationToShort();
+	public void zeroUpdateDelayIsInvalid() {
+		config.setUpdateDelay(Duration.ofMillis(0));
+		validateUpdateDelayToShort();
 	}
 
-	private void validateCacheDurationToShort() {
+	private void validateUpdateDelayToShort() {
 		Set<ConstraintViolation<AuroraConfiguration>> violations = validator.validate(config);
 		assertThat(violations).hasSize(1);
 		ConstraintViolation<AuroraConfiguration> violation = violations.iterator().next();
-		assertThat(violation.getPropertyPath().toString()).isEqualTo("kpIndexCacheDurationValid");
+		assertThat(violation.getPropertyPath().toString()).isEqualTo("updateDelayValid");
 		assertThat(violation.getMessage()).isEqualTo(AuroraConfiguration.AT_LEAST_ONE_MINUTE);
 	}
 }

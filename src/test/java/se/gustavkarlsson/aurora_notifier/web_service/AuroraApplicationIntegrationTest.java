@@ -1,7 +1,9 @@
 package se.gustavkarlsson.aurora_notifier.web_service;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.apache.http.HttpEntity;
@@ -18,7 +20,12 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
 import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
+import se.gustavkarlsson.aurora_notifier.web_service.guice_annotations.Update;
 
+import javax.inject.Singleton;
+import java.time.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
@@ -74,13 +81,33 @@ public class AuroraApplicationIntegrationTest {
 		private static class AuroraTestModule extends AbstractModule {
 			@Override
 			protected void configure() {
-				bind(new TypeLiteral<Supplier<Timestamped<Float>>>() {}).to(FixedTimestampedSupplier.class);
+				Multibinder<Supplier<Float>> kpIndexSuppliersBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<Supplier<Float>>() {});
+				kpIndexSuppliersBinder.addBinding().to(FixedTimestampedSupplier.class);
 			}
 
-			private static class FixedTimestampedSupplier implements Supplier<Timestamped<Float>> {
+			@Provides
+			@Singleton
+			@Update
+			public Duration provideUpdateDelay() {
+				return Duration.ofSeconds(5);
+			}
+
+			@Provides
+			@Singleton
+			public ScheduledExecutorService provideScheduledExecutorService() {
+				return Executors.newSingleThreadScheduledExecutor();
+			}
+
+			@Provides
+			@Singleton
+			public Clock provideClock() {
+				return Clock.fixed(Instant.ofEpochMilli(1000), ZoneOffset.UTC);
+			}
+
+			private static class FixedTimestampedSupplier implements Supplier<Float> {
 				@Override
-				public Timestamped<Float> get() {
-					return KP_INDEX;
+				public Float get() {
+					return KP_INDEX.getValue();
 				}
 			}
 		}

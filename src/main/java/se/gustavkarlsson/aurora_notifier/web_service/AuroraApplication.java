@@ -1,6 +1,7 @@
 package se.gustavkarlsson.aurora_notifier.web_service;
 
 
+import com.google.inject.Stage;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -23,7 +24,7 @@ public class AuroraApplication extends Application<AuroraConfiguration> {
 		GuiceBundle<AuroraConfiguration> guiceBundle = GuiceBundle.<AuroraConfiguration>builder()
 				.enableAutoConfig("se.gustavkarlsson.aurora_notifier.web_service")
 				.modules(new AuroraModule())
-				.build();
+				.build(Stage.PRODUCTION);
 		bootstrap.addBundle(guiceBundle);
 	}
 

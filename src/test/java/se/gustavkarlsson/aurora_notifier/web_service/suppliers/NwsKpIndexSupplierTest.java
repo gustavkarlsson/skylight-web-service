@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
+package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import com.codahale.metrics.MetricRegistry;
 import org.junit.BeforeClass;
@@ -42,17 +42,21 @@ public class NwsKpIndexSupplierTest {
 		assertThat(value).isCloseTo(0.35f, within(0.005f));
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void corruptPage_get_throwsRuntimeException() throws Exception {
+	@Test
+	public void corruptPage_get_returnsNull() throws Exception {
 		NwsKpIndexSupplier supplier = new NwsKpIndexSupplier(new MetricRegistry(), getResource("corrupt_nws_report.txt"));
 
-		supplier.get();
+		Float value = supplier.get();
+
+		assertThat(value).isNull();
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void missingPage_get_throwsRuntimeException() throws Exception {
+	@Test
+	public void missingPage_get_returnsNull() throws Exception {
 		NwsKpIndexSupplier supplier = new NwsKpIndexSupplier(new MetricRegistry(), DUMMY_URL);
 
-		supplier.get();
+		Float value = supplier.get();
+
+		assertThat(value).isNull();
 	}
 }

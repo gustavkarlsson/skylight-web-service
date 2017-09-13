@@ -1,4 +1,4 @@
-package se.gustavkarlsson.aurora_notifier.web_service.suppliers.kp_index;
+package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
@@ -16,8 +16,8 @@ import java.util.function.Supplier;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
-abstract class WebBasedKpIndexSupplier implements Supplier<Float> {
-	private static final Logger logger = getLogger(WebBasedKpIndexSupplier.class);
+abstract class WebScrapingKpIndexSupplier implements Supplier<Float> {
+	private static final Logger logger = getLogger(WebScrapingKpIndexSupplier.class);
 
 	private static final String BEGINNING_OF_STRING_TOKEN = "\\A";
 
@@ -25,7 +25,7 @@ abstract class WebBasedKpIndexSupplier implements Supplier<Float> {
 	private final Meter exceptionsMeter;
 	private final URL url;
 
-	WebBasedKpIndexSupplier(MetricRegistry metrics, URL url) {
+	WebScrapingKpIndexSupplier(MetricRegistry metrics, URL url) {
 		checkNotNull(metrics);
 		checkNotNull(url);
 		getTimer = createGetTimer(metrics);
@@ -53,7 +53,7 @@ abstract class WebBasedKpIndexSupplier implements Supplier<Float> {
 		} catch (Exception e) {
 			exceptionsMeter.mark();
 			logger.warn("Failed to get KP index", e);
-			throw new RuntimeException(e);
+			return null;
 		}
 	}
 
