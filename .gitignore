@@ -10,6 +10,7 @@
 # IntelliJ
 /.idea/
 *.iml
+/out/
 
 # Logs
 /logs/
