@@ -1,0 +1,6 @@
+{
+  "name": "Skylight web service",
+  "description": "Web service for the Skylight mobile app",
+  "image": "heroku/gradle",
+  "addons": []
+}
