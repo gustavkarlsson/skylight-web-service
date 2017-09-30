@@ -3,3 +3,11 @@ server:
   applicationContextPath: /
   connector:
     type: http
+logging:
+  level: INFO
+  appenders:
+    - type: console
+    - type: airbrake
+      threshold: ERROR
+      env: production
+      apiKey: ${AIRBRAKE_API_KEY}
