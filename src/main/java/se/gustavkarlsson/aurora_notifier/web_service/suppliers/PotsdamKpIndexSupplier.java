@@ -12,10 +12,6 @@ import java.util.Arrays;
 public class PotsdamKpIndexSupplier extends WebScrapingKpIndexSupplier {
 	private static final String URL = "http://www-app3.gfz-potsdam.de/kp_index/qlyymm.tab";
 
-	static {
-		SslSecurityOverrider.override();
-	}
-
 	@Inject
 	PotsdamKpIndexSupplier(MetricRegistry metrics) {
 		this(metrics, parseUrl(URL));
