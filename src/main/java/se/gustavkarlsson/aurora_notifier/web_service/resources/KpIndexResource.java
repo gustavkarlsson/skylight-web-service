@@ -2,7 +2,6 @@ package se.gustavkarlsson.aurora_notifier.web_service.resources;
 
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
-import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.web_service.repository.KpIndexRepository;
 
 import javax.inject.Inject;

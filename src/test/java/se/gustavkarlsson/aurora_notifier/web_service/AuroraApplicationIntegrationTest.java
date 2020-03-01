@@ -18,12 +18,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
-import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
-import se.gustavkarlsson.aurora_notifier.common.service.KpIndexService;
 import se.gustavkarlsson.aurora_notifier.web_service.guice_annotations.Update;
+import se.gustavkarlsson.aurora_notifier.web_service.resources.Timestamped;
 
 import javax.inject.Singleton;
-import java.time.*;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;

@@ -1,6 +1,6 @@
 package se.gustavkarlsson.aurora_notifier.web_service.repository;
 
-import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
+import se.gustavkarlsson.aurora_notifier.web_service.resources.Timestamped;
 
 import javax.inject.Singleton;
 
