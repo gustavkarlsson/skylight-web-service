@@ -7,7 +7,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import io.dropwizard.setup.Environment;
 import se.gustavkarlsson.aurora_notifier.web_service.guice_annotations.Update;
-import se.gustavkarlsson.aurora_notifier.web_service.suppliers.NwsKpIndexSupplier;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.PotsdamKpIndexSupplier;
 import se.gustavkarlsson.aurora_notifier.web_service.suppliers.SwlKpIndexSupplier;
 
@@ -23,7 +22,6 @@ class AuroraModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		Multibinder<Supplier<Float>> kpIndexSuppliersBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<Supplier<Float>>() {});
-		kpIndexSuppliersBinder.addBinding().to(NwsKpIndexSupplier.class);
 		kpIndexSuppliersBinder.addBinding().to(SwlKpIndexSupplier.class);
 		kpIndexSuppliersBinder.addBinding().to(PotsdamKpIndexSupplier.class);
 	}
