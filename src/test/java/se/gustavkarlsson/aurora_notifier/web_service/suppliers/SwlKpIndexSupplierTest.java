@@ -39,7 +39,7 @@ public class SwlKpIndexSupplierTest {
 
 		Float value = supplier.get();
 
-		assertThat(value).isCloseTo(4.33f, within(0.005f));
+		assertThat(value).isCloseTo(2f, within(0.005f));
 	}
 
 	@Test
