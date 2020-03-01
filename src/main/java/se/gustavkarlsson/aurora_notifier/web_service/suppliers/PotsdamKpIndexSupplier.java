@@ -1,7 +1,6 @@
 package se.gustavkarlsson.aurora_notifier.web_service.suppliers;
 
 import com.codahale.metrics.MetricRegistry;
-import se.gustavkarlsson.aurora_notifier.web_service.security.SslSecurityOverrider;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

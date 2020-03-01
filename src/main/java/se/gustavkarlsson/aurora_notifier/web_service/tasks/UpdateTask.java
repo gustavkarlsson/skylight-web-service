@@ -2,7 +2,7 @@ package se.gustavkarlsson.aurora_notifier.web_service.tasks;
 
 import com.google.common.collect.ImmutableMultimap;
 import io.dropwizard.servlets.tasks.Task;
-import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
+import se.gustavkarlsson.aurora_notifier.web_service.resources.Timestamped;
 import se.gustavkarlsson.aurora_notifier.web_service.updater.KpIndexUpdater;
 
 import javax.inject.Inject;

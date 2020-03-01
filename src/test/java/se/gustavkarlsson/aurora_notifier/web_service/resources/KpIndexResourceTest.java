@@ -4,7 +4,6 @@ import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
-import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.web_service.repository.KpIndexRepository;
 
 import javax.ws.rs.core.GenericType;

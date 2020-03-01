@@ -2,9 +2,9 @@ package se.gustavkarlsson.aurora_notifier.web_service.updater;
 
 import io.dropwizard.lifecycle.Managed;
 import org.slf4j.Logger;
-import se.gustavkarlsson.aurora_notifier.common.domain.Timestamped;
 import se.gustavkarlsson.aurora_notifier.web_service.guice_annotations.Update;
 import se.gustavkarlsson.aurora_notifier.web_service.repository.KpIndexRepository;
+import se.gustavkarlsson.aurora_notifier.web_service.resources.Timestamped;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
