@@ -1,12 +1,9 @@
 plugins {
-	id "java"
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
 	id "application"
 	id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
-sourceCompatibility = 1.8
-group = "se.gustavkarlsson.aurora-notifier"
-version = "1.0-SNAPSHOT"
 mainClassName = "se.gustavkarlsson.aurora_notifier.web_service.AuroraApplication"
 
 repositories {
@@ -30,17 +27,6 @@ dependencies {
 	testImplementation "io.dropwizard:dropwizard-testing:$dropwizard_version"
 	testImplementation "io.dropwizard:dropwizard-client:$dropwizard_version"
 	testImplementation "com.squareup.retrofit2:converter-jackson:2.1.0"
-}
-
-jar {
-	manifest {
-		attributes "Implementation-Title": name,
-				"Implementation-Version": version,
-				"Built-By": System.getProperty("user.name"),
-				"Built-Date": new Date(),
-				"Built-JDK": System.getProperty("java.version"),
-				"Main-Class": mainClassName
-	}
 }
 
 task stage(dependsOn: ["clean", "shadowJar"])
