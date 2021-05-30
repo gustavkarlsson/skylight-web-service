@@ -2,3 +2,4 @@
 - Rewrite in Kotlin (ktor?)
 - Migrate to kotlin gradle DSL?
 - Do config purely with env files
+- Change to LF
