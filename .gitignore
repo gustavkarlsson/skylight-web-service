@@ -1,16 +1,11 @@
 # Gradle
-/.gradle/
+**/.gradle/
 /build/
-
-# Eclipse
-/.classpath
-/.project
-/.settings/
+local.properties
 
 # IntelliJ
-/.idea/
+**/.idea/
 *.iml
-/out/
 
 # Logs
-/logs/
+*.log
