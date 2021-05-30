@@ -26,14 +26,12 @@ dependencies {
 	testImplementation("com.squareup.retrofit2:converter-jackson:2.1.0")
 
     // New
+    val ktorVersion = "1.6.0"
     implementation(kotlin("stdlib"))
-    implementation("io.ktor:ktor-server-core:1.6.0")
-    implementation("io.ktor:ktor-server-netty:1.6.0")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("ch.qos.logback:logback-classic:1.2.3")
-}
-
-kotlin {
-    explicitApi()
 }
 
 application {
