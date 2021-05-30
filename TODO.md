@@ -1,0 +1,4 @@
+- Replace travis with GH actions
+- Rewrite in Kotlin (ktor?)
+- Migrate to kotlin gradle DSL?
+- Do config purely with env files
