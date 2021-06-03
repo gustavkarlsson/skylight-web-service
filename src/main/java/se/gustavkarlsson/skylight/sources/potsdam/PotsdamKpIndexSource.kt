@@ -8,7 +8,7 @@ class PotsdamKpIndexSource(
 ) : KpIndexSource {
     override val name: String = "Potsdam"
 
-    override suspend fun get(): KpIndex {
+    override suspend fun get(): KpIndexReport {
         val data = fetcher.fetch()
         return extractor.extract(data)
     }

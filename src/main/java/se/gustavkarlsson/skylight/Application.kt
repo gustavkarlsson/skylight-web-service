@@ -6,22 +6,27 @@ import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.time.delay
-import kotlinx.coroutines.time.withTimeout
+import se.gustavkarlsson.skylight.database.Database
+import se.gustavkarlsson.skylight.database.InMemoryDatabase
 import se.gustavkarlsson.skylight.sources.potsdam.PotsdamKpIndexSource
-import java.time.Duration
+import java.time.Instant
 import kotlin.system.exitProcess
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
+@OptIn(ExperimentalTime::class)
 fun main() {
     val port = getPortFromEnv("PORT")
     if (port==null) {
         logError { "Failed to read port." }
         exitProcess(1)
     }
-    val updateDelay = Duration.ofMinutes(15)
+    val updateDelay = Duration.minutes(15)
     val sources = listOf(PotsdamKpIndexSource())
+    val database = InMemoryDatabase()
     embeddedServer(Netty, port = port) {
-        updateInBackground(updateDelay, sources)
+        continuouslyUpdateInBackground(updateDelay, sources, database)
         routing {
             get("/kp-index") {
                 // FIXME get from database
@@ -30,31 +35,60 @@ fun main() {
     }.start(wait = true)
 }
 
-private fun CoroutineScope.updateInBackground(updateDelay: Duration, sources: Iterable<KpIndexSource>) {
-    val timeout = Duration.ofMinutes(1)
-    launch {
-        while (true) {
-            sources
-                .map { source ->
-                    source to async { source.get() }
-                }
-                .forEach { (source, job) ->
-                    try {
-                        val kpIndex = withTimeout(timeout) {
-                            job.await()
-                        }
-                        // FIXME save in database
-                    } catch (e: TimeoutCancellationException) {
-                        logError { "Timed out after $timeout when getting Kp index from ${source.name}" }
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Exception) {
-                        logError(e) { "Failed to get Kp index from ${source.name}" }
-                    }
-                }
-            delay(updateDelay)
+@OptIn(ExperimentalTime::class)
+private fun CoroutineScope.continuouslyUpdateInBackground(
+    timeBetweenUpdates: Duration,
+    sources: Iterable<KpIndexSource>,
+    database: Database,
+): Job = launch {
+    while (true) {
+        logInfo { "Updating..." }
+        val elapsed = measureTime {
+            updateSafe(timeBetweenUpdates, sources, database)
+        }
+        logInfo { "Update completed in $elapsed." }
+        val delay = timeBetweenUpdates - elapsed
+        if (delay.isPositive()) {
+            logInfo { "Waiting for $delay until next update." }
+            delay(delay)
         }
     }
+}
+
+@OptIn(ExperimentalTime::class)
+private suspend fun updateSafe(
+    timeout: Duration,
+    sources: Iterable<KpIndexSource>,
+    database: Database,
+) {
+    try {
+        withTimeout(timeout) {
+            updateAll(sources, database)
+        }
+    } catch (e: TimeoutCancellationException) {
+        logError(e) { "Update timed out." }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        logError(e) { "Update failed." }
+    }
+}
+
+private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Database) {
+    val jobs = supervisorScope {
+        sources.map { source ->
+            val handler = CoroutineExceptionHandler { _, t ->
+                logError(t) { "${source.name} failed to update." }
+            }
+            launch(handler) {
+                val report = source.get()
+                val fetchTime = Instant.now()
+                val entry = Database.Entry(source.name, report, fetchTime)
+                database.update(entry)
+            }
+        }
+    }
+    jobs.joinAll()
 }
 
 private fun getPortFromEnv(key: String): Int? {
@@ -72,14 +106,14 @@ private fun getPortFromEnv(key: String): Int? {
     return port
 }
 
-fun logError(e: Exception? = null, message: () -> String) {
+fun logError(t: Throwable? = null, message: () -> String) {
     println(message())
-    e?.printStackTrace(System.out)
+    t?.printStackTrace(System.out)
 }
 
-fun logWarn(e: Exception? = null, message: () -> String) {
+fun logWarn(t: Throwable? = null, message: () -> String) {
     println(message())
-    e?.printStackTrace(System.out)
+    t?.printStackTrace(System.out)
 }
 
 fun logInfo(message: () -> String) {
