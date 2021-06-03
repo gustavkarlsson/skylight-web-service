@@ -3,5 +3,4 @@
 - Migrate to kotlin gradle DSL?
 - Do config purely with env files
 - Change to LF
-- Do proper ktor logging
 - @OptIn(ExperimentalTime::class)

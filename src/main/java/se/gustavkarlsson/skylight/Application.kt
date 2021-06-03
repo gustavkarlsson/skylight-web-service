@@ -34,11 +34,12 @@ fun main() {
         install(ContentNegotiation) {
             json()
         }
+        install(CallLogging)
         continuouslyUpdateInBackground(updateDelay, sources, database)
         routing {
             get("/kp-index") {
                 val entry = database.entries.firstOrNull()
-                if (entry == null) {
+                if (entry==null) {
                     call.respond(HttpStatusCode.NotFound)
                 } else {
                     val response = KpIndexResponse(entry.kpIndexResult.kpIndex.value, entry.fetchTime.toEpochMilli())
@@ -118,22 +119,4 @@ private fun getPortFromEnv(key: String): Int? {
     }
     logInfo { "Read port $port from $$key." }
     return port
-}
-
-fun logError(t: Throwable? = null, message: () -> String) {
-    println(message())
-    t?.printStackTrace(System.out)
-}
-
-fun logWarn(t: Throwable? = null, message: () -> String) {
-    println(message())
-    t?.printStackTrace(System.out)
-}
-
-fun logInfo(message: () -> String) {
-    println(message())
-}
-
-fun logDebug(message: () -> String) {
-    println(message())
 }
