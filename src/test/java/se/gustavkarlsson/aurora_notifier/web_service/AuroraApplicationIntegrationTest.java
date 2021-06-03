@@ -18,8 +18,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
-import se.gustavkarlsson.aurora_notifier.web_service.guice_annotations.Update;
-import se.gustavkarlsson.aurora_notifier.web_service.resources.Timestamped;
 
 import javax.inject.Singleton;
 import java.time.Clock;
@@ -89,8 +87,7 @@ public class AuroraApplicationIntegrationTest {
 
 			@Provides
 			@Singleton
-			@Update
-			public Duration provideUpdateDelay() {
+            public Duration provideUpdateDelay() {
 				return Duration.ofSeconds(5);
 			}
 
