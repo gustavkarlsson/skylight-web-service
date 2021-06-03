@@ -36,7 +36,7 @@ fun main() {
         "Loaded sources: $sourcesNames"
     }
     val database = InMemoryDatabase()
-    logInfo { "Loaded database: $database" }
+    logInfo { "Loaded database: ${database.javaClass.name}" }
     embeddedServer(Netty, port = port) {
         install(ContentNegotiation) {
             json()
