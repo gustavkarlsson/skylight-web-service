@@ -24,12 +24,19 @@ import kotlin.time.measureTime
 fun main() {
     val port = getPortFromEnv("PORT")
     if (port==null) {
-        logError { "Failed to read port." }
+        logError { "Failed to read port" }
         exitProcess(1)
     }
+    logInfo { "Read port: $port" }
     val updateDelay = Duration.minutes(15)
+    logInfo { "Got update delay: $updateDelay" }
     val sources = listOf(PotsdamKpIndexSource())
+    logInfo {
+        val sourcesNames = sources.map { it.name }
+        "Loaded sources: $sourcesNames"
+    }
     val database = InMemoryDatabase()
+    logInfo { "Loaded database: $database" }
     embeddedServer(Netty, port = port) {
         install(ContentNegotiation) {
             json()
@@ -61,10 +68,10 @@ private fun CoroutineScope.continuouslyUpdateInBackground(
         val elapsed = measureTime {
             updateSafe(timeBetweenUpdates, sources, database)
         }
-        logInfo { "Update completed in $elapsed." }
+        logInfo { "Update completed in $elapsed" }
         val delay = timeBetweenUpdates - elapsed
         if (delay.isPositive()) {
-            logInfo { "Waiting for $delay until next update." }
+            logInfo { "Waiting for $delay until next update" }
             delay(delay)
         }
     }
@@ -81,11 +88,11 @@ private suspend fun updateSafe(
             updateAll(sources, database)
         }
     } catch (e: TimeoutCancellationException) {
-        logError(e) { "Update timed out." }
+        logError(e) { "Update timed out" }
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
-        logError(e) { "Update failed." }
+        logError(e) { "Update failed" }
     }
 }
 
@@ -93,7 +100,7 @@ private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Databa
     val jobs = supervisorScope {
         sources.map { source ->
             val handler = CoroutineExceptionHandler { _, t ->
-                logError(t) { "${source.name} failed to update." }
+                logError(t) { "${source.name} failed to update" }
             }
             launch(handler + CoroutineName(source.name)) {
                 val report = source.get()
@@ -109,14 +116,14 @@ private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Databa
 private fun getPortFromEnv(key: String): Int? {
     val string = System.getenv(key)?.trim()
     if (string.isNullOrBlank()) {
-        logWarn { "No port set in $$key." }
+        logWarn { "No port set in $$key" }
         return null
     }
     val port = string.toIntOrNull()
     if (port==null) {
-        logWarn { "Failed to read port $string from $$key." }
+        logWarn { "Failed to read port $string from $$key" }
         return null
     }
-    logInfo { "Read port $port from $$key." }
+    logDebug { "Read port $port from $$key" }
     return port
 }
