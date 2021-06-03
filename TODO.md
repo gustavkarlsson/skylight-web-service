@@ -7,3 +7,4 @@
 - Health checks?
 - Manual updates?
 - Add airbrake logback appender
+- Hide secrets somehow?
