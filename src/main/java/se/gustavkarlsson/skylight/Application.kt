@@ -55,7 +55,7 @@ private fun CoroutineScope.continuouslyUpdateInBackground(
     timeBetweenUpdates: Duration,
     sources: Iterable<KpIndexSource>,
     database: Database,
-): Job = launch {
+): Job = launch(CoroutineName("Update")) {
     while (true) {
         logInfo { "Updating..." }
         val elapsed = measureTime {
@@ -95,7 +95,7 @@ private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Databa
             val handler = CoroutineExceptionHandler { _, t ->
                 logError(t) { "${source.name} failed to update." }
             }
-            launch(handler) {
+            launch(handler + CoroutineName(source.name)) {
                 val report = source.get()
                 val fetchTime = Instant.now()
                 val entry = Database.Entry(source.name, report, fetchTime)
