@@ -29,7 +29,23 @@ fun logDebug(message: () -> String) {
 
 private fun getLogger(): Logger {
     val stackTrace = Thread.currentThread().stackTrace
-    val frame = stackTrace[3]
-    val name = frame.className
+    val name = getLoggerName(stackTrace)
     return LoggerFactory.getLogger(name)
 }
+
+private fun getLoggerName(stackTrace: Array<StackTraceElement>): String {
+    stackDepth?.let { depth ->
+        return stackTrace[depth].className
+    }
+    val classNameToIgnore = stackTrace[1].className
+    val depth = stackTrace
+        .map { it.className }
+        .withIndex()
+        .indexOfFirst { (index, className) ->
+            index > 0 && className!=classNameToIgnore
+        }
+    stackDepth = depth
+    return stackTrace[depth].className
+}
+
+private var stackDepth: Int? = null
