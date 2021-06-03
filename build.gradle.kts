@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.5.10"
+    kotlin("plugin.serialization") version "1.5.0"
 	id("application")
 	id("com.github.johnrengelman.shadow") version "7.0.0"
 }
@@ -30,7 +31,9 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-serialization:$ktorVersion")
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
     implementation("ch.qos.logback:logback-classic:1.2.3")
 }
 

@@ -2,7 +2,12 @@
 
 package se.gustavkarlsson.skylight
 
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.*
@@ -26,10 +31,19 @@ fun main() {
     val sources = listOf(PotsdamKpIndexSource())
     val database = InMemoryDatabase()
     embeddedServer(Netty, port = port) {
+        install(ContentNegotiation) {
+            json()
+        }
         continuouslyUpdateInBackground(updateDelay, sources, database)
         routing {
             get("/kp-index") {
-                // FIXME get from database
+                val entry = database.entries.firstOrNull()
+                if (entry == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                } else {
+                    val response = KpIndexResponse(entry.kpIndexResult.kpIndex.value, entry.fetchTime.toEpochMilli())
+                    call.respond(response)
+                }
             }
         }
     }.start(wait = true)
