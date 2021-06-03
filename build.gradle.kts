@@ -23,7 +23,7 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation("net.anthavio:airbrake-logback:1.0.3") // TODO Update version
+    implementation("com.bugsnag:bugsnag:3.6.2")
 }
 
 tasks.withType<KotlinCompile>().configureEach {

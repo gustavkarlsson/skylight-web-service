@@ -2,6 +2,7 @@
 
 package se.gustavkarlsson.skylight
 
+import com.bugsnag.Bugsnag
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -13,6 +14,7 @@ import io.ktor.server.netty.*
 import kotlinx.coroutines.*
 import se.gustavkarlsson.skylight.database.Database
 import se.gustavkarlsson.skylight.database.InMemoryDatabase
+import se.gustavkarlsson.skylight.logging.*
 import se.gustavkarlsson.skylight.sources.potsdam.PotsdamKpIndexSource
 import java.time.Instant
 import kotlin.system.exitProcess
@@ -20,9 +22,11 @@ import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
+
 @OptIn(ExperimentalTime::class)
 fun main() {
-    val port = getPortFromEnv("PORT")
+    setupLogging()
+    val port = readIntFromEnv("PORT")
     if (port==null) {
         logError { "Failed to read port" }
         exitProcess(1)
@@ -55,6 +59,39 @@ fun main() {
             }
         }
     }.start(wait = true)
+}
+
+private fun setupLogging() {
+    addLogger(Slf4jLogger)
+    val bugsnag = trySetupBugsnag()
+    if (bugsnag!=null) {
+        val bugsnagLogger = BugsnagLogger(bugsnag)
+        addLogger(bugsnagLogger)
+    }
+}
+
+private fun trySetupBugsnag(): Bugsnag? {
+    val apiKeyKey = "BUGSNAG_API_KEY"
+    val apiKey = readStringFromEnv(apiKeyKey) ?: return null
+    val releaseStageKey = "BUGSNAG_RELEASE_STAGE"
+    val releaseStage = readStringFromEnv(releaseStageKey)?.trim()?.lowercase()
+    val validStages = listOf("production", "develop")
+    when (releaseStage) {
+        in validStages -> Unit
+        null -> {
+            val message = "$apiKeyKey is set without a valid $releaseStageKey ($releaseStage). " +
+                "Must be one of: $validStages"
+            error(message)
+        }
+        else -> {
+            val message = "$apiKeyKey is set without $releaseStageKey. " +
+                "Must be one of: $validStages"
+            error(message)
+        }
+    }
+    val bugsnag = Bugsnag(apiKey, true)
+    bugsnag.setReleaseStage(releaseStage)
+    return bugsnag
 }
 
 @OptIn(ExperimentalTime::class)
@@ -113,17 +150,27 @@ private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Databa
     jobs.joinAll()
 }
 
-private fun getPortFromEnv(key: String): Int? {
+private fun readStringFromEnv(key: String): String? {
     val string = System.getenv(key)?.trim()
     if (string.isNullOrBlank()) {
-        logWarn { "No port set in $$key" }
+        logWarn { "No value set for $$key" }
         return null
     }
-    val port = string.toIntOrNull()
-    if (port==null) {
-        logWarn { "Failed to read port $string from $$key" }
+    logDebug { "Read $string from $$key" }
+    return string
+}
+
+private fun readIntFromEnv(key: String): Int? {
+    val string = System.getenv(key)?.trim()
+    if (string.isNullOrBlank()) {
+        logWarn { "No value set for $$key" }
         return null
     }
-    logDebug { "Read port $port from $$key" }
-    return port
+    val int = string.toIntOrNull()
+    if (int==null) {
+        logWarn { "Failed to parse $$key=$string as integer" }
+        return null
+    }
+    logDebug { "Read $int from $$key" }
+    return int
 }
