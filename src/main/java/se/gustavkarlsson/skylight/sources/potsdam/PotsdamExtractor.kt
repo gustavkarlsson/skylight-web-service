@@ -7,15 +7,15 @@ import se.gustavkarlsson.skylight.Signature
 
 object PotsdamExtractor : Extractor<PotsdamData> {
     override fun extract(data: PotsdamData): KpIndexReport {
-        val lastLine = getLastLine(data)
+        val lastLine = getKpIndexLine(data)
         val kpIndex = getLastKpIndex(lastLine)
         val signature = Signature(lastLine.hashCode())
         return KpIndexReport(kpIndex, signature)
     }
 
-    private fun getLastLine(data: PotsdamData): String {
+    private fun getKpIndexLine(data: PotsdamData): String {
         return data.value.lineSequence()
-            .filter { line -> line.isNotBlank() }
+            .filter { line -> line.contains(KP_REGEX) }
             .last()
     }
 
@@ -23,7 +23,7 @@ object PotsdamExtractor : Extractor<PotsdamData> {
         val lastText = line.split(Regex("\\s+")).asSequence()
             .drop(1)
             .take(8)
-            .filter { string -> string.matches(Regex("[0-9]([o+\\-])")) }
+            .filter { cell -> cell.matches(KP_REGEX) }
             .lastOrNull() ?: throw IllegalArgumentException("Could not find Kp index in line: '$line'")
         return lastText.parseKpIndex()
     }
@@ -49,3 +49,5 @@ object PotsdamExtractor : Extractor<PotsdamData> {
     }
 
 }
+
+private val KP_REGEX = Regex("\\d([o+\\-])")
