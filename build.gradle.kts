@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.10"
-    kotlin("plugin.serialization") version "1.5.0"
+    val kotlinVersion = "1.5.10"
+
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
     id("application")
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
@@ -13,9 +15,8 @@ repositories {
 }
 
 dependencies {
-
-    // New
     val ktorVersion = "1.6.0"
+
     implementation(kotlin("stdlib"))
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
