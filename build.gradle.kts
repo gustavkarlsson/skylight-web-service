@@ -25,6 +25,20 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("com.bugsnag:bugsnag:3.6.2")
+
+    // Spek
+    val spekVersion = "2.0.15"
+    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion")
+    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:$spekVersion")
+    testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect")
+
+    testImplementation("io.strikt:strikt-jvm:0.31.0")
+}
+
+tasks.test {
+    useJUnitPlatform {
+        includeEngines("spek2")
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
