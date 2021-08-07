@@ -56,6 +56,10 @@ private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Databa
             }
             launch(handler + CoroutineName(source.name)) {
                 val report = source.get()
+                if (report==null) {
+                    logInfo { "No report from source: $source" }
+                    return@launch
+                }
                 val fetchTime = Instant.now()
                 val entry = Database.Entry(source.name, report, fetchTime)
                 database.update(entry)

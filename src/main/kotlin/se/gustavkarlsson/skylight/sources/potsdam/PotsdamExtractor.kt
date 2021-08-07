@@ -1,22 +1,32 @@
 package se.gustavkarlsson.skylight.sources.potsdam
 
+import org.intellij.lang.annotations.Language
 import se.gustavkarlsson.skylight.Extractor
 import se.gustavkarlsson.skylight.KpIndex
 import se.gustavkarlsson.skylight.KpIndexReport
 import se.gustavkarlsson.skylight.Signature
+import se.gustavkarlsson.skylight.logging.logInfo
 
 object PotsdamExtractor : Extractor<PotsdamData> {
-    override fun extract(data: PotsdamData): KpIndexReport {
-        val lastLine = getKpIndexLine(data)
+    override fun extract(data: PotsdamData): KpIndexReport? {
+        val validLines = data.value.lineSequence()
+            .filter { line -> line.matches(KP_LINE_REGEX) }
+            .toList()
+        check(validLines.isNotEmpty()) {
+            "No valid lines in data:\n'${data.value}'"
+        }
+        val lastLine = getKpIndexLine(validLines)
+        if (lastLine==null) {
+            logInfo { "No line matched $KP_REGEX. Start of month? Data:\n'${data.value}'" }
+            return null
+        }
         val kpIndex = getLastKpIndex(lastLine)
         val signature = Signature(lastLine.hashCode())
         return KpIndexReport(kpIndex, signature)
     }
 
-    private fun getKpIndexLine(data: PotsdamData): String {
-        return data.value.lineSequence()
-            .filter { line -> line.contains(KP_REGEX) }
-            .last()
+    private fun getKpIndexLine(lines: Iterable<String>): String? {
+        return lines.lastOrNull { line -> line.contains(KP_REGEX) }
     }
 
     private fun getLastKpIndex(line: String): KpIndex {
@@ -50,4 +60,21 @@ object PotsdamExtractor : Extractor<PotsdamData> {
 
 }
 
-private val KP_REGEX = Regex("\\d([o+\\-])")
+@Language("RegExp")
+private const val DATE_PATTERN = "\\d{6}"
+
+@Language("RegExp")
+private const val KP_PATTERN = "\\d[o+\\-]"
+
+@Language("RegExp")
+private const val EMPTY_SUFFIX = " *"
+
+@Language("RegExp")
+private val INCOMPLETE_SUFFIX = "( +$KP_PATTERN){0,7} *"
+
+@Language("RegExp")
+private val COMPLETE_SUFFIX = "( +$KP_PATTERN){8} +.*"
+
+private val KP_LINE_REGEX = Regex("^${DATE_PATTERN}($EMPTY_SUFFIX|$INCOMPLETE_SUFFIX|$COMPLETE_SUFFIX)$")
+
+private val KP_REGEX = Regex(KP_PATTERN)
