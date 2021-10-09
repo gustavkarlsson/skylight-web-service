@@ -9,6 +9,10 @@ import se.gustavkarlsson.skylight.logging.logInfo
 
 object PotsdamExtractor : Extractor<PotsdamData> {
     override fun extract(data: PotsdamData): KpIndexReport? {
+        if (data.value.isBlank()) {
+            logInfo { "Data is blank. Start of month?" }
+            return null
+        }
         val validLines = data.value.lineSequence()
             .filter { line -> line.matches(KP_LINE_REGEX) }
             .toList()

@@ -45,8 +45,15 @@ object PotsdamExtractorSpec : Spek({
             }
         }
 
-        it("returns null when data is empty") {
-            val data = PotsdamData(emptyData)
+        it("returns null when data has no kp values") {
+            val data = PotsdamData(noValuesData)
+            val result = subject.extract(data)
+
+            expectThat(result).isNull()
+        }
+
+        it("returns null when data is blank") {
+            val data = PotsdamData(blankData)
             val result = subject.extract(data)
 
             expectThat(result).isNull()
@@ -86,6 +93,8 @@ private val corruptData1 = """
     18070 feawfwewa  wf
 """.trimIndent()
 
-private val emptyData = """
+private val noValuesData = """
 123456
 """.trimIndent()
+
+private const val blankData = "\t \n"
