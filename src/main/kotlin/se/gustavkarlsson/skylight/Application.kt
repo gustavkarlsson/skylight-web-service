@@ -26,7 +26,7 @@ fun main() {
     val port = readIntFromEnv(portKey) ?: error("Failed to read port from $$portKey")
     logInfo { "Port: $port" }
 
-    val sources: Iterable<KpIndexSource> = listOf(PotsdamKpIndexSource())
+    val sources: Iterable<Source<KpIndexReport>> = listOf(PotsdamKpIndexSource())
     logInfo {
         val sourcesNames = sources.map { it.name }
         "Loaded sources: $sourcesNames"

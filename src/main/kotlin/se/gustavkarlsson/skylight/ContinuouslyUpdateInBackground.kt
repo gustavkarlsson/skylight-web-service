@@ -11,7 +11,7 @@ import kotlin.time.measureTime
 
 @OptIn(ExperimentalTime::class)
 fun CoroutineScope.continuouslyUpdateInBackground(
-    sources: Iterable<KpIndexSource>,
+    sources: Iterable<Source<KpIndexReport>>,
     database: Database,
     timeBetweenUpdates: Duration,
 ): Job = launch(CoroutineName("Update")) {
@@ -31,7 +31,7 @@ fun CoroutineScope.continuouslyUpdateInBackground(
 
 @OptIn(ExperimentalTime::class)
 private suspend fun updateSafe(
-    sources: Iterable<KpIndexSource>,
+    sources: Iterable<Source<KpIndexReport>>,
     database: Database,
     timeout: Duration,
 ) {
@@ -48,7 +48,7 @@ private suspend fun updateSafe(
     }
 }
 
-private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Database) {
+private suspend fun updateAll(sources: Iterable<Source<KpIndexReport>>, database: Database) {
     val jobs = supervisorScope {
         sources.map { source ->
             val handler = CoroutineExceptionHandler { _, t ->
