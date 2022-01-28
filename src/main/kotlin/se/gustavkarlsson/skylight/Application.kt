@@ -3,17 +3,29 @@
 package se.gustavkarlsson.skylight
 
 import com.bugsnag.Bugsnag
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.routing.*
-import io.ktor.serialization.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import se.gustavkarlsson.skylight.database.Database
-import se.gustavkarlsson.skylight.database.InMemoryDatabase
-import se.gustavkarlsson.skylight.logging.*
-import se.gustavkarlsson.skylight.routes.kpIndexRoute
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.CallLogging
+import io.ktor.features.ContentNegotiation
+import io.ktor.http.HttpStatusCode
+import io.ktor.response.respond
+import io.ktor.routing.get
+import io.ktor.routing.routing
+import io.ktor.serialization.json
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import kotlinx.coroutines.launch
+import se.gustavkarlsson.skylight.database.InMemoryRepository
+import se.gustavkarlsson.skylight.database.Repository
+import se.gustavkarlsson.skylight.logging.BugsnagLogger
+import se.gustavkarlsson.skylight.logging.Slf4jLogger
+import se.gustavkarlsson.skylight.logging.addLogger
+import se.gustavkarlsson.skylight.logging.logDebug
+import se.gustavkarlsson.skylight.logging.logInfo
+import se.gustavkarlsson.skylight.logging.logWarn
 import se.gustavkarlsson.skylight.sources.potsdam.PotsdamKpIndexSource
+import se.gustavkarlsson.skylight.sources.swpc.SwpcKpIndexForecastSource
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
@@ -26,32 +38,83 @@ fun main() {
     val port = readIntFromEnv(portKey) ?: error("Failed to read port from $$portKey")
     logInfo { "Port: $port" }
 
-    val sources: Iterable<Source<KpIndexReport>> = listOf(PotsdamKpIndexSource())
-    logInfo {
-        val sourcesNames = sources.map { it.name }
-        "Loaded sources: $sourcesNames"
-    }
-
-    val database: Database = InMemoryDatabase()
-    logInfo { "Loaded database: ${database.javaClass.name}" }
-
-    val updateDelay = Duration.minutes(15)
-    logInfo { "Update delay: $updateDelay" }
-
     embeddedServer(Netty, port = port) {
-        continuouslyUpdateInBackground(sources, database, updateDelay)
         install(ContentNegotiation) { json() }
         install(CallLogging)
-        routing {
-            kpIndexRoute(database)
-        }
+        setupKpIndexRoute()
+        setupForecastRoute()
     }.start(wait = true)
+}
+
+@OptIn(ExperimentalTime::class)
+private fun Application.setupKpIndexRoute() {
+    val sources: Iterable<Source<KpIndexReport>> = listOf(PotsdamKpIndexSource())
+    logInfo {
+        val names = sources.map { it.name }
+        "Loaded Kp index sources: $names"
+    }
+
+    val repo: Repository<KpIndexReport> = InMemoryRepository()
+    logInfo { "Loaded Kp index repo: ${repo.javaClass.name}" }
+
+    val updateDelay = Duration.minutes(15)
+    logInfo { "Kp index update delay: $updateDelay" }
+
+    launch { continuouslyUpdate(sources, repo, updateDelay, "Kp index") }
+    routing {
+        get("/kp-index") {
+            when (val entry = repo.entries.firstOrNull()) {
+                null -> {
+                    call.respond(HttpStatusCode.NotFound)
+                }
+                else -> {
+                    val response = KpIndexResponse(entry.report.kpIndex.value, entry.fetchTime.toEpochMilli())
+                    call.respond(response)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalTime::class)
+private fun Application.setupForecastRoute() {
+    val sources: Iterable<Source<KpIndexForecastReport>> = listOf(SwpcKpIndexForecastSource())
+    logInfo {
+        val names = sources.map { it.name }
+        "Loaded forecast sources: $names"
+    }
+
+    val repo: Repository<KpIndexForecastReport> = InMemoryRepository()
+    logInfo { "Loaded forecast repo: ${repo.javaClass.name}" }
+
+    val updateDelay = Duration.minutes(60)
+    logInfo { "Forecast update delay: $updateDelay" }
+
+    launch { continuouslyUpdate(sources, repo, updateDelay, "Forecast") }
+    routing {
+        get("/kp-index-forecast") {
+            when (val entry = repo.entries.firstOrNull()) {
+                null -> {
+                    call.respond(HttpStatusCode.NotFound)
+                }
+                else -> {
+                    val kpIndexes = entry.report.map.entries
+                        .map { (timestamp, kpIndex) ->
+                            KpIndexResponse(kpIndex.value, timestamp.toEpochMilli())
+                        }
+                        .sortedBy { it.timestamp }
+                    val response = KpIndexForecastResponse(kpIndexes)
+                    call.respond(response)
+                }
+            }
+        }
+    }
 }
 
 private fun setupLogging() {
     addLogger(Slf4jLogger)
     val bugsnag = trySetupBugsnag()
-    if (bugsnag!=null) {
+    if (bugsnag != null) {
         val bugsnagLogger = BugsnagLogger(bugsnag)
         addLogger(bugsnagLogger)
     }
@@ -88,7 +151,7 @@ private fun readIntFromEnv(key: String): Int? {
         return null
     }
     val int = string.toIntOrNull()
-    if (int==null) {
+    if (int == null) {
         logWarn { "Failed to parse $$key=$string as integer" }
         return null
     }
