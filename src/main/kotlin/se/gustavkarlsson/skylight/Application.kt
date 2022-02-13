@@ -63,7 +63,7 @@ private fun Application.setupKpIndexRoute() {
     launch { continuouslyUpdate(sources, repo, updateDelay, "Kp index") }
     routing {
         get("/kp-index") {
-            when (val entry = repo.entries.firstOrNull()) {
+            when (val entry = repo.getEntries().firstOrNull()) {
                 null -> {
                     call.respond(HttpStatusCode.NotFound)
                 }
@@ -93,7 +93,7 @@ private fun Application.setupForecastRoute() {
     launch { continuouslyUpdate(sources, repo, updateDelay, "Forecast") }
     routing {
         get("/kp-index-forecast") {
-            when (val entry = repo.entries.firstOrNull()) {
+            when (val entry = repo.getEntries().firstOrNull()) {
                 null -> {
                     call.respond(HttpStatusCode.NotFound)
                 }
