@@ -12,7 +12,7 @@ import java.util.Locale
 import kotlin.math.absoluteValue
 
 private val KP_LINE_REGEX = Regex("\\d\\d-\\d\\dUT.*")
-private val COLUMN_REGEX = Regex("\\s+")
+private val KP_INDEX_REGEX = Regex(" +?(\\d) +?")
 
 // FIXME test!
 object SwpcForecastExtractor : Extractor<SwpcForecastData, KpIndexForecastReport> {
@@ -27,9 +27,10 @@ object SwpcForecastExtractor : Extractor<SwpcForecastData, KpIndexForecastReport
         val map = data.value.lineSequence()
             .filter { line -> line.matches(KP_LINE_REGEX) }
             .flatMap { line ->
-                val splitLine = line.split(COLUMN_REGEX)
-                val timeColumn = splitLine.first()
-                val kpColumns = splitLine.drop(1)
+                val timeColumn = line.take(7)
+                val kpColumns = KP_INDEX_REGEX.findAll(line.drop(7))
+                    .map { it.groupValues[1] }
+                    .toList()
                 check(dates.size == kpColumns.size) {
                     "Number of dates (${dates.size}) is not equal to number of kp index columns (${kpColumns.size})"
                 }
@@ -121,3 +122,58 @@ private fun getSignature(data: SwpcForecastData): Signature? {
         }
         .firstOrNull()
 }
+
+/*
+:Product: 3-Day Forecast
+:Issued: 2022 Feb 18 1230 UTC
+# Prepared by the U.S. Dept. of Commerce, NOAA, Space Weather Prediction Center
+#
+A. NOAA Geomagnetic Activity Observation and Forecast
+
+The greatest observed 3 hr Kp over the past 24 hours was 1 (below NOAA
+Scale levels).
+The greatest expected 3 hr Kp for Feb 18-Feb 20 2022 is 5 (NOAA Scale
+G1).
+
+NOAA Kp index breakdown Feb 18-Feb 20 2022
+
+            Feb 18     Feb 19     Feb 20
+00-03UT        0          2          2
+03-06UT        1          2          1
+06-09UT        1          1          1
+09-12UT        1          1          1
+12-15UT        1          1          3
+15-18UT        1          1          4
+18-21UT        2          2          4
+21-00UT        1          1          5 (G1)
+
+Rationale: G1 (Minor) geomagnetic storms are likely on 20 Feb due to CH
+HSS influences.
+
+B. NOAA Solar Radiation Activity Observation and Forecast
+
+Solar radiation, as observed by NOAA GOES-16 over the past 24 hours, was
+below S-scale storm level thresholds.
+
+Solar Radiation Storm Forecast for Feb 18-Feb 20 2022
+
+              Feb 18  Feb 19  Feb 20
+S1 or greater    1%      1%      1%
+
+Rationale: No S1 (Minor) or greater solar radiation storms are expected.
+No significant active region activity favorable for radiation storm
+production is forecast.
+
+C. NOAA Radio Blackout Activity and Forecast
+
+No radio blackouts were observed over the past 24 hours.
+
+Radio Blackout Forecast for Feb 18-Feb 20 2022
+
+              Feb 18        Feb 19        Feb 20
+R1-R2            5%            5%           10%
+R3 or greater    1%            1%            1%
+
+Rationale: There is a slight chance for R1-R2 (Minor-Moderate) radio
+blackouts on 20 Feb due to the return of old Region 2936 (N17, L=132).
+*/
