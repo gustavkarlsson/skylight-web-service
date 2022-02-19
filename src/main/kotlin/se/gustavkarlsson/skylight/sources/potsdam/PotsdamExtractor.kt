@@ -7,7 +7,7 @@ import se.gustavkarlsson.skylight.KpIndexReport
 import se.gustavkarlsson.skylight.Signature
 import se.gustavkarlsson.skylight.logging.logInfo
 
-object PotsdamExtractor : Extractor<PotsdamData> {
+object PotsdamExtractor : Extractor<PotsdamData, KpIndexReport> {
     override fun extract(data: PotsdamData): KpIndexReport? {
         if (data.value.isBlank()) {
             logInfo { "Data is blank. Start of month?" }

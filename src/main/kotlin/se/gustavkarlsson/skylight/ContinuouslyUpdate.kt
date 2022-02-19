@@ -1,7 +1,15 @@
 package se.gustavkarlsson.skylight
 
-import kotlinx.coroutines.*
-import se.gustavkarlsson.skylight.database.Database
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withTimeout
+import se.gustavkarlsson.skylight.database.Repository
 import se.gustavkarlsson.skylight.logging.logError
 import se.gustavkarlsson.skylight.logging.logInfo
 import java.time.Instant
@@ -10,34 +18,35 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 @OptIn(ExperimentalTime::class)
-fun CoroutineScope.continuouslyUpdateInBackground(
-    sources: Iterable<KpIndexSource>,
-    database: Database,
+suspend fun <T : Any> continuouslyUpdate(
+    sources: Iterable<Source<T>>,
+    repo: Repository<T>,
     timeBetweenUpdates: Duration,
-): Job = launch(CoroutineName("Update")) {
+    debugName: String,
+): Nothing {
     while (true) {
-        logInfo { "Updating..." }
+        logInfo { "Updating $debugName..." }
         val elapsed = measureTime {
-            updateSafe(sources, database, timeBetweenUpdates)
+            updateSafe(sources, repo, timeBetweenUpdates)
         }
-        logInfo { "Update completed in $elapsed" }
+        logInfo { "$debugName update completed in $elapsed" }
         val delay = timeBetweenUpdates - elapsed
         if (delay.isPositive()) {
-            logInfo { "Waiting for $delay until next update" }
+            logInfo { "Waiting for $delay until next $debugName update" }
             delay(delay)
         }
     }
 }
 
 @OptIn(ExperimentalTime::class)
-private suspend fun updateSafe(
-    sources: Iterable<KpIndexSource>,
-    database: Database,
+private suspend fun <T : Any> updateSafe(
+    sources: Iterable<Source<T>>,
+    repository: Repository<T>,
     timeout: Duration,
 ) {
     try {
         withTimeout(timeout) {
-            updateAll(sources, database)
+            updateAll(sources, repository)
         }
     } catch (e: TimeoutCancellationException) {
         logError(e) { "Update timed out" }
@@ -48,7 +57,7 @@ private suspend fun updateSafe(
     }
 }
 
-private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Database) {
+private suspend fun <T : Any> updateAll(sources: Iterable<Source<T>>, repo: Repository<T>) {
     val jobs = supervisorScope {
         sources.map { source ->
             val handler = CoroutineExceptionHandler { _, t ->
@@ -56,13 +65,13 @@ private suspend fun updateAll(sources: Iterable<KpIndexSource>, database: Databa
             }
             launch(handler + CoroutineName(source.name)) {
                 val report = source.get()
-                if (report==null) {
+                if (report == null) {
                     logInfo { "No report from source: $source" }
                     return@launch
                 }
                 val fetchTime = Instant.now()
-                val entry = Database.Entry(source.name, report, fetchTime)
-                database.update(entry)
+                val entry = Repository.Entry(source.name, report, fetchTime)
+                repo.update(entry)
             }
         }
     }
