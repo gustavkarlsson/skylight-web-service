@@ -1,7 +1,6 @@
 package se.gustavkarlsson.skylight.sources.potsdam
 
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
+import io.kotest.core.spec.style.DescribeSpec
 import se.gustavkarlsson.skylight.KpIndex
 import se.gustavkarlsson.skylight.KpIndexReport
 import se.gustavkarlsson.skylight.Signature
@@ -12,9 +11,9 @@ import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import strikt.assertions.isNull
 
-object PotsdamExtractorSpec : Spek({
+class SwpcForecastExtractorSpec : DescribeSpec({
     describe("A PotsdamExtractor") {
-        val subject by memoized { PotsdamExtractor }
+        val subject = PotsdamExtractor
 
         it("extracts kp index report from report 1") {
             val data = PotsdamData(data1)
