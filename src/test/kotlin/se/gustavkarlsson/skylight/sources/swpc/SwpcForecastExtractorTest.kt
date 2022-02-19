@@ -1,7 +1,6 @@
 package se.gustavkarlsson.skylight.sources.swpc
 
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
+import io.kotest.core.spec.style.DescribeSpec
 import se.gustavkarlsson.skylight.KpIndex
 import strikt.api.expectThat
 import strikt.assertions.getValue
@@ -10,11 +9,13 @@ import strikt.assertions.isEqualTo
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-class SwpcForecastExtractorSpec : Spek({
+class SwpcForecastExtractorSpec : DescribeSpec({
     describe("A SwpcForecastExtractor") {
+        val subject = SwpcForecastExtractor
+
         it("Gets value in last column next to geomagnetic storm") {
             val data = SwpcForecastData(validWithGeomagneticStormOnLastColumn)
-            val result = SwpcForecastExtractor.extract(data)
+            val result = subject.extract(data)
 
             val instant = LocalDateTime.of(2022, 2, 20, 22, 30).toInstant(ZoneOffset.UTC)
             expectThat(result.map).getValue(instant)
@@ -22,7 +23,7 @@ class SwpcForecastExtractorSpec : Spek({
         }
         it("Gets value in last middle column") {
             val data = SwpcForecastData(validWithNoGeomagneticStorm)
-            val result = SwpcForecastExtractor.extract(data)
+            val result = subject.extract(data)
 
             val instant = LocalDateTime.of(2022, 2, 19, 4, 30).toInstant(ZoneOffset.UTC)
             expectThat(result.map).getValue(instant)
@@ -30,7 +31,7 @@ class SwpcForecastExtractorSpec : Spek({
         }
         it("Gets value in middle column next to geomagnetic storm") {
             val data = SwpcForecastData(validWithGeomagneticStormOnMiddleColumn)
-            val result = SwpcForecastExtractor.extract(data)
+            val result = subject.extract(data)
 
             val instant = LocalDateTime.of(2022, 2, 20, 22, 30).toInstant(ZoneOffset.UTC)
             expectThat(result.map).getValue(instant)
@@ -38,7 +39,7 @@ class SwpcForecastExtractorSpec : Spek({
         }
         it("Gets correct number of values when there is no geomagnetic storm") {
             val data = SwpcForecastData(validWithNoGeomagneticStorm)
-            val result = SwpcForecastExtractor.extract(data)
+            val result = subject.extract(data)
 
             expectThat(result.map.keys).hasSize(24)
         }

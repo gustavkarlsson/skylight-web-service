@@ -26,7 +26,7 @@ import se.gustavkarlsson.skylight.logging.logInfo
 import se.gustavkarlsson.skylight.logging.logWarn
 import se.gustavkarlsson.skylight.sources.potsdam.PotsdamKpIndexSource
 import se.gustavkarlsson.skylight.sources.swpc.SwpcKpIndexForecastSource
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
 
@@ -57,7 +57,7 @@ private fun Application.setupKpIndexRoute() {
     val repo: Repository<KpIndexReport> = InMemoryRepository()
     logInfo { "Loaded Kp index repo: ${repo.javaClass.name}" }
 
-    val updateDelay = Duration.minutes(15)
+    val updateDelay = 15.minutes
     logInfo { "Kp index update delay: $updateDelay" }
 
     launch { continuouslyUpdate(sources, repo, updateDelay, "Kp index") }
@@ -87,7 +87,7 @@ private fun Application.setupForecastRoute() {
     val repo: Repository<KpIndexForecastReport> = InMemoryRepository()
     logInfo { "Loaded forecast repo: ${repo.javaClass.name}" }
 
-    val updateDelay = Duration.minutes(60)
+    val updateDelay = 16.minutes
     logInfo { "Forecast update delay: $updateDelay" }
 
     launch { continuouslyUpdate(sources, repo, updateDelay, "Forecast") }

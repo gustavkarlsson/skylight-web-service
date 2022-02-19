@@ -1,4 +1,0 @@
-io.dropwizard.logging.ConsoleAppenderFactory
-io.dropwizard.logging.FileAppenderFactory
-io.dropwizard.logging.SyslogAppenderFactory
-se.gustavkarlsson.aurora_notifier.web_service.logging.AirbrakeAppenderFactory
