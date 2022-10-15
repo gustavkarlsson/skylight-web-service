@@ -13,6 +13,7 @@ jobs:
     name: Deploy app
     runs-on: ubuntu-22.04
     environment: fly.io
+    url: https://fly.io/apps/skylight-web-service
     steps:
       - name: Check out
         uses: actions/checkout@v3
