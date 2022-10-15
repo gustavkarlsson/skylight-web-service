@@ -13,6 +13,7 @@ jobs:
 
   deploy:
     name: Deploy app
+    needs: checks
     runs-on: ubuntu-22.04
     environment:
       name: fly.io
