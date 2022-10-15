@@ -20,7 +20,7 @@ object PotsdamExtractor : Extractor<PotsdamData, KpIndexReport> {
             "No valid lines in data:\n'${data.value}'"
         }
         val lastLine = getKpIndexLine(validLines)
-        if (lastLine==null) {
+        if (lastLine == null) {
             logInfo { "No line matched $KP_REGEX. Start of month? Data:\n'${data.value}'" }
             return null
         }
@@ -61,7 +61,6 @@ object PotsdamExtractor : Extractor<PotsdamData, KpIndexReport> {
             else -> throw IllegalArgumentException("Invalid Kp index format: text")
         }
     }
-
 }
 
 @Language("RegExp")
@@ -79,6 +78,6 @@ private val INCOMPLETE_SUFFIX = "( +$KP_PATTERN){0,7} *"
 @Language("RegExp")
 private val COMPLETE_SUFFIX = "( +$KP_PATTERN){8} +.*"
 
-private val KP_LINE_REGEX = Regex("^${DATE_PATTERN}($EMPTY_SUFFIX|$INCOMPLETE_SUFFIX|$COMPLETE_SUFFIX)$")
+private val KP_LINE_REGEX = Regex("^$DATE_PATTERN($EMPTY_SUFFIX|$INCOMPLETE_SUFFIX|$COMPLETE_SUFFIX)$")
 
 private val KP_REGEX = Regex(KP_PATTERN)
