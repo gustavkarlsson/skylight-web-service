@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.serialization") version kotlinVersion
     id("application")
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 
 repositories {
