@@ -26,11 +26,10 @@ import se.gustavkarlsson.skylight.logging.logInfo
 import se.gustavkarlsson.skylight.logging.logWarn
 import se.gustavkarlsson.skylight.sources.potsdam.PotsdamKpIndexSource
 import se.gustavkarlsson.skylight.sources.swpc.SwpcKpIndexForecastSource
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.ExperimentalTime
 
 
-@OptIn(ExperimentalTime::class)
 fun main() {
     setupLogging()
 
@@ -41,26 +40,29 @@ fun main() {
     embeddedServer(Netty, port = port) {
         install(ContentNegotiation) { json() }
         install(CallLogging)
-        setupKpIndexRoute()
-        setupForecastRoute()
+        setupKpIndexRoute(
+            sources = listOf(element = PotsdamKpIndexSource()),
+            repo = InMemoryRepository(),
+            timeBetweenUpdates = 15.minutes,
+        )
+        setupForecastRoute(
+            sources = listOf(element = SwpcKpIndexForecastSource()),
+            repo = InMemoryRepository(),
+            timeBetweenUpdates = 20.minutes,
+        )
     }.start(wait = true)
 }
 
-@OptIn(ExperimentalTime::class)
-private fun Application.setupKpIndexRoute() {
-    val sources: Iterable<Source<KpIndexReport>> = listOf(PotsdamKpIndexSource())
-    logInfo {
-        val names = sources.map { it.name }
-        "Loaded Kp index sources: $names"
-    }
-
-    val repo: Repository<KpIndexReport> = InMemoryRepository()
+private fun Application.setupKpIndexRoute(
+    sources: Iterable<Source<KpIndexReport>>,
+    repo: Repository<KpIndexReport>,
+    timeBetweenUpdates: Duration,
+) {
+    logInfo { "Loaded Kp index sources: ${sources.map { it.name }}" }
     logInfo { "Loaded Kp index repo: ${repo.javaClass.name}" }
+    logInfo { "Kp index time between updates: $timeBetweenUpdates" }
 
-    val updateDelay = 15.minutes
-    logInfo { "Kp index update delay: $updateDelay" }
-
-    launch { continuouslyUpdate(sources, repo, updateDelay, "Kp index") }
+    launch { continuouslyUpdate(sources, repo, timeBetweenUpdates, "Kp index") }
     routing {
         get("/kp-index") {
             when (val entry = repo.getEntries().firstOrNull()) {
@@ -76,21 +78,16 @@ private fun Application.setupKpIndexRoute() {
     }
 }
 
-@OptIn(ExperimentalTime::class)
-private fun Application.setupForecastRoute() {
-    val sources: Iterable<Source<KpIndexForecastReport>> = listOf(SwpcKpIndexForecastSource())
-    logInfo {
-        val names = sources.map { it.name }
-        "Loaded forecast sources: $names"
-    }
-
-    val repo: Repository<KpIndexForecastReport> = InMemoryRepository()
+private fun Application.setupForecastRoute(
+    sources: Iterable<Source<KpIndexForecastReport>>,
+    repo: Repository<KpIndexForecastReport>,
+    timeBetweenUpdates: Duration,
+) {
+    logInfo { "Loaded forecast sources: ${sources.map { it.name }}" }
     logInfo { "Loaded forecast repo: ${repo.javaClass.name}" }
+    logInfo { "Forecast time between updates: $timeBetweenUpdates" }
 
-    val updateDelay = 16.minutes
-    logInfo { "Forecast update delay: $updateDelay" }
-
-    launch { continuouslyUpdate(sources, repo, updateDelay, "Forecast") }
+    launch { continuouslyUpdate(sources, repo, timeBetweenUpdates, "Forecast") }
     routing {
         get("/kp-index-forecast") {
             when (val entry = repo.getEntries().firstOrNull()) {

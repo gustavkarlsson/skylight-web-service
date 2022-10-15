@@ -31,15 +31,12 @@ private fun Iterable<Logger>.log(block: Logger.() -> Unit) {
 }
 
 private fun getStackTrace(): Array<StackTraceElement> {
-    val stackTrace = Thread.currentThread().stackTrace
-    val thisFileName = stackTrace[1].fileName
-    val depth = stackTrace
+    val stackTrace = Thread.currentThread().stackTrace.drop(1) // Drop the actual call to // Thread.currentThread()
+    val thisFileName = stackTrace.first().fileName
+    val thisFileFrameCount = stackTrace
         .map { it.fileName }
-        .withIndex()
-        .indexOfFirst { (index, fileName) ->
-            index > 0 && fileName!=thisFileName
-        }
-    return stackTrace.drop(depth)
+        .indexOfFirst { it != thisFileName }
+    return stackTrace.drop(thisFileFrameCount)
 }
 
-private fun Array<StackTraceElement>.drop(depth: Int) = copyOfRange(depth, size)
+private fun Array<StackTraceElement>.drop(n: Int) = copyOfRange(n, size)

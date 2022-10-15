@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withTimeout
@@ -57,7 +56,7 @@ private suspend fun <T : Any> updateSafe(
 }
 
 private suspend fun <T : Any> updateAll(sources: Iterable<Source<T>>, repo: Repository<T>) {
-    val jobs = supervisorScope {
+    supervisorScope {
         sources.map { source ->
             val handler = CoroutineExceptionHandler { _, t ->
                 logError(t) { "${source.name} failed to update" }
@@ -74,5 +73,4 @@ private suspend fun <T : Any> updateAll(sources: Iterable<Source<T>>, repo: Repo
             }
         }
     }
-    jobs.joinAll()
 }
