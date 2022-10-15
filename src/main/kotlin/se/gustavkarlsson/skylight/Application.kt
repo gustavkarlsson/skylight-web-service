@@ -29,7 +29,6 @@ import se.gustavkarlsson.skylight.sources.swpc.SwpcKpIndexForecastSource
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
-
 fun main() {
     setupLogging()
 
