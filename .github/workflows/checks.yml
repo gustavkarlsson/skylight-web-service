@@ -60,7 +60,7 @@ jobs:
             **/build/reports/ktlint/
 
       - name: Set up PHP with cs2pr
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         if: ${{ always() }}
         with:
           php-version: 7.3
