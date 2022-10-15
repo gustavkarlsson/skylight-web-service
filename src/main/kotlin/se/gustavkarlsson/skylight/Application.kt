@@ -3,18 +3,18 @@
 package se.gustavkarlsson.skylight
 
 import com.bugsnag.Bugsnag
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
-import io.ktor.routing.get
-import io.ktor.routing.routing
-import io.ktor.serialization.json
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.callloging.CallLogging
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.response.respond
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import kotlinx.coroutines.launch
 import se.gustavkarlsson.skylight.database.InMemoryRepository
 import se.gustavkarlsson.skylight.database.Repository
@@ -37,7 +37,7 @@ fun main() {
     val port = readIntFromEnv(portKey) ?: error("Failed to read port from $$portKey")
     logInfo { "Port: $port" }
 
-    embeddedServer(Netty, port = port) {
+    embeddedServer(CIO, port = port) {
         install(ContentNegotiation) { json() }
         install(CallLogging)
         setupKpIndexRoute(

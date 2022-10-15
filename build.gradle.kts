@@ -20,11 +20,13 @@ dependencies {
     implementation(kotlin("stdlib:$kotlinVersion"))
 
     // Ktor
-    implementation(platform("io.ktor:ktor-bom:1.6.8"))
+    implementation(platform("io.ktor:ktor-bom:2.1.2"))
     implementation("io.ktor:ktor-server-core")
-    implementation("io.ktor:ktor-server-netty")
-    implementation("io.ktor:ktor-serialization")
-    implementation("io.ktor:ktor-client-okhttp")
+    implementation("io.ktor:ktor-server-cio")
+    implementation("io.ktor:ktor-server-call-logging")
+    implementation("io.ktor:ktor-server-content-negotiation")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("io.ktor:ktor-client-cio")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
