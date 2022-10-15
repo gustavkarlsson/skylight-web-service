@@ -44,6 +44,8 @@ import kotlin.time.Duration.Companion.minutes
 
 private const val PORT_KEY = "PORT"
 private const val ADMIN_PORT_KEY = "ADMIN_PORT"
+private const val BUGSNAG_API_KEY_KEY = "BUGSNAG_API_KEY"
+private const val BUGSNAG_RELEASE_STAGE_KEY = "BUGSNAG_RELEASE_STAGE"
 
 fun main() {
     setupLogging()
@@ -74,20 +76,18 @@ private fun setupLogging() {
 }
 
 private fun trySetupBugsnag(): Bugsnag? {
-    val apiKeyKey = "BUGSNAG_API_KEY"
-    val apiKey = readStringFromEnv(apiKeyKey) ?: return null
-    val releaseStageKey = "BUGSNAG_RELEASE_STAGE"
-    val releaseStage = readStringFromEnv(releaseStageKey)?.trim()?.lowercase()
+    val apiKey = readStringFromEnv(BUGSNAG_API_KEY_KEY, redact = true) ?: return null
+    val releaseStage = readStringFromEnv(BUGSNAG_RELEASE_STAGE_KEY)?.trim()?.lowercase()
     val validStages = listOf("production", "develop")
     when (releaseStage) {
         in validStages -> Unit
         null -> {
-            val message = "$apiKeyKey is set without $releaseStageKey. Must be one of: $validStages"
+            val message = "$BUGSNAG_API_KEY_KEY is set without $BUGSNAG_RELEASE_STAGE_KEY. Must be one of: $validStages"
             error(message)
         }
 
         else -> {
-            val message = "$apiKeyKey is set without a valid $releaseStageKey ($releaseStage). " +
+            val message = "$BUGSNAG_API_KEY_KEY is set without a valid $BUGSNAG_RELEASE_STAGE_KEY ($releaseStage). " +
                 "Must be one of: $validStages"
             error(message)
         }
@@ -221,12 +221,13 @@ private fun readIntFromEnv(key: String): Int? {
     return int
 }
 
-private fun readStringFromEnv(key: String): String? {
+private fun readStringFromEnv(key: String, redact: Boolean = false): String? {
     val string = System.getenv(key)?.trim()
     if (string.isNullOrBlank()) {
         logWarn { "No value set for $$key" }
         return null
     }
-    logDebug { "Read '$string' from $$key" }
+    val logString = if (redact) "**********" else string
+    logDebug { "Read '$logString' from $$key" }
     return string
 }
