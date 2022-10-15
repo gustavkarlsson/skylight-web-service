@@ -8,8 +8,8 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.install
+import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
@@ -37,7 +37,7 @@ fun main() {
     val port = readIntFromEnv(portKey) ?: error("Failed to read port from $$portKey")
     logInfo { "Port: $port" }
 
-    embeddedServer(Netty, port = port) {
+    embeddedServer(CIO, port = port) {
         install(ContentNegotiation) { json() }
         install(CallLogging)
         setupKpIndexRoute(
