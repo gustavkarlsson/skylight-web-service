@@ -27,6 +27,7 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
     implementation("ch.qos.logback:logback-classic:1.4.3")
 
