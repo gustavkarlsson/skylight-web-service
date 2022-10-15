@@ -38,7 +38,6 @@ suspend fun <T : Any> continuouslyUpdate(
     }
 }
 
-@OptIn(ExperimentalTime::class)
 private suspend fun <T : Any> updateSafe(
     sources: Iterable<Source<T>>,
     repository: Repository<T>,
