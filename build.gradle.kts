@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    val kotlinVersion = "1.7.20" // Match version set in dependencies
+    val kotlinVersion = "1.7.20" // Match version set in plugins
 
     implementation(kotlin("stdlib:$kotlinVersion"))
 
@@ -26,11 +26,16 @@ dependencies {
     implementation("io.ktor:ktor-server-cio")
     implementation("io.ktor:ktor-server-call-logging")
     implementation("io.ktor:ktor-server-content-negotiation")
-    implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("io.ktor:ktor-server-metrics-micrometer")
+
     implementation("io.ktor:ktor-client-cio")
+
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
+    implementation("io.micrometer:micrometer-registry-prometheus:1.9.5")
 
     implementation("ch.qos.logback:logback-classic:1.4.3")
 
