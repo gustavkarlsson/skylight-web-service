@@ -7,6 +7,10 @@ on:
   workflow_dispatch:
 
 jobs:
+  checks:
+    name: Checks
+    uses: ./.github/workflows/checks.yml
+
   deploy:
     name: Deploy app
     runs-on: ubuntu-22.04

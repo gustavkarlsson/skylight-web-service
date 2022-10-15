@@ -1,2 +1,1 @@
-- Health checks
-- Only deploy (GHA) if checks pass
+- Add health check (fly.io supports it)
