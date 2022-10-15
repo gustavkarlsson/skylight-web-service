@@ -67,6 +67,9 @@ private fun setupLogging() {
     if (bugsnag != null) {
         val bugsnagLogger = BugsnagLogger(bugsnag)
         addLogger(bugsnagLogger)
+        logInfo { "Bugsnag enabled" }
+    } else {
+        logWarn { "Bugsnag disabled" }
     }
 }
 
