@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -13,6 +14,7 @@ jobs:
     name: Deploy app
     runs-on: ubuntu-22.04
     environment: fly.io
+    concurrency: fly.io
     url: https://fly.io/apps/skylight-web-service
     steps:
       - name: Check out
