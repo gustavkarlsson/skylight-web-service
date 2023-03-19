@@ -39,7 +39,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.4.3")
 
-    implementation("com.bugsnag:bugsnag:3.6.4")
+    implementation("com.rollbar:rollbar-java:1.10.0")
 
     // Test
     testImplementation("io.kotest:kotest-runner-junit5:5.5.0")

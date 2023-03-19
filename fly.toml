@@ -4,8 +4,8 @@ kill_timeout = 5
 processes = []
 
 [env]
-BUGSNAG_RELEASE_STAGE = "production"
-# BUGSNAG_API_KEY is set as a fly secret
+ROLLBAR_ENVIRONMENT = "production"
+# ROLLBAR_ACCESS_TOKEN is set as a fly secret
 
 [experimental]
 allowed_public_ports = []
