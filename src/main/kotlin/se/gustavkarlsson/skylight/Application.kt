@@ -107,6 +107,7 @@ private fun trySetupRollbar(): Rollbar? {
     // TODO Add code version with git hash
     val config = ConfigBuilder
         .withAccessToken(accessToken)
+        .environment(environment)
         .build()
     return Rollbar.init(config)
 }
