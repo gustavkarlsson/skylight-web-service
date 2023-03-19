@@ -8,22 +8,22 @@ fun addLogger(logger: Logger) {
 
 fun logError(throwable: Throwable? = null, message: () -> String) {
     val stackTrace = getStackTrace()
-    loggers.log { error(message, stackTrace, throwable) }
+    loggers.log { error(message(), stackTrace, throwable) }
 }
 
 fun logWarn(throwable: Throwable? = null, message: () -> String) {
     val stackTrace = getStackTrace()
-    loggers.log { warn(message, stackTrace, throwable) }
+    loggers.log { warn(message(), stackTrace, throwable) }
 }
 
 fun logInfo(message: () -> String) {
     val stackTrace = getStackTrace()
-    loggers.log { info(message, stackTrace) }
+    loggers.log { info(message(), stackTrace) }
 }
 
 fun logDebug(message: () -> String) {
     val stackTrace = getStackTrace()
-    loggers.log { debug(message, stackTrace) }
+    loggers.log { debug(message(), stackTrace) }
 }
 
 private fun Iterable<Logger>.log(block: Logger.() -> Unit) {

@@ -2,7 +2,8 @@
 
 package se.gustavkarlsson.skylight
 
-import com.bugsnag.Bugsnag
+import com.rollbar.notifier.Rollbar
+import com.rollbar.notifier.config.ConfigBuilder
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.call
@@ -31,10 +32,11 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.launch
 import se.gustavkarlsson.skylight.database.InMemoryRepository
 import se.gustavkarlsson.skylight.database.Repository
-import se.gustavkarlsson.skylight.logging.BugsnagLogger
+import se.gustavkarlsson.skylight.logging.RollbarLogger
 import se.gustavkarlsson.skylight.logging.Slf4jLogger
 import se.gustavkarlsson.skylight.logging.addLogger
 import se.gustavkarlsson.skylight.logging.logDebug
+import se.gustavkarlsson.skylight.logging.logError
 import se.gustavkarlsson.skylight.logging.logInfo
 import se.gustavkarlsson.skylight.logging.logWarn
 import se.gustavkarlsson.skylight.sources.potsdam.PotsdamKpIndexSource
@@ -44,57 +46,69 @@ import kotlin.time.Duration.Companion.minutes
 
 private const val PORT_KEY = "PORT"
 private const val ADMIN_PORT_KEY = "ADMIN_PORT"
-private const val BUGSNAG_API_KEY_KEY = "BUGSNAG_API_KEY"
-private const val BUGSNAG_RELEASE_STAGE_KEY = "BUGSNAG_RELEASE_STAGE"
+private const val ROLLBAR_ACCESS_TOKEN_KEY = "ROLLBAR_ACCESS_TOKEN"
+private const val ROLLBAR_ENVIRONMENT_KEY = "ROLLBAR_ENVIRONMENT"
 
 fun main() {
-    setupLogging()
+    withMonitoring {
+        val port = readIntFromEnv(PORT_KEY) ?: 8080
+        logInfo { "Application port: $port" }
 
-    val port = readIntFromEnv(PORT_KEY) ?: 8080
-    logInfo { "Application port: $port" }
+        val adminPort = readIntFromEnv(ADMIN_PORT_KEY) ?: 9090
+        logInfo { "Admin port: $adminPort" }
 
-    val adminPort = readIntFromEnv(ADMIN_PORT_KEY) ?: 9090
-    logInfo { "Admin port: $adminPort" }
-
-    val environment = applicationEngineEnvironment {
-        setupAppModule(port)
-        setupAdminModule(adminPort)
+        val environment = applicationEngineEnvironment {
+            setupAppModule(port)
+            setupAdminModule(adminPort)
+        }
+        embeddedServer(CIO, environment).start(wait = true)
     }
-    embeddedServer(CIO, environment).start(wait = true)
 }
 
-private fun setupLogging() {
+private fun withMonitoring(block: () -> Unit) {
     addLogger(Slf4jLogger)
-    val bugsnag = trySetupBugsnag()
-    if (bugsnag != null) {
-        val bugsnagLogger = BugsnagLogger(bugsnag)
-        addLogger(bugsnagLogger)
-        logInfo { "Bugsnag enabled" }
+    val rollbar = trySetupRollbar()
+    if (rollbar != null) {
+        val rollbarLogger = RollbarLogger(rollbar)
+        addLogger(rollbarLogger)
+        logInfo { "Rollbar enabled" }
     } else {
-        logWarn { "Bugsnag disabled" }
+        logWarn { "Rollbar disabled" }
+    }
+    try {
+        block()
+    } catch (e: Exception) {
+        logError(e) {
+            "Application terminated unexpectedly"
+        }
+    } finally {
+        rollbar?.close(true)
     }
 }
 
-private fun trySetupBugsnag(): Bugsnag? {
-    val apiKey = readStringFromEnv(BUGSNAG_API_KEY_KEY, redact = true) ?: return null
-    val releaseStage = readStringFromEnv(BUGSNAG_RELEASE_STAGE_KEY)?.trim()?.lowercase()
+private fun trySetupRollbar(): Rollbar? {
+    val accessToken = readStringFromEnv(ROLLBAR_ACCESS_TOKEN_KEY, redact = true) ?: return null
+    val environment = readStringFromEnv(ROLLBAR_ENVIRONMENT_KEY)?.trim()?.lowercase()
     val validStages = listOf("production", "develop")
-    when (releaseStage) {
+    when (environment) {
         in validStages -> Unit
         null -> {
-            val message = "$BUGSNAG_API_KEY_KEY is set without $BUGSNAG_RELEASE_STAGE_KEY. Must be one of: $validStages"
+            val message = "$ROLLBAR_ACCESS_TOKEN_KEY is set without $ROLLBAR_ENVIRONMENT_KEY. " +
+                "Must be one of: $validStages"
             error(message)
         }
 
         else -> {
-            val message = "$BUGSNAG_API_KEY_KEY is set without a valid $BUGSNAG_RELEASE_STAGE_KEY ($releaseStage). " +
+            val message = "$ROLLBAR_ACCESS_TOKEN_KEY is set without a valid $ROLLBAR_ENVIRONMENT_KEY ($environment). " +
                 "Must be one of: $validStages"
             error(message)
         }
     }
-    val bugsnag = Bugsnag(apiKey, true)
-    bugsnag.setReleaseStage(releaseStage)
-    return bugsnag
+    // TODO Add code version with git hash
+    val config = ConfigBuilder
+        .withAccessToken(accessToken)
+        .build()
+    return Rollbar.init(config)
 }
 
 private fun ApplicationEngineEnvironmentBuilder.setupAppModule(port: Int) {

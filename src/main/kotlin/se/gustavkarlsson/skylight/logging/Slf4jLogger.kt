@@ -4,28 +4,28 @@ import org.slf4j.LoggerFactory
 import org.slf4j.Logger as Slf4jLogger
 
 object Slf4jLogger : Logger {
-    override fun error(message: () -> String, stackTrace: Array<StackTraceElement>, throwable: Throwable?) {
+    override fun error(message: String, stackTrace: Array<StackTraceElement>, throwable: Throwable?) {
         val logger = getLogger(stackTrace)
         if (!logger.isErrorEnabled) return
-        logger.error(message(), throwable)
+        logger.error(message, throwable)
     }
 
-    override fun warn(message: () -> String, stackTrace: Array<StackTraceElement>, throwable: Throwable?) {
+    override fun warn(message: String, stackTrace: Array<StackTraceElement>, throwable: Throwable?) {
         val logger = getLogger(stackTrace)
         if (!logger.isWarnEnabled) return
-        logger.warn(message(), throwable)
+        logger.warn(message, throwable)
     }
 
-    override fun info(message: () -> String, stackTrace: Array<StackTraceElement>) {
+    override fun info(message: String, stackTrace: Array<StackTraceElement>) {
         val logger = getLogger(stackTrace)
         if (!logger.isInfoEnabled) return
-        logger.info(message())
+        logger.info(message)
     }
 
-    override fun debug(message: () -> String, stackTrace: Array<StackTraceElement>) {
+    override fun debug(message: String, stackTrace: Array<StackTraceElement>) {
         val logger = getLogger(stackTrace)
         if (!logger.isDebugEnabled) return
-        logger.debug(message())
+        logger.debug(message)
     }
 }
 
