@@ -13,13 +13,9 @@ class RollbarLogger(private val rollbar: Rollbar) : Logger {
         notify(message, Level.WARNING, stackTrace, throwable)
     }
 
-    override fun info(message: String, stackTrace: Array<StackTraceElement>) {
-        notify(message, Level.INFO, stackTrace)
-    }
+    override fun info(message: String, stackTrace: Array<StackTraceElement>) {}
 
-    override fun debug(message: String, stackTrace: Array<StackTraceElement>) {
-        notify(message, Level.DEBUG, stackTrace)
-    }
+    override fun debug(message: String, stackTrace: Array<StackTraceElement>) {}
 
     private fun notify(
         message: String,

@@ -104,10 +104,22 @@ private fun trySetupRollbar(): Rollbar? {
             error(message)
         }
     }
-    // TODO Add code version with git hash
+
+    val commit = object {}.javaClass.getResource("/commit.txt")?.readText()
+    if (commit == null) {
+        logError { "Code version could not be read" }
+    }
+
+    val jvmVersion = Runtime.version().version().joinToString(separator = ".")
+    val platform = "JVM $jvmVersion"
+
     val config = ConfigBuilder
         .withAccessToken(accessToken)
         .environment(environment)
+        .codeVersion(commit)
+        .platform(platform)
+        .language("kotlin")
+        .framework("ktor")
         .build()
     return Rollbar.init(config)
 }
