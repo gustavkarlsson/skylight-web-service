@@ -1,4 +1,12 @@
+import org.eclipse.jgit.lib.Ref
+import org.eclipse.jgit.lib.RepositoryBuilder
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+buildscript {
+    dependencies {
+        classpath("org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r")
+    }
+}
 
 plugins {
     val kotlinVersion = "1.7.20" // Match version set in dependencies
@@ -44,6 +52,36 @@ dependencies {
     // Test
     testImplementation("io.kotest:kotest-runner-junit5:5.5.0")
     testImplementation("io.strikt:strikt-jvm:0.34.1")
+}
+
+val generatedResourcesDir = file("$buildDir/generated-resources")
+
+val generateGitCommitResource = tasks.register("generateGitCommitResource") {
+    val head = getHeadRef()
+    val commit = head.objectId.abbreviate(8).name()
+    val file = file("$generatedResourcesDir/commit.txt")
+    inputs.property("commit", commit)
+    outputs.file(file)
+    doLast {
+        file.writeText(commit)
+    }
+}
+
+fun getHeadRef(): Ref {
+    val repo = RepositoryBuilder().run {
+        gitDir = File(rootDir, "/.git")
+        readEnvironment()
+        build()
+    }
+    return repo.exactRef("HEAD")
+}
+
+sourceSets.main {
+    resources.srcDir(generatedResourcesDir)
+}
+
+tasks.processResources {
+    dependsOn(generateGitCommitResource)
 }
 
 tasks.withType<Test> {
