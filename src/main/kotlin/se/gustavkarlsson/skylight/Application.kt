@@ -2,6 +2,7 @@
 
 package se.gustavkarlsson.skylight
 
+import com.rollbar.api.payload.data.Level
 import com.rollbar.notifier.Rollbar
 import com.rollbar.notifier.config.ConfigBuilder
 import io.ktor.http.HttpStatusCode
@@ -95,7 +96,7 @@ private fun withMonitoring(block: () -> Unit) {
 fun Rollbar.continuouslySendKeepalive() {
     GlobalScope.launch {
         delay(1.hours)
-        log("Appliation is running...")
+        log("Appliation is running...", Level.DEBUG)
     }
 }
 
