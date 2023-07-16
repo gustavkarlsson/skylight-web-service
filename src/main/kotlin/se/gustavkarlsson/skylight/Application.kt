@@ -92,14 +92,6 @@ private fun withMonitoring(block: () -> Unit) {
     }
 }
 
-@OptIn(DelicateCoroutinesApi::class)
-fun Rollbar.continuouslySendKeepalive() {
-    GlobalScope.launch {
-        delay(1.hours)
-        log("Appliation is running...", Level.DEBUG)
-    }
-}
-
 private fun trySetupRollbar(): Rollbar? {
     val accessToken = readStringFromEnv(ROLLBAR_ACCESS_TOKEN_KEY, redact = true) ?: return null
     val environment = readStringFromEnv(ROLLBAR_ENVIRONMENT_KEY)?.trim()?.lowercase()
@@ -136,6 +128,14 @@ private fun trySetupRollbar(): Rollbar? {
         .framework("ktor")
         .build()
     return Rollbar.init(config)
+}
+
+@OptIn(DelicateCoroutinesApi::class)
+fun Rollbar.continuouslySendKeepalive() {
+    GlobalScope.launch {
+        delay(1.hours)
+        log("Appliation is running...", Level.DEBUG)
+    }
 }
 
 private fun ApplicationEngineEnvironmentBuilder.setupAppModule(port: Int) {
