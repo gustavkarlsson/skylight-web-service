@@ -29,6 +29,9 @@ import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import se.gustavkarlsson.skylight.database.InMemoryRepository
 import se.gustavkarlsson.skylight.database.Repository
@@ -42,6 +45,7 @@ import se.gustavkarlsson.skylight.logging.logWarn
 import se.gustavkarlsson.skylight.sources.potsdam.PotsdamKpIndexSource
 import se.gustavkarlsson.skylight.sources.swpc.SwpcKpIndexForecastSource
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 private const val PORT_KEY = "PORT"
@@ -70,6 +74,7 @@ private fun withMonitoring(block: () -> Unit) {
     val rollbar = trySetupRollbar()
     if (rollbar != null) {
         val rollbarLogger = RollbarLogger(rollbar)
+        rollbar.continuouslySendKeepalive()
         addLogger(rollbarLogger)
         logInfo { "Rollbar enabled" }
     } else {
@@ -83,6 +88,14 @@ private fun withMonitoring(block: () -> Unit) {
         }
     } finally {
         rollbar?.close(true)
+    }
+}
+
+@OptIn(DelicateCoroutinesApi::class)
+fun Rollbar.continuouslySendKeepalive() {
+    GlobalScope.launch {
+        delay(1.hours)
+        log("Appliation is running...")
     }
 }
 
