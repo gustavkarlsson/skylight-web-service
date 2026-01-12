@@ -29,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v6
         if: ${{ always() }}
         with:
-          name: reports
+          name: test-reports
           path: |
             **/build/reports/tests/
 
@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v6
         if: ${{ always() }}
         with:
-          name: reports
+          name: lint-reports
           path: |
             **/build/reports/ktlint/
 
