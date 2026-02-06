@@ -19,4 +19,4 @@ ENV ADMIN_PORT=9090
 RUN mkdir /app
 COPY --from=build /src/build/libs/*-all.jar /app/app.jar
 WORKDIR /app
-ENTRYPOINT ["java","-Xmx160M","-jar","app.jar"]
+ENTRYPOINT ["java","-Xmx120M","-jar","app.jar"]
